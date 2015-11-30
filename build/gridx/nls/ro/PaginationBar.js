@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/ro/PaginationBar",{pagerWai:"Paginator",pageIndex:"${0}",pageIndexTitle:"Pagina ${0}",firstPageTitle:"Prima pagin\u0103",prevPageTitle:"Pagina anterioar\u0103",nextPageTitle:"Pagina urm\u0103toare",lastPageTitle:"Ultima pagin\u0103",pageSize:"${0}",pageSizeTitle:"${0} articole pe pagin\u0103",pageSizeAll:"Toate",pageSizeAllTitle:"Toate articolele",description:"${0} - ${1} din ${2} articole.",descriptionEmpty:"Grila este goal\u0103.",summary:"Total: ${0}",summaryWithSelection:"Total: ${0} Selectate: ${1}",
-gotoBtnTitle:"Deplasare la o pagin\u0103 anumit\u0103",gotoDialogTitle:"Deplasare la pagin\u0103",gotoDialogMainMsg:"Specifica\u0163i num\u0103rul de pagin\u0103:",gotoDialogPageCount:"(${0} pagini)",gotoDialogOKBtn:"Deplasare",gotoDialogCancelBtn:"Anulare",pageLabel:"Pagina",pageSizeLabel:"R\u00e2nduri"});
-//@ sourceMappingURL=PaginationBar.js.map

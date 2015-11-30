@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/hu/PaginationBar",{pagerWai:"Oldalakra t\u00f6ldel\u00e9s",pageIndex:"${0}",pageIndexTitle:"${0}. oldal",firstPageTitle:"Els\u0151 oldal",prevPageTitle:"El\u0151z\u0151 oldal",nextPageTitle:"K\u00f6vetkez\u0151 oldal",lastPageTitle:"Utols\u00f3 oldal",pageSize:"${0}",pageSizeTitle:"${0} elem oldalank\u00e9nt",pageSizeAll:"Mind",pageSizeAllTitle:"\u00d6sszes elem",description:"${0} - ${1} elem ${2} k\u00f6z\u00fcl.",descriptionEmpty:"A r\u00e1cs \u00fcres.",summary:"\u00d6sszesen: ${0}",
-summaryWithSelection:"\u00d6sszesen: ${0} Kiv\u00e1lasztott: ${1}",gotoBtnTitle:"Ugr\u00e1s adott oldalra",gotoDialogTitle:"Ugr\u00e1s adott oldalra",gotoDialogMainMsg:"Adja meg az oldalsz\u00e1mot:",gotoDialogPageCount:"(${0} oldal)",gotoDialogOKBtn:"Mehet",gotoDialogCancelBtn:"M\u00e9gse",pageLabel:"Oldal",pageSizeLabel:"Sorok"});
-//@ sourceMappingURL=PaginationBar.js.map

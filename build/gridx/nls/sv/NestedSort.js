@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/sv/NestedSort",{singleSort:"Enkel sortering",nestedSort:"N\u00e4stlad sortering",ascending:"Klicka f\u00f6r att sortera i stigande ordning",descending:"Klicka f\u00f6r att sortera i fallande ordning",sortingState:"${0} - ${1}",unsorted:"Sortera inte den h\u00e4r kolumnen",waiSingleSortLabel:"${0} - \u00e4r sorterad efter ${1}. V\u00e4lj att sortera efter ${2}",waiNestedSortLabel:"${0} - \u00e4r sorterat n\u00e4stlat efter ${1}. V\u00e4lj att sortera n\u00e4stlat efter ${2}"});
-//@ sourceMappingURL=NestedSort.js.map

@@ -1,9 +1,180 @@
-//>>built
-require({cache:{"url:gridx/templates/LinkPager.html":"\x3cdiv class\x3d\"gridxLinkPager\" role\x3d\"toolbar\" aria-label\x3d\"${pagerWai}\"\r\n\t\x3e\x3cspan class\x3d'gridxPagerStepperBtn gridxPagerPrevPage'\r\n\t\ttabindex\x3d'${_tabIndex}'\r\n\t\ttitle\x3d'${prevPageTitle}'\r\n\t\taria-label\x3d'${prevPageTitle}'\r\n\t\tpageindex\x3d'prev',\r\n\t\tdata-dojo-attach-point\x3d'_prevPageBtn'\r\n\t\tdata-dojo-attach-event\x3d'onclick: _prevPage'\r\n\t\t\x3e\x3cspan class\x3d'gridxPagerA11yInner'\x3e\x26nbsp;\x26lt;\x3c/span\r\n\t\x3e\x3c/span\r\n\t\x3e\x3cspan class\x3d'gridxPagerPages'\r\n\t\tdata-dojo-attach-point\x3d'_pageBtnContainer'\r\n\t\tdata-dojo-attach-event\x3d'onclick: _gotoPage, onmouseover: _onHover, onmouseout: _onHover'\r\n\t\x3e\x3c/span\r\n\t\x3e\x3cspan class\x3d'gridxPagerStepperBtn gridxPagerNextPage'\r\n\t\ttabindex\x3d'${_tabIndex}'\r\n\t\ttitle\x3d'${nextPageTitle}'\r\n\t\taria-label\x3d'${nextPageTitle}'\r\n\t\tpageindex\x3d'next',\r\n\t\tdata-dojo-attach-point\x3d'_nextPageBtn'\r\n\t\tdata-dojo-attach-event\x3d'onclick: _nextPage'\r\n\t\t\x3e\x3cspan class\x3d'gridxPagerA11yInner'\x3e\x26nbsp;\x26gt;\x3c/span\r\n\t\x3e\x3c/span\r\n\x3e\x3c/div\x3e\r\n"}});
-define("gridx/support/LinkPager","dojo/_base/declare dojo/query dojo/_base/event dojo/string dojo/dom-class dojo/keys ./_LinkPageBase dojo/text!../templates/LinkPager.html".split(" "),function(r,k,q,s,m,g,t,u){var f=m.contains;return r(t,{templateString:u,postMixInProperties:function(){var a=this.grid.pagination;this.inherited(arguments);this.connect(a,"onSwitchPage","refresh");this.connect(a,"onChangePageSize","refresh");this.connect(this.grid.model,"onSizeChange","refresh")},startup:function(){this.inherited(arguments);
-this.refresh()},visibleSteppers:3,refresh:function(){var a=this,c=a.grid.pagination,b=c.pageCount(),e=c.currentPage(),d=a.visibleSteppers,c=[],g=a._tabIndex,f=!1,k=!1,n=s.substitute,p=function(b){return['\x3cspan class\x3d"gridxPagerStepperBtn gridxPagerPage ',e==b?"gridxPagerStepperBtnActive":"",'" pageindex\x3d"',b,'" title\x3d"',n(a.pageIndexTitle,[b+1]),'" aria-label\x3d"',n(a.pageIndexTitle,[b+1]),'" tabindex\x3d"',g,'"\x3e',n(a.pageIndex,[b+1]),"\x3c/span\x3e"].join("")};if("number"!=typeof d||
-0>=d)d=3;if(b){var h=e-Math.floor((d-1)/2),l=h+d-1;1>h?(h=1,l=d-1):b>d&&h>=b-d&&(h=b-d);l>=b-1&&(l=b-2);c.push(p(0));if(2<b){1<h&&c.push('\x3cspan class\x3d"gridxPagerStepperEllipsis"\x3e\x26hellip;\x3c/span\x3e');for(d=h;d<=l;++d)c.push(p(d));l<b-2&&c.push('\x3cspan class\x3d"gridxPagerStepperEllipsis"\x3e\x26hellip;\x3c/span\x3e')}1<b&&c.push(p(b-1))}a._pageBtnContainer.innerHTML=c.join("");if(!e||e===b-1)k=!e||1>=b,f=e||1>=b;m.toggle(a._nextPageBtn,"gridxPagerStepperBtnDisable gridxPagerNextPageDisable",
-f);m.toggle(a._prevPageBtn,"gridxPagerStepperBtnDisable gridxPagerPrevPageDisable",k);a.grid.vLayout.reLayout();a.focused&&a._focusNextBtn()},_onHover:function(a){this._toggleHover(a,"gridxPagerStepperBtn","gridxPagerPages","gridxPagerStepperBtnHover")},_prevPage:function(){this._focusPageIndex="prev";var a=this.grid.pagination;a.gotoPage(a.currentPage()-1)},_nextPage:function(){this._focusPageIndex="next";var a=this.grid.pagination;a.gotoPage(a.currentPage()+1)},_gotoPage:function(a){if(a=this._findNodeByEvent(a,
-"gridxPagerStepperBtn","gridxPagerPages"))a=this._focusPageIndex=a.getAttribute("pageindex"),this.grid.pagination.gotoPage(parseInt(a,10))},_onKey:function(a){var c=this.grid.pagination,b=this.grid.isLeftToRight()?g.LEFT_ARROW:g.RIGHT_ARROW;if(a.keyCode==g.LEFT_ARROW||a.keyCode==g.RIGHT_ARROW)q.stop(a),this._focusNextBtn(!0,a.keyCode==b);else if(a.keyCode==g.ENTER&&f(a.target,"gridxPagerStepperBtn")&&!f(a.target,"gridxPagerStepperBtnActive")&&!f(a.target,"gridxPagerStepperBtnDisable"))if(q.stop(a),
-isNaN(parseInt(this._focusPageIndex,10)))this["_"+this._focusPageIndex+"Page"]();else c.gotoPage(parseInt(this._focusPageIndex,10))},_focusNextBtn:function(a,c){var b=this.domNode,e=k('[pageindex\x3d"'+this._focusPageIndex+'"]',b)[0];if(e=this._focus(k(".gridxPagerStepperBtn",b),e,a,c,function(a){return!f(a,"gridxPagerStepperBtnActive")&&!f(a,"gridxPagerStepperBtnDisable")}))this._focusPageIndex=e.getAttribute("pageindex");return e}})});
-//@ sourceMappingURL=LinkPager.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/query",
+	"dojo/_base/event",
+	"dojo/string",
+	"dojo/dom-class",
+	"dojo/keys",
+	"./_LinkPageBase",
+	"dojo/text!../templates/LinkPager.html"
+], function(declare, query, event, string, domClass, keys, _LinkPageBase, template){
+
+/*=====
+	return declare(_LinkPageBase, {
+		// summary:
+		//		This is a grid bar plugin to switch pages for grid using link buttons.
+		
+		// visibleSteppers: Integer
+		//		Number of visible page steppers. If invalid, default to 3.
+		visibleSteppers: 3,
+
+		refresh: function(){
+		}
+	});
+=====*/
+
+	var hasClass = domClass.contains;
+
+	return declare(_LinkPageBase, {
+		templateString: template,
+
+		postMixInProperties: function(){
+			var t = this,
+				c = 'connect',
+				p = t.grid.pagination;
+			t.inherited(arguments);
+			t[c](p, 'onSwitchPage', 'refresh');
+			t[c](p, 'onChangePageSize', 'refresh');
+			t[c](t.grid.model, 'onSizeChange', 'refresh');
+		},
+
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page after pagination module is ready.
+			//FIXME: this causes 2 times refresh, any better way?
+			this.refresh();
+		},
+
+		//Public-----------------------------------------------------------------------------
+
+		// visibleSteppers: Integer
+		//		Number of visible page steppers. If invalid, default to 3.
+		visibleSteppers: 3,
+
+		refresh: function(){
+			var t = this,
+				p = t.grid.pagination,
+				pageCount = p.pageCount(),
+				currentPage = p.currentPage(),
+				count = t.visibleSteppers,
+				sb = [], tabIndex = t._tabIndex,
+				disableNext = false,
+				disablePrev = false,
+				ellipsis = '<span class="gridxPagerStepperEllipsis">&hellip;</span>',
+				substitute = string.substitute,
+				stepper = function(page){
+					return ['<span class="gridxPagerStepperBtn gridxPagerPage ',
+						currentPage == page ? 'gridxPagerStepperBtnActive' : '',
+						'" pageindex="', page,
+						'" title="', substitute(t.pageIndexTitle, [page + 1]),
+						'" aria-label="', substitute(t.pageIndexTitle, [page + 1]),
+						'" tabindex="', tabIndex, '">', substitute(t.pageIndex, [page + 1]),
+					'</span>'].join('');
+				};
+			if(typeof count != 'number' || count <= 0){
+				count = 3;
+			}
+			if(pageCount){
+				var firstPage = currentPage - Math.floor((count - 1) / 2),
+					lastPage = firstPage + count - 1;
+				if(firstPage < 1){
+					firstPage = 1;
+					lastPage = count - 1;
+				}else if(pageCount > count && firstPage >= pageCount - count){
+					firstPage = pageCount - count;
+				}
+				if(lastPage >= pageCount - 1){
+					lastPage = pageCount - 2;
+				}
+				sb.push(stepper(0));
+				if(pageCount > 2){
+					if(firstPage > 1){
+						sb.push(ellipsis);
+					}
+					for(var i = firstPage; i <= lastPage; ++i){
+						sb.push(stepper(i));
+					}
+					if(lastPage < pageCount - 2){
+						sb.push(ellipsis);
+					}
+				}
+				if(pageCount > 1){
+					sb.push(stepper(pageCount - 1));
+				}
+			}
+			t._pageBtnContainer.innerHTML = sb.join('');
+			
+			if(!currentPage || currentPage === pageCount - 1){
+				disablePrev = !currentPage || pageCount <= 1;
+				disableNext = currentPage || pageCount <= 1;
+			}
+			domClass.toggle(t._nextPageBtn, 'gridxPagerStepperBtnDisable gridxPagerNextPageDisable', disableNext);
+			domClass.toggle(t._prevPageBtn, 'gridxPagerStepperBtnDisable gridxPagerPrevPageDisable', disablePrev);
+
+			t.grid.vLayout.reLayout();
+			if(t.focused){
+				t._focusNextBtn();
+			}
+		},	
+
+		//Private----------------------------------------------------------------------------
+		_onHover: function(evt){
+			this._toggleHover(evt, 'gridxPagerStepperBtn', 'gridxPagerPages', 'gridxPagerStepperBtnHover');
+		},
+	
+		_prevPage: function(){
+			this._focusPageIndex = 'prev';
+			var p = this.grid.pagination;
+			p.gotoPage(p.currentPage() - 1);
+		},
+	
+		_nextPage: function(){
+			this._focusPageIndex = 'next';
+			var p = this.grid.pagination;
+			p.gotoPage(p.currentPage() + 1);
+		},
+
+		_gotoPage: function(evt){
+			var n = this._findNodeByEvent(evt, 'gridxPagerStepperBtn', 'gridxPagerPages');
+			if(n){
+				var page = this._focusPageIndex = n.getAttribute('pageindex');
+				this.grid.pagination.gotoPage(parseInt(page, 10));
+			}
+		},
+
+		//Focus------------------------
+		_onKey: function(evt){
+			var t = this,
+				p = t.grid.pagination,
+				leftKey = t.grid.isLeftToRight() ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
+			if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
+				event.stop(evt);
+				t._focusNextBtn(true, evt.keyCode == leftKey);
+			}else if(evt.keyCode == keys.ENTER && 
+				hasClass(evt.target, 'gridxPagerStepperBtn') && 
+				!hasClass(evt.target, 'gridxPagerStepperBtnActive') &&
+				!hasClass(evt.target, 'gridxPagerStepperBtnDisable')){
+				event.stop(evt);
+				if(isNaN(parseInt(t._focusPageIndex, 10))){
+					t['_' + t._focusPageIndex + 'Page']();
+				}else{
+					p.gotoPage(parseInt(t._focusPageIndex, 10));
+				}
+			}
+		},
+	
+		_focusNextBtn: function(isMove, isLeft){
+			var t = this,
+				c = t.domNode,
+				n = query('[pageindex="' + t._focusPageIndex + '"]', c)[0];
+			n = t._focus(query('.gridxPagerStepperBtn', c), n, isMove, isLeft, function(node){
+				return !hasClass(node, 'gridxPagerStepperBtnActive') &&
+					!hasClass(node, 'gridxPagerStepperBtnDisable');
+			});
+			if(n){
+				t._focusPageIndex = n.getAttribute('pageindex');
+			}
+			return n;
+		}
+	});
+});

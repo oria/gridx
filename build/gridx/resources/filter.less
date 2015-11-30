@@ -91,14 +91,22 @@
 	.icon(filterLTR; 15px; 15px);
 }
 
-
 .gridxFilterPaneText .gridxFilterPaneTextWrapper,
 .gridxFilterPaneCombo .gridxFilterPaneComboWrapper,
 .gridxFilterPaneNumber .gridxFilterPaneNumberWrapper,
+.gridxFilterPaneNumberRange .gridxFilterPaneNumberRangeWrapper,
+
 .gridxFilterPaneDate .gridxFilterPaneDateWrapper,
 .gridxFilterPaneDateRange .gridxFilterPaneDateRangeWrapper,
+.gridxFilterPaneDatePast .gridxFilterPaneDatePastWrapper,
+
+.gridxFilterPaneDatetime .gridxFilterPaneDatetimeWrapper,
+.gridxFilterPaneDatetimeRange .gridxFilterPaneDatetimeRangeWrapper,
+.gridxFilterPaneDatetimePast .gridxFilterPaneDatetimePastWrapper,
+
 .gridxFilterPaneTime .gridxFilterPaneTimeWrapper,
 .gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
+.gridxFilterPaneTimePast .gridxFilterPaneTimePastWrapper,
 .gridxFilterPaneSelect .gridxFilterPaneSelectWrapper,
 .gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
 	display: block;
@@ -235,6 +243,7 @@
 	top: 0px;
 	cursor: pointer;
 	display: none;
+	text-align: center;
 
 	.dj_ie7 & {
 		top: 5px;
@@ -250,12 +259,12 @@
 	.icon(filterLTR);
 }
 
-.gridxQuickFilterClearInner,
 .gridxQuickFilterNoFilterBar .gridxQuickFilterComboButton,
 .gridxQuickFilterHasFilterBar .gridxQuickFilterButton {
 	display: none;
 }
 
+.gridxQuickFilterClearInner,
 .gridxFilterBarCloseBtnText,
 .gridxFilterTooltipRemoveBtnText {
 	display: none;

@@ -1,10 +1,260 @@
-//>>built
-define("gridx/modules/extendedSelect/_Base","dojo/_base/declare dojo/query dojo/_base/connect dojo/_base/Deferred dojo/_base/sniff dojo/_base/window dojo/dom dojo/keys ../../core/_Module ../AutoScroll".split(" "),function(m,n,h,k,g,p,f,l,q){return m(q,{required:["autoScroll"],getAPIPath:function(){var a={select:{}};a.select[this._type]=this;return a},load:function(){var a=this,b=a.grid,c=p.doc;b.domNode.setAttribute("aria-multiselectable",!0);a._refSelectedIds=[];a.subscribe("gridClearSelection_"+
-b.id,function(b){b!=a._type&&a.clear()});a.batchConnect([b.body,"onRender","_onRender"],[c,"onmouseup","_end"],[c,"onkeydown",function(a){a.keyCode==l.SHIFT&&f.setSelectable(9<g("ie")?c.body:b.domNode,!1)}],[c,"onkeyup",function(a){a.keyCode==l.SHIFT&&f.setSelectable(9<g("ie")?c.body:b.domNode,!0)}]);a._init();a.loaded.callback()},enabled:!0,canSwept:!0,holdingCtrl:!1,holdingShift:!1,selectById:function(){return this._subMark("_markById",arguments,!0)},deselectById:function(){return this._subMark("_markById",
-arguments,!1)},selectByIndex:function(){return this._subMark("_markByIndex",arguments,!0)},deselectByIndex:function(){return this._subMark("_markByIndex",arguments,!1)},onSelectionChange:function(){},_clear:function(){delete this._lastToSelect;delete this._lastStartItem;delete this._lastEndItem},_subMark:function(a,b,c){var d=this;if(d.arg("enabled"))return c&&h.publish("gridClearSelection_"+d.grid.id,[d._type]),d._lastSelectedIds=d.getSelected(),d._refSelectedIds=[],k.when(d[a](b,c),function(){d._onSelectionChange()})},
-_start:function(a,b,c){var d=this.grid.model;if(!this._selecting&&!this._marking&&this.arg("enabled")){f.setSelectable(this.grid.domNode,!1);this._fixFF(1);var e=!0===this._isSelected(a);(c=c||this.arg("holdingShift"))&&this._lastStartItem?(this._isRange=1,this._toSelect=this._lastToSelect,this._startItem=this._lastStartItem,this._currentItem=this._lastEndItem):(this._startItem=a,this._currentItem=null,b||this.arg("holdingCtrl")?(this._toSelect=!e,"row"===this._type&&(d.treeMarkMode()&&!this._isSelected(a)&&
-this._toSelect)&&(this._toSelect="mixed")):(this._toSelect=1,"row"===this._type&&(d.treeMarkMode()&&!this._isSelected(a)&&this._toSelect)&&(this._toSelect="mixed"),this.clear(1)));h.publish("gridClearSelection_"+this.grid.id,[this._type]);this._beginAutoScroll();this.grid.autoScroll.enabled=!0;this._lastSelectedIds=this.getSelected();this._selecting=1;this._highlight(a)}},_highlight:function(a){var b=this;if(b._selecting){var c=b._type,d=b._startItem,e=b._currentItem,f=function(a,d,e){a=a[c];d=d[c];
-for(var f=a<d?1:-1;a!=d;a+=f){var g={};g[c]=a;b._highlightSingle(g,e)}};null===e?b._highlightSingle(a,1):b._inRange(a[c],d[c],e[c])?f(e,a,0):(b._inRange(d[c],a[c],e[c])&&(f(e,d,0),e=d),f(a,e,1));b._currentItem=a;b._focus(a)}},_end:function(){var a=this,b=a.grid;if(a._selecting){a._fixFF();a._endAutoScroll();a._selecting=0;a._marking=1;b.autoScroll.enabled=!1;var c=a._addToSelected(a._startItem,a._currentItem,a._toSelect);a._lastToSelect=a._toSelect;a._lastStartItem=a._startItem;a._lastEndItem=a._currentItem;
-a._startItem=a._currentItem=a._isRange=null;k.when(c,function(){f.setSelectable(b.domNode,!0);a._marking=0;a._onSelectionChange()})}},_highlightSingle:function(a,b){b=b?this._toSelect:this._isSelected(a);this._doHighlight(a,b)},_onSelectionChange:function(){var a=this.getSelected();this.onSelectionChange(a,this._lastSelectedIds);this._lastSelectedIds=a},_inRange:function(a,b,c,d){return(a>=b&&a<=c||a>=c&&a<=b)&&(d||a!=c)},_fixFF:function(a){g("ff")&&n(".gridxSortNode",this.grid.headerNode).style("overflow",
-a?"visible":"")}})});
-//@ sourceMappingURL=_Base.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/query",
+	"dojo/_base/connect",
+	"dojo/_base/Deferred",
+	"dojo/_base/sniff",
+	"dojo/_base/window",
+	"dojo/dom",
+	"dojo/keys",
+	"../../core/_Module",
+//    "dojo/NodeList-dom",
+	"../AutoScroll"
+], function(declare, query, connect, Deferred, has, win, dom, keys, _Module){
+
+/*=====
+	return declare(_Module, {
+		// enabled: Boolean
+		//		If false, this module is disabled. This parameter is mainly used by DnD to not conflict with selection operations.
+		enabled: true,
+
+		// canSwept: Boolean
+		//		If false, swept selecting by mouse is disabled. Default to true.
+		canSwept: true,
+
+		// holdingCtrl: Boolean
+		//		If true, when selecting it'll appear as if the CTRL key is held.
+		holdingCtrl: false,
+
+		// holdingShift: Boolean
+		//		If true, when selecting it'll appear as if the SHIFT key is held.
+		holdingShift: false,
+
+		onSelectionChange: function(newSelectedIds, oldSelectedIds){
+			// summary:
+			//		Fired when the selection is changed.
+			// newSelectedIds: String[]
+			//		Current selected ids.
+			// oldSelectedIds: String[]
+			//		Previous selected ids.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		required: ['autoScroll'],
+
+		getAPIPath: function(){
+			var path = {
+				select: {}
+			};
+			path.select[this._type] = this;
+			return path;
+		},
+		
+		load: function(){
+			var t = this, g = t.grid, doc = win.doc;
+			g.domNode.setAttribute('aria-multiselectable', true);
+			t._refSelectedIds = [];
+			t.subscribe('gridClearSelection_' + g.id, function(type){
+				if(type != t._type){
+					t.clear();
+				}
+			});
+			t.batchConnect(
+				[g.body, 'onRender', '_onRender'],
+				[doc, 'onmouseup', '_end'],
+				[doc, 'onkeydown', function(e){
+					if(e.keyCode == keys.SHIFT){
+						dom.setSelectable((has('ie') > 9  || has('trident') > 5)? doc.body : g.domNode, false);
+					}
+				}],
+				[doc, 'onkeyup', function(e){
+					if(e.keyCode == keys.SHIFT){
+						dom.setSelectable((has('ie') > 9  || has('trident') > 5) ? doc.body : g.domNode, true);
+					}
+				}]
+			);
+			t._init();
+			t.loaded.callback();
+		},
+
+		//Public ------------------------------------------------------------------
+		enabled: true,
+
+		canSwept: true,
+
+		holdingCtrl: false,
+
+		holdingShift: false,
+
+		selectById: function(/* id */){
+			return this._subMark('_markById', arguments, true);
+		},
+
+		deselectById: function(/* id */){
+			return this._subMark('_markById', arguments, false);
+		},
+
+		selectByIndex: function(/* start, end */){
+			return this._subMark('_markByIndex', arguments, true);
+		},
+
+		deselectByIndex: function(/* start, end */){
+			return this._subMark('_markByIndex', arguments, false);
+		},
+
+		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
+			// summary:
+			//		Event: fired when the selection is changed.
+		},
+
+		//Private -----------------------------------------------------------------
+		_clear: function(){
+			var t = this;
+			delete t._lastToSelect;
+			delete t._lastStartItem;
+			delete t._lastEndItem;
+		},
+
+		_subMark: function(func, args, toSelect){
+			var t = this;
+			if(t.arg('enabled')){
+				if(toSelect){
+					connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
+				}
+				t._lastSelectedIds = t.getSelected();
+
+				t._refSelectedIds = [];
+				return Deferred.when(t[func](args, toSelect), function(){
+					t._onSelectionChange();
+				});
+			}
+		},
+
+		_start: function(item, extending, isRange){
+			var t = this,
+				g = t.grid,
+				m = g.model;
+			
+			if(!t._selecting && !t._marking && t.arg('enabled')){
+				dom.setSelectable(t.grid.domNode, false);
+				t._fixFF(1);
+				var isSelected = t._isSelected(item) === true;
+				isRange = isRange || t.arg('holdingShift');
+				if(isRange && t._lastStartItem){
+					t._isRange = 1;	//1 as true
+					t._toSelect = t._lastToSelect;
+					t._startItem = t._lastStartItem;
+					t._currentItem = t._lastEndItem;
+					t._lastSelectedIds = t.getSelected();
+				}else{
+					t._startItem = item;
+					t._currentItem = null;
+					
+					if(extending || t.arg('holdingCtrl')){
+						t._toSelect = !isSelected;
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
+					}else{
+						t._toSelect = 1;	//1 as true 
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
+						t._lastSelectedIds = t.getSelected();
+						t.clear(1);
+					}
+				}
+				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
+				t._beginAutoScroll();
+				t.grid.autoScroll.enabled = true;
+				t._selecting = 1;	//1 as true
+				t._highlight(item);
+			}
+		},
+
+		_highlight: function(target){
+			var t = this,
+				g = t.grid;
+			if(t._selecting && t._lastStartItem != target){
+				var type = t._type,
+					start = t._startItem,
+					current = t._currentItem,
+					highlight = function(from, to, toHL){
+						from = from[type];
+						to = to[type];
+						var dir = from < to ? 1 : -1,
+							start = g.body.renderStart, 
+							end = start + g.body.renderCount;
+						for(; from != to; from += dir){
+							if (from < start || from > end) continue;
+							var item = {};
+							item[type] = from;
+							t._highlightSingle(item, toHL);
+						}
+					};
+				if(current === null){
+					//First time select.
+					t._highlightSingle(target, 1);	//1 as true
+				}else{
+					if(t._inRange(target[type], start[type], current[type])){
+						//target is between start and current, some selected should be deselected.
+						highlight(current, target, 0);	//0 as false
+					}else{
+						if(t._inRange(start[type], target[type], current[type])){
+							//selection has jumped to different direction, all should be deselected.
+							highlight(current, start, 0);	//0 as false
+							current = start;
+						}
+						highlight(target, current, 1);	//1 as true
+					}
+				}
+				t._currentItem = target;
+				t._focus(target);
+			}
+		},
+
+		_end: function(){
+			var t = this, g = t.grid;
+			if(t._selecting){
+				t._fixFF();
+				t._endAutoScroll();
+				t._selecting = 0;	//0 as false
+				t._marking = 1;	//1 as true
+				g.autoScroll.enabled = false;
+				var d = t._addToSelected(t._startItem, t._currentItem, t._toSelect);
+				t._lastToSelect = t._toSelect;
+				t._lastStartItem = t._startItem;
+				t._lastEndItem = t._currentItem;
+				t._startItem = t._currentItem = t._isRange = null;
+				Deferred.when(d, function(){
+					dom.setSelectable(g.domNode, true);
+					t._marking = 0;	//0 as false
+					t._onSelectionChange();
+				});
+			}
+		},
+
+		_highlightSingle: function(target, toHighlight){
+			toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
+			this._doHighlight(target, toHighlight);
+		},
+
+		_onSelectionChange: function(){
+			var t = this, selectedIds = t.getSelected();
+			t.onSelectionChange(selectedIds, t._lastSelectedIds);
+			t._lastSelectedIds = selectedIds;
+		},
+
+		_inRange: function(value, start, end, isClose){
+			return ((value >= start && value <= end) || (value >= end && value <= start)) && (isClose || value != end);
+		},
+
+		_fixFF: function(isStart){
+			if(has('ff')){
+				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
+			}
+		}
+	});
+});

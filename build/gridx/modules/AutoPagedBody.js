@@ -1,6 +1,100 @@
-//>>built
-define("gridx/modules/AutoPagedBody","dojo/_base/declare dojo/_base/lang dojo/dom-class dojo/_base/Deferred ./Body ./_PagedBodyMixin".split(" "),function(f,g,h,k,l,m){return f([l,m],{preload:function(){this.inherited(arguments);var a=this,b=a.grid,c=a.domNode,d=function(){a._load(1)};a.connect(c,"onscroll",function(b){b=c.lastChild;b.offsetTop+b.offsetHeight<=c.scrollTop+c.offsetHeight&&(clearTimeout(a._loadHandler),a._loadHandler=setTimeout(d,10))});a.aspect(b,"_onResizeEnd",function(){a._checkSpace()&&
-a._load(1)});b.vScroller.loaded.then(function(){var e=b.vScroller._scrollable;e&&a.aspect(e,"slideTo",function(e,f){e.y<b.mainNode.offsetHeight-b.bodyNode.offsetHeight+c.lastChild.offsetHeight&&(clearTimeout(a._loadHandler),a._loadHandler=setTimeout(d,1E3*f))})})},_checkSpace:function(){var a=this.domNode;return a.lastChild==this._bottomNode&&a.lastChild.offsetTop+a.lastChild.offsetHeight<a.scrollTop+a.offsetHeight},onRender:function(){this.inherited(arguments);this._checkSpace()&&this._load(1)},
-createBottom:function(a){a.innerHTML='\x3cspan class\x3d"gridxLoadingMore"\x3e\x3c/span\x3e'+this.arg("loadMoreLoadingLabel",this.grid.nls.loadMoreLoading)},refresh:function(){var a=g.hitch(this,this.inherited,arguments);if(this.arg("quickRefresh")){h.add(this.grid.loadingNode,"gridxLoading");var b=this.grid.vScroller._scrollable;if(b){var c=b.getPos();b.scrollTo({x:c.x,y:0})}var d=new k;this.grid.view.updateRootRange(0,this.pageSize).then(function(){a().then(function(){d.callback()},function(a){d.errback(a)})});
-return d}return a()},_busy:function(){},_onLoadFinish:function(a,b,c,d){d()}})});
-//@ sourceMappingURL=AutoPagedBody.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/_base/Deferred",
+	"./Body",
+	"./_PagedBodyMixin"
+], function(declare, lang, domClass, Deferred, Body, _PagedBodyMixin){
+
+/*=====
+	return declare(Body, {
+		// summary:
+		//		module name: body.
+		//		
+		// description:
+		//		
+	});
+=====*/
+
+	return declare([Body, _PagedBodyMixin], {
+		preload: function(){
+			this.inherited(arguments);
+			var t = this,
+				g = t.grid,
+				dn = t.domNode,
+				load = function(){
+					t._load(1);
+				};
+			t.connect(dn, 'onscroll', function(e){
+				var lastNode = dn.lastChild;
+				if(lastNode.offsetTop + lastNode.offsetHeight <= dn.scrollTop + dn.offsetHeight){
+					clearTimeout(t._loadHandler);
+					t._loadHandler = setTimeout(load, 10);
+				}
+			});
+			t.aspect(g, '_onResizeEnd', function(){
+				if(t._checkSpace()){
+					t._load(1);
+				}
+			});
+			g.vScroller.loaded.then(function(){
+				var scrollable = g.vScroller._scrollable;
+				if(scrollable){
+					t.aspect(scrollable, 'slideTo', function(to, duration){
+						if(to.y < g.mainNode.offsetHeight - g.bodyNode.offsetHeight + dn.lastChild.offsetHeight){
+							clearTimeout(t._loadHandler);
+							t._loadHandler = setTimeout(load, duration * 1000);
+						}
+					});
+				}
+			});
+		},
+
+		_checkSpace: function(){
+			var bn = this.domNode;
+			return bn.lastChild == this._bottomNode && bn.lastChild.offsetTop + bn.lastChild.offsetHeight < bn.scrollTop + bn.offsetHeight;
+		},
+
+		onRender: function(/*start, count*/){
+			var t = this;
+			t.inherited(arguments);
+			if(t._checkSpace()){
+				t._load(1);
+			}
+		},
+
+		createBottom: function(bottomNode){
+			bottomNode.innerHTML = '<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', this.grid.nls.loadMoreLoading);
+		},
+
+		refresh: function(){
+			var inherited = lang.hitch(this, this.inherited, arguments);
+			if(this.arg('quickRefresh')){
+				domClass.add(this.grid.loadingNode, 'gridxLoading');
+				var scrollable = this.grid.vScroller._scrollable;
+				if(scrollable){
+					var pos = scrollable.getPos();
+					scrollable.scrollTo({x: pos.x, y: 0});
+				}
+				var d = new Deferred();
+				this.grid.view.updateRootRange(0, this.pageSize).then(function(){
+					inherited().then(function(){
+						d.callback();
+					}, function(e){
+						d.errback(e);
+					});
+				});
+				return d;
+			}else{
+				return inherited();
+			}
+		},
+
+		_busy: function(){},
+
+		_onLoadFinish: function(isPost, start, count, callback){
+			callback();
+		}
+	});
+});

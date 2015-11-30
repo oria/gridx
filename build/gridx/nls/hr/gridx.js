@@ -1,12 +1,169 @@
-//>>built
-define("gridx/nls/hr/gridx",{loadingInfo:"U\u010ditavanje...",emptyInfo:"Nema stavki za prikaz",loadFailInfo:"U\u010ditavanje podataka nije uspjelo!",loadMore:"U\u010ditaj vi\u0161e",loadMoreLoading:"U\u010ditavanje...",loadPrevious:"U\u010ditaj prethodno",loadPreviousLoading:"U\u010ditavanje...",clearFilterDialogTitle:"Isprazni filter",filterDefDialogTitle:"Filter",defaultRuleTitle:"Pravilo",ruleTitleTemplate:"Pravilo ${ruleNumber}",noFilterApplied:"Nema primijenjenog filtera.",defineFilter:"Definiranje filtera",
-conditionEqual:"jednako",conditionNotEqual:"nije jednako",conditionLess:"manje od",conditionLessEqual:"manje od ili jednako",conditionGreater:"ve\u0107e od",conditionGreaterEqual:"ve\u0107e od ili jednako",conditionContain:"sadr\u017ei",conditionIs:"je",conditionStartWith:"po\u010dinje s",conditionEndWith:"zavr\u0161ava s",conditionNotContain:"ne sadr\u017ei",conditionIsNot:"nije",conditionNotStartWith:"ne po\u010dinje s",conditionNotEndWith:"ne zavr\u0161ava s",conditionBefore:"prije",conditionAfter:"nakon",
-conditionRange:"raspon",conditionIsEmpty:"prazno",all:"sve",any:"bilo koje",relationAll:"sva pravila",waiRelAll:"Podudaranje sa svim sljede\u0107im pravilima:",relationAny:"bilo koje pravilo",waiRelAny:"Podudaranje s bilo kojim od sljede\u0107ih pravila:",relationMsgFront:"Podudaranje",relationMsgTail:"",and:"i",or:"ili",addRuleButton:"Dodaj pravilo",waiAddRuleButton:"Dodaj novo pravilo",removeRuleButton:"Ukloni pravilo",waiRemoveRuleButtonTemplate:"Ukloni pravilo ${0}",addRuleButton:"Dodaj pravilo filtera",
-cancelButton:"Opoziv",waiCancelButton:"Opozovi ovaj dijalog",clearButton:"Isprazni",waiClearButton:"Isprazni filter",filterButton:"Filter",waiFilterButton:"Predaj filter",columnSelectLabel:"Stupac:",waiColumnSelectTemplate:"Stupac za pravilo ${0}",conditionSelectLabel:"Uvjet:",waiConditionSelectTemplate:"Uvjet za pravilo ${0}",valueBoxLabel:"Vrijednost:",waiValueBoxTemplate:"Unesite vrijednost za filter pravila ${0}",rangeTo:"do",rangeTemplate:"od ${0} do ${1}",statusTipHeaderColumn:"Stupac",statusTipHeaderCondition:"Pravila",
-statusTipTitle:"Traka filtera",statusTipMsg:"Kliknite na traku filtera za filtriranje vrijednosti u ${0}.",anycolumn:"bilo koji stupac",statusTipTitleNoFilter:"Traka filtera",statusTipTitleHasFilter:"Filter",statusTipRelPre:"Podudaranje",statusTipRelPost:"pravila.",statusTipHeaderAll:"Podudaranje sa svim pravilima.",statusTipHeaderAny:"Podudaranje s bilo kojim pravilima.",defaultItemsName:"stavke",filterBarMsgHasFilterTemplate:"${0} od ${1} ${2} prikazano.",filterBarMsgNoFilterTemplate:"Nema primijenjenog filtera",
-filterBarDefButton:"Definiraj filter",waiFilterBarDefButton:"Filtriraj tablicu",a11yFilterBarDefButton:"Filter...",filterBarClearButton:"Isprazni filter",waiFilterBarClearButton:"Isprazni filter",closeFilterBarBtn:"Zatvori traku filtera",clearFilterMsg:"Filter \u0107e se ukloniti i prikazat \u0107e se svi dostupni slogovi.",anyColumnOption:"Bilo koji stupac",trueLabel:"To\u010dno",falseLabel:"Neto\u010dno",radioTrueLabel:"Vrijednost je to\u010dna",radioFalseLabel:"Vrijednost je neto\u010dna",beginTimeRangeLabel:"Po\u010detna vrijednost raspona vremena",
-endTimeRangeLabel:"Zavr\u0161na vrijednost raspona vremena",beginDateRangeLabel:"Po\u010detna vrijednost raspona datuma",endDateRangeLabel:"Zavr\u0161na vrijednost raspona datuma",startsWithExpr:"${0}*",singleSort:"Jedno sortiranje",nestedSort:"Ugnije\u017e\u0111eno sortiranje",ascending:"Kliknite za uzlazno sortiranje",descending:"Kliknite za silazno sortiranje",sortingState:"${0} - ${1}",unsorted:"Nemoj sortirati ovaj stupac",waiSingleSortLabel:"${0} - se sortira po ${1}. Izaberite sortiranje po ${2}",
-waiNestedSortLabel:"${0} - se ugnije\u017e\u0111eno sortira po ${1}. Izaberite ugnije\u017e\u0111eno sortiranje po ${2}",pagerWai:"Podjela u stranice",pageIndex:"${0}",pageIndexTitle:"Stranica ${0}",firstPageTitle:"Prva stranica",prevPageTitle:"Prethodna stranica",nextPageTitle:"Sljede\u0107a stranica",lastPageTitle:"Zadnja stranica",pageSize:"${0}",pageSizeTitle:"${0} stavki po stranici",pageSizeAll:"Sve",pageSizeAllTitle:"Sve stavke",description:"${0} - ${1} od ${2} stavki.",descriptionEmpty:"Mre\u017ea je prazna.",
-summary:"Ukupno: ${0}",summaryWithSelection:"Ukupno: ${0} Izabrano: ${1}",gotoBtnTitle:"Idi na odre\u0111enu stranicu",gotoDialogTitle:"Idi na stranicu",gotoDialogMainMsg:"Navedite broj stranice:",gotoDialogPageCount:"(${0} stranica)",gotoDialogOKBtn:"Idi",gotoDialogCancelBtn:"Opoziv",pageLabel:"Stranica",pageSizeLabel:"Redova",filterLabel:"Filter",clearButtonTitle:"Isprazni filter",buildFilterMenuLabel:"Kreiraj filter\x26hellip;",apply:"Primijeni filter",helpMsg:"${0} - Kliknite za sortiranje ili upotrijebite control-klik za dodavanje u sortiranje",
-singleHelpMsg:"${0} - Kliknite za sortiranje",priorityOrder:"Prioritet sortiranja ${0}",summaryTotal:"Ukupno: ${0}",summarySelected:"Izabrano: ${0}",summaryRange:"Raspon: ${0}-${1}",indirectSelectAll:"Pritisnite razmaknicu da biste odabrali sve.",indirectDeselectAll:"Pritisnite razmaknicu da biste odzna\u010dili sve.",treeExpanded:"Control + tipka sa strelicom lijevo za smanjivanje ovog reda.",treeCollapsed:"Control + tipka sa strelicom desno za pro\u0161irivanje ovog reda."});
-//@ sourceMappingURL=gridx.js.map
+define({     
+//Body
+	loadingInfo: "Učitavanje...",
+	emptyInfo: "Nema stavki za prikaz",
+	loadFailInfo: "Učitavanje podataka nije uspjelo!",
+	loadMore: "Učitaj više",
+	loadMoreLoading: "Učitavanje...",
+	loadPrevious: "Učitaj prethodno",
+	loadPreviousLoading: "Učitavanje...",
+
+//FilterBar
+	"clearFilterDialogTitle": "Isprazni filter",
+	"filterDefDialogTitle": "Filter",
+	"defaultRuleTitle": "Pravilo",
+	"ruleTitleTemplate": "Pravilo ${ruleNumber}",
+	"noFilterApplied": "Nema primijenjenog filtera.",
+	"defineFilter": "Definiranje filtera",
+	"defineFilterAriaLabel": "Definiranje filtera: Otvara dijalog filtera za konfiguriranje kompleksnih pravila filtera. Svako pravilo filtera se sastoji od kombinacije stupca, uvjeta i vrijednosti. Kada se otvori dijalog, polje vrijednosti ima fokus tipkovnice.",
+	"conditionEqual": "jednako",
+	"conditionNotEqual": "nije jednako",
+	"conditionLess": "manje od",
+	"conditionLessEqual": "manje od ili jednako",
+	"conditionGreater": "veće od",
+	"conditionGreaterEqual": "veće od ili jednako",
+	"conditionContain": "sadrži",
+	"conditionIs": "je",
+	"conditionStartWith": "počinje s",
+	"conditionEndWith": "završava s",
+	"conditionNotContain": "ne sadrži",
+	"conditionIsNot": "nije",
+	"conditionNotStartWith": "ne počinje s",
+	"conditionNotEndWith": "ne završava s",
+	"conditionBefore": "prije",
+	"conditionAfter": "nakon",
+	"conditionRange": "raspon",
+	"conditionIsEmpty": "prazno",
+	"conditionIsNotEmpty": "nije prazno",
+	"all": "sve",
+	"any": "bilo koje",
+	"relationAll": "sva pravila",
+	"waiRelAll": "Podudaranje sa svim sljedećim pravilima:",
+	"relationAny": "bilo koje pravilo",
+	"waiRelAny": "Podudaranje s bilo kojim od sljedećih pravila:",
+	"relationMsgFront": "Podudaranje",
+	"relationMsgTail": "",
+	"and": "i",
+	"or": "ili",
+	"addRuleButton": "Dodaj pravilo",
+	"waiAddRuleButton": "Dodaj novo pravilo",
+	"removeRuleButton": "Ukloni pravilo",
+	"waiRemoveRuleButtonTemplate": "Ukloni pravilo ${0}",
+	"addRuleButton": "Dodaj pravilo filtera",
+	"cancelButton": "Opoziv",
+	"waiCancelButton": "Opozovi ovaj dijalog",
+	"clearButton": "Isprazni",
+	"waiClearButton": "Isprazni filter",
+	"filterButton": "Filter",
+	"waiFilterButton": "Predaj filter",
+	"columnSelectLabel": "Stupac:",
+	"columnSelectAriaLabel": "Stupac: dio uvjeta ${0} od ${1}",
+	"waiColumnSelectTemplate": "Stupac za pravilo ${0}",
+
+	"conditionSelectLabel": "Uvjet:",
+	"conditionSelectAriaLabel": "Operator: dio uvjeta ${0} od ${1}",
+	"waiConditionSelectTemplate": "Uvjet za pravilo ${0}",
+
+	"valueBoxLabel": "Vrijednost:",
+	"valueBoxAriaLabel": "Vrijednost: dio uvjeta ${0} od ${1}",
+	"waiValueBoxTemplate": "Unesite vrijednost za filter pravila ${0}",
+	"rangeTo": "do",
+	"rangeTemplate": "od ${0} do ${1}",
+	"statusTipHeaderColumn": "Stupac",
+	"statusTipHeaderCondition": "Pravila",
+	"statusTipTitle": "Traka filtera",
+	"statusTipMsg": "Kliknite na traku filtera za filtriranje vrijednosti u ${0}.",
+	"anycolumn": "bilo koji stupac",
+	"statusTipTitleNoFilter": "Traka filtera",
+	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelPre": "Podudaranje",
+	"statusTipRelPost": "pravila.",
+	"statusTipHeaderAll": "Podudaranje sa svim pravilima.",
+	"statusTipHeaderAny": "Podudaranje s bilo kojim pravilima.",
+	"defaultItemsName": "stavke",
+	"filterBarMsgHasFilterTemplate": "${0} od ${1} ${2} prikazano.",
+	"filterBarMsgNoFilterTemplate": "Nema primijenjenog filtera",
+	"filterBarDefButton": "Definiranje filtera",
+	"waiFilterBarDefButton": "Filtriraj tablicu",
+	"a11yFilterBarDefButton": "Filter...",
+	"filterBarClearButton": "Isprazni filter",
+	"waiFilterBarClearButton": "Isprazni filter",
+	"closeFilterBarBtn": "Zatvori traku filtera",
+	"clearFilterMsg": "Filter će se ukloniti i prikazat će se svi dostupni slogovi.",
+	"anyColumnOption": "Bilo koji stupac",
+	"trueLabel": "Točno",
+	"falseLabel": "Netočno",
+	"radioTrueLabel": "Vrijednost je točna",
+	"radioFalseLabel": "Vrijednost je netočna",
+	"beginTimeRangeLabel": "Početna vrijednost raspona vremena",
+	"endTimeRangeLabel": "Završna vrijednost raspona vremena",
+	"beginDateRangeLabel": "Početna vrijednost raspona datuma",
+	"endDateRangeLabel": "Završna vrijednost raspona datuma",
+	"startsWithExpr": "${0}*",
+
+//NestedSort
+	singleSort: "Jedno sortiranje",
+	nestedSort: "Ugniježđeno sortiranje",
+	ascending: "Kliknite za uzlazno sortiranje",
+	descending: "Kliknite za silazno sortiranje",
+	sortingState: "${0} - ${1}",
+	unsorted: "Nemoj sortirati ovaj stupac",
+	waiSingleSortLabel: "${0} - se sortira po ${1}. Izaberite sortiranje po ${2}",
+	waiNestedSortLabel:"${0} - se ugniježđeno sortira po ${1}. Izaberite ugniježđeno sortiranje po ${2}",
+
+//PaginationBar
+	pagerWai: 'Podjela u stranice',
+
+	pageIndex: '${0}',
+	pageIndexTitle: 'Stranica ${0}',
+
+	firstPageTitle: 'Prva stranica',
+	prevPageTitle: 'Prethodna stranica',
+	nextPageTitle: 'Sljedeća stranica',
+	lastPageTitle: 'Zadnja stranica',
+
+	pageSize: '${0}',
+	pageSizeTitle: '${0} stavki po stranici',
+	pageSizeAll: 'Sve',
+	pageSizeAllTitle: 'Sve stavke',
+
+	description: '${0} - ${1} od ${2} stavki.',
+	descriptionEmpty: 'Mreža je prazna.',
+
+	summary: 'Ukupno: ${0}',
+	summaryWithSelection: 'Ukupno: ${0} Izabrano: ${1}',
+
+	gotoBtnTitle: 'Idi na određenu stranicu',
+
+	gotoDialogTitle: 'Idi na stranicu',
+	gotoDialogMainMsg: 'Navedite broj stranice:',
+	gotoDialogPageCount: '(${0} stranica)',
+	gotoDialogOKBtn: 'Idi',
+	gotoDialogCancelBtn: 'Opoziv',
+	// for drop down pagination bar
+	pageLabel: 'Stranica',
+	pageSizeLabel: 'Redova',
+
+//QuickFilter
+	filterLabel: 'Filter',
+	clearButtonTitle: 'Isprazni filter',
+	buildFilterMenuLabel: 'Kreiraj filter...',
+	apply: 'Primijeni filter',
+
+//Sort
+	helpMsg: '${0} - Kliknite za sortiranje ili upotrijebite control-klik za dodavanje u sortiranje',
+	singleHelpMsg: '${0} - Kliknite za sortiranje',
+	priorityOrder: 'Prioritet sortiranja ${0}',
+
+//SummaryBar
+	summaryTotal: 'Ukupno: ${0}',
+	summarySelected: 'Izabrano: ${0}',
+	summaryRange: 'Raspon: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Pritisnite razmaknicu da biste odabrali sve.",	//need translation
+	indirectDeselectAll: "Pritisnite razmaknicu da biste odznačili sve.",	//need translation
+	treeExpanded: "Control + tipka sa strelicom lijevo za smanjivanje ovog reda.",	//need translation
+	treeCollapsed: "Control + tipka sa strelicom desno za proširivanje ovog reda."	//need translation
+});
+

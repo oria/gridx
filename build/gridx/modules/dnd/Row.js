@@ -1,9 +1,327 @@
-//>>built
-define("gridx/modules/dnd/Row","dojo/_base/declare dojo/_base/array dojo/_base/Deferred dojo/_base/lang dojo/dom-class dojo/dom-geometry dojo/_base/sniff ./_Base ../../core/_Module".split(" "),function(w,q,m,u,x,n,y,z,B){function A(b,f){if(b.grid){var a=new m,c=r(a,a.callback),d=r(a,a.errback),g=[],h=b.grid,k=h.dnd.row._selectedRowIds;h.model.when({id:k},function(){s(k,function(a){h.model.idToIndex(a);(a=h.model.byId(a))&&g.push(u.clone(a.rawData))})}).then(function(){c(g)},d);return a}return b.getGridDndRowData&&
-b.getGridDndRowData(f)||[]}var r=u.hitch,s=q.forEach;return w(z,{name:"dndRow",required:["_dnd","moveRow"],getAPIPath:function(){return{dnd:{row:this}}},accept:["grid/rows"],provide:["grid/rows"],onDraggedOut:function(b){var f=[];if(b.grid)f=b.grid.dnd._dnd.profile.arg("accept");else for(var a in b.accept)f.push(a);if(!this.checkArg("copyWhenDragOut",f)){b=this.grid;var c=b.model,d=b.store,g=this._selectedRowIds;if(d.fetch){var h=[];b.model.when({id:g},function(){s(g,function(a){(a=c.byId(a))&&h.push(a.item)})}).then(function(){s(h,
-d.deleteItem,d);d.save()})}else s(g,d.remove,d)}},_checkDndReady:function(b){var f=this.model;return!f.getMark||f.getMark(b.rowId)?(this.grid.dnd._dnd.profile=this,this._selectedRowIds=f.getMarkedIds?f.getMarkedIds():[b.rowId],!0):!1},_cssName:"Row",_onBeginDnd:function(b){b.delay=this.arg("delay")},_getDndCount:function(){return this._selectedRowIds.length},_onEndDnd:function(){},_buildDndNodes:function(){var b=this.grid.id;return q.map(this._selectedRowIds,function(f){return["\x3cdiv id\x3d'",b,
-"_dndrow_",f,"' gridid\x3d'",b,"' rowid\x3d'",f,"'\x3e\x3c/div\x3e"].join("")}).join("")},_onBeginAutoScroll:function(){this.grid.autoScroll.horizontal=!1},_onEndAutoScroll:function(){this.grid.autoScroll.horizontal=!0},_getItemData:function(b){return b.substring((this.grid.id+"_dndrow_").length)},_calcTargetAnchorPos:function(b,f){var a=this,c=b.target,d=a.grid.view,g={width:f.w+"px",height:"",left:""},h=function(b){return a.model.getMark&&a.model.getMark(b.getAttribute("rowid"))},k=function(a){return parseInt(a.getAttribute("visualindex"),
-10)},p=function(c){var d=c,e=d,l=d;if(h(d)){for(e=d.previousSibling;e&&h(e);)d=e,e=e.previousSibling;e=d;d=c;for(l=d.nextSibling;l&&h(l);)d=l,l=l.nextSibling;l=d}e&&l?(d=n.position(e),c=n.position(l),b.clientY<(d.y+c.y+c.h)/2?(a._target=k(e),g.top=d.y-f.y+"px"):(a._target=k(l)+1,g.top=c.y+c.h-f.y+"px")):delete a._target;return g};if(!y("ff"))for(;c;){if(x.contains(c,"gridxRow"))return p(c);c=c.parentNode}var t=a.grid.bodyNode,v=t.childNodes;if(v.length){var c=t.firstChild,m=k(c),e=n.position(c);if(0===
-m&&b.clientY<=e.y+e.h)g.top=e.y-f.y+"px",a._target=0;else if(c=t.lastChild,m=k(c),e=n.position(c),m===d.visualCount-1&&b.clientY>e.y+e.h)g.top=e.y+e.h-f.y+"px",a._target=d.visualCount;else return q.some(v,function(a){e=n.position(a);if(e.y<=b.clientY&&e.y+e.h>=b.clientY)return c=a,!0})?p(c):null}else g.top="0px",a._target=0;return g},_onDropInternal:function(b,f){var a=this,c=a.grid;0<=a._target&&a.model.when({id:a._selectedRowIds},function(){var b=q.map(a._selectedRowIds,function(b){return a.model.idToIndex(b)});
-c.move.row.move(b,c.view.getRowInfo({visualIndex:a._target}).rowIndex)})},_onDropExternal:function(b,f,a){a=new m;var c=r(a,a.callback),d=r(a,a.errback),g=this.grid,h=this._target,k,p,n=A(b,f);g.model.when([h-1,h],function(){k=g.model.byIndex(h);p=g.model.byIndex(h-1)}).then(function(){m.when(n,function(a){a&&a.length&&(a=g.model.insert(a,p&&p.item,k&&k.item),m.when(a,c,d))},d)},d);return a}})});
-//@ sourceMappingURL=Row.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/Deferred",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
+	"dojo/_base/sniff",
+	"dojo/dnd/Manager",
+	"./_Base",
+	"../../core/_Module"
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, _Module){
+
+/*=====
+	return declare(_Base, {
+		// summary:
+		//		module name: dndRow.
+		//		This module provides an implementation of row drag & drop.
+		// description:
+		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.
+		//		This module depends on "_dnd" and "moveRow" modules.
+
+		// accept: String[]
+		//		Can drag in what kind of stuff
+		accept: [],
+
+		// provide: String[]
+		//		Can drag out what kind of stuff
+		provide: []
+	});
+=====*/
+
+	var hitch = lang.hitch,
+		forEach = array.forEach;
+
+	function getSourceData(source, nodes){
+		if(source.grid){
+			var d = new Deferred(),
+				success = hitch(d, d.callback),
+				fail = hitch(d, d.errback),
+				dataArr = [],
+				sg = source.grid,
+				rowIds = sg.dnd.row._selectedRowIds;
+			sg.model.when({id: rowIds}, function(){
+				forEach(rowIds, function(id){
+					var idx = sg.model.idToIndex(id),
+						row = sg.model.byId(id);
+					if(row){
+						dataArr.push(lang.clone(row.rawData));
+					}
+				});
+			}).then(function(){
+				success(dataArr);
+			}, fail);
+			return d;
+		}else{
+			return source.getGridDndRowData && source.getGridDndRowData(nodes) || [];
+		}
+	}
+
+	return declare(_Base, {
+		name: 'dndRow',
+		
+		required: ['_dnd', 'moveRow'],
+
+		getAPIPath: function(){
+			return {
+				dnd: {
+					row: this
+				}
+			};
+		},
+
+		//Public---------------------------------------------------------------------------
+		accept: ['grid/rows'],
+
+		provide: ['grid/rows'],
+
+		onDraggedOut: function(targetSource){
+			var t = this,
+				targetAccept = [];
+			if(targetSource.grid){
+				targetAccept = targetSource.grid.dnd._dnd.profile.arg('accept');
+			}else{
+				for(var n in targetSource.accept){
+					targetAccept.push(n);
+				}
+			}
+			if(!t.checkArg('copyWhenDragOut', targetAccept)){
+				var g = t.grid,
+					m = g.model,
+					s = g.store,
+					rowIds = t._selectedRowIds;
+				if(s.fetch){
+					var items = [];
+					g.model.when({id: rowIds}, function(){
+						forEach(rowIds, function(id){
+							var row = m.byId(id);
+							if(row){
+								items.push(row.item);
+							}
+						});
+					}).then(function(){
+						forEach(items, s.deleteItem, s);
+						s.save();
+					});
+				}else{
+					forEach(rowIds, s.remove, s);
+				}
+			}
+		},
+	
+		//Package-----------------------------------------------------------------------------------
+		_checkDndReady: function(evt){
+			var t = this, m = t.model;
+			if(!m.getMark || m.getMark(evt.rowId)){
+				t.grid.dnd._dnd.profile = t;
+				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
+				return true;
+			}
+			return false;
+		},
+
+		//Private-----------------------------------------------------------------------------
+		_cssName: 'Row',
+
+		_onBeginDnd: function(source){
+			source.delay = this.arg('delay');
+		},
+
+		_getDndCount: function(){
+			return this._selectedRowIds.length;
+		},
+
+		_onEndDnd: function(){},
+
+		_buildDndNodes: function(){
+			var gid = this.grid.id;
+			return array.map(this._selectedRowIds, function(rowId){
+				return ["<div id='", gid, '_dndrow_', rowId, "' gridid='", gid, "' rowid='", rowId, "'></div>"].join('');
+			}).join('');
+		},
+
+		_onBeginAutoScroll: function(){
+			this.grid.autoScroll.horizontal = false;
+		},
+
+		_onEndAutoScroll: function(){
+			this.grid.autoScroll.horizontal = true;
+		},
+
+		_getItemData: function(id){
+			return id.substring((this.grid.id + '_dndrow_').length);
+		},
+		
+		//----------------------------------------------------------------------------
+		_calcTargetAnchorPos: function(evt, containerPos){
+			var t = this,
+				node = evt.target,
+				view = t.grid.view,
+				ret = {
+					width: containerPos.w + "px",
+					height: '',
+					left: ''
+				},
+				isSelected = function(n){
+					return t.model.getMark && t.model.getMark(n.getAttribute('rowid'));
+				},
+				getVIdx = function(n){
+					return parseInt(n.getAttribute('visualindex'), 10);
+				},
+				calcPos = function(node){
+					var n = node, first = n, last = n;
+					if(isSelected(n)){
+						var prenode = n.previousSibling;
+						while(prenode && isSelected(prenode)){
+							n = prenode;
+							prenode = prenode.previousSibling;
+						}
+						first = n;
+						n = node;
+						var nextnode = n.nextSibling;
+						while(nextnode && isSelected(nextnode)){
+							n = nextnode;
+							nextnode = nextnode.nextSibling;
+						}
+						last = n;
+					}
+					if(first && last){
+						var firstPos = domGeometry.position(first),
+							lastPos = domGeometry.position(last),
+							middle = (firstPos.y + lastPos.y + lastPos.h) / 2;
+						if(evt.clientY < middle){
+							t._target = getVIdx(first);
+							ret.top = (firstPos.y - containerPos.y) + "px";
+						}else{
+							t._target = getVIdx(last) + 1;
+							ret.top = (lastPos.y + lastPos.h - containerPos.y) + "px";
+						}
+					}else{
+						delete t._target;
+					}
+					return ret;
+				};
+			if(!has('ff')){
+				//In FF, this conflicts with the overflow:hidden css rule for grid row DIV, which is required by ColumnLock.
+				while(node){
+					if(domClass.contains(node, 'gridxRow')){
+						return calcPos(node);
+					}
+					node = node.parentNode;
+				}
+			}
+			var bn = t.grid.bodyNode,
+				nodes = bn.childNodes;
+			if(!nodes.length){
+				ret.top = '0px';
+				t._target = 0;
+			}else{
+				node = bn.firstChild;
+				var idx = getVIdx(node),
+					pos = domGeometry.position(node);
+				if(idx === 0 && evt.clientY <= pos.y + pos.h){
+					ret.top = (pos.y - containerPos.y) + 'px';
+					t._target = 0;
+				}else{
+					node = bn.lastChild;
+					idx = getVIdx(node);
+					pos = domGeometry.position(node);
+					if(idx === view.visualCount - 1 && evt.clientY > pos.y + pos.h){
+						ret.top = (pos.y + pos.h - containerPos.y) + 'px';
+						t._target = view.visualCount;
+					}else{
+						var rowFound = array.some(nodes, function(rowNode){
+							pos = domGeometry.position(rowNode);
+							if(pos.y <= evt.clientY && pos.y + pos.h >= evt.clientY){
+								node = rowNode;
+								return true;
+							}
+						});
+						return rowFound ? calcPos(node) : null;
+					}
+				}
+			}
+			return ret;
+		},
+
+
+		_onMouseMove: function(){
+			var t = this, flag = true;
+			if(t._target >= 0){
+
+				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
+					flag = false;
+				}
+				t.model.when({id: t._selectedRowIds}, function(){
+					var indexes = array.map(t._selectedRowIds, function(rowId){
+						return t.model.idToIndex(rowId);
+					});
+					if (t.grid.rowLock) {
+						if (array.some(indexes, function(index) {
+							return index < t.grid.rowLock.count;
+						})) {						
+							console.warn('can not move locked rows');
+							flag = false;
+						}
+					}
+				});
+			}
+			var manager=DndManager.manager();
+			manager.canDropFlag = flag;
+			manager.avatar.update();
+		},
+
+
+		_onDropInternal: function(nodes, copy){
+			var t = this, g = t.grid;
+			if(t._target >= 0){
+
+				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
+					return false;
+				}
+				t.model.when({id: t._selectedRowIds}, function(){
+					var indexes = array.map(t._selectedRowIds, function(rowId){
+						return t.model.idToIndex(rowId);
+					});
+					if (t.grid.rowLock) {
+						if (array.some(indexes, function(index) {
+							return index < t.grid.rowLock.count;
+						})) {						
+							console.warn('can not move locked rows');
+							return false;
+						}
+					}
+					g.move.row.move(indexes, g.view.getRowInfo({
+						visualIndex: t._target
+					}).rowIndex);
+
+				});
+			}
+		},
+
+		_onDropExternal: function(source, nodes, copy){
+			var d = new Deferred(),
+				success = hitch(d, d.callback),
+				fail = hitch(d, d.errback),
+				g = this.grid,
+				target = this._target,
+				targetRow, preRow,
+				sourceData = getSourceData(source, nodes);
+			g.model.when([target - 1, target], function(){
+				targetRow = g.model.byIndex(target);
+				preRow = g.model.byIndex(target - 1);
+			}).then(function(){
+				//Inserting and deleting (and other operations that changes store) are better to happen outside 
+				//"model.when", because during "when", it is not allowed to clear cache.
+				Deferred.when(sourceData, function(dataArr){
+					if(dataArr && dataArr.length){
+						var inserted = g.model.insert(dataArr, preRow && preRow.item, targetRow && targetRow.item);
+						Deferred.when(inserted, success, fail);
+					}
+				}, fail);
+			}, fail);
+			return d;
+		}
+	});
+});

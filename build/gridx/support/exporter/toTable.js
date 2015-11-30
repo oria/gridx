@@ -1,5 +1,92 @@
-//>>built
-define("gridx/support/exporter/toTable",["./exporter"],function(f){function d(a,b){return f(a,d.writer,b||{})}d.writer={_cellattrs:function(a,b,c,d){var e=b.columnWidth;b=e&&e[c.id]||(b.natualWidth?"":c.getWidth())||"auto";a=a.getTextDirStyle(c.id,d);return[' colid\x3d"',c.id,'" style\x3d"',a," width:",b,'"'].join("")},initialize:function(a,b){this._rst=['\x3ctable class\x3d"grid"',b.natualWidth?"":' style\x3d"table-layout:fixed;"',' border\x3d"0" cellpadding\x3d"0" cellspacing\x3d"0"\x3e']},beforeHeader:function(){this._rst.push('\x3cthead\x3e\x3ctr class\x3d"grid_header"\x3e')},
-handleHeaderCell:function(a,b){var c=a.column;this._rst.push('\x3cth class\x3d"grid_header_cell"',this._cellattrs(c.grid,b,c,c.name()),"\x3e",c.name(),"\x3c/th\x3e")},afterHeader:function(){this._rst.push("\x3c/tr\x3e\x3cthead\x3e")},beforeBody:function(){this._rst.push("\x3ctbody\x3e")},beforeRow:function(a){a=a.row;var b=a.index();this._rst.push('\x3ctr class\x3d"grid_row grid_row_',b%2?"even":"odd",'" rowid\x3d"',a.id,'" rowindex\x3d"',b,'"\x3e')},handleCell:function(a,b){this._rst.push('\x3ctd class\x3d"grid_cell"',
-this._cellattrs(a.grid,b,a.column,a.data),"\x3e",a.data,"\x3c/td\x3e")},afterRow:function(){this._rst.push("\x3c/tr\x3e")},afterBody:function(){this._rst.push("\x3c/tbody\x3e\x3c/table\x3e")},getResult:function(){return this._rst.join("")}};return d});
-//@ sourceMappingURL=toTable.js.map
+define([
+/*====="dojo/_base/declare", =====*/
+	"./exporter"
+], function(/*=====declare, =====*/exporter){
+
+/*=====
+	function toTable(grid, args){
+		// summary:
+		//		Export the grid contents to HTML table according to the given args.
+		// args: __TableExportArgs?
+		//		The args to configure the export result and the export process.
+		// returns:
+		//		A deferred object indicating when the export process is completed,
+		//		and then pass the exported HTML table (as string) to callbacks.
+	}
+
+	toTable.__TableExportArgs = declare(exporter.__ExportArgs, {
+		// natualWidth: Boolean
+		natualWidth: false,
+
+		// columnWidth: Object
+		columnWidth: {}
+	});
+
+	return toTable;
+=====*/
+
+	function toTable(grid, args){
+		return exporter(grid, toTable.writer, args || {});	//dojo.Deferred
+	}
+
+	toTable.writer = {
+		_cellattrs: function(grid, args, col, cellContent){
+			var cw = args.columnWidth,
+				w = (cw && cw[col.id]) || (args.natualWidth ? '' : col.getWidth()) || 'auto',
+				dir = grid.getTextDirStyle(col.id, cellContent);
+			return [' colid="', col.id, '" style="', dir, ' width:', w, '"'].join('');
+		},	
+
+		initialize: function(context, /* __TableExportArgs */ args){
+			this._rst = ['<table class="grid"',
+				args.natualWidth ? '' : ' style="table-layout:fixed;"',
+				' border="0" cellpadding="0" cellspacing="0">'
+			];
+		},
+
+		beforeHeader: function(){
+			this._rst.push('<thead><tr class="grid_header">');
+		},
+
+		handleHeaderCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
+			var col = context.column;
+			this._rst.push('<th class="grid_header_cell"',
+				this._cellattrs(col.grid, args, col, col.name()),
+				'>', col.name(), '</th>');
+		},
+
+		afterHeader: function(){
+			this._rst.push('</tr><thead>');
+		},
+
+		beforeBody: function(){
+			this._rst.push('<tbody>');
+		},
+
+		beforeRow: function(/* __ExportContext */ context){
+			var r = context.row, idx = r.index();
+			this._rst.push('<tr class="grid_row grid_row_', idx % 2 ? 'even' : 'odd',
+				'" rowid="', r.id, '" rowindex="', idx, '">');
+		},
+
+		handleCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
+			this._rst.push('<td class="grid_cell"',
+				this._cellattrs(context.grid, args, context.column, context.data),
+				'>', context.data, '</td>');
+		},
+
+		afterRow: function(){
+			this._rst.push('</tr>');
+		},
+
+		afterBody: function(){
+			this._rst.push('</tbody></table>');
+		},
+
+		getResult: function(){
+			return this._rst.join('');
+		}
+	};
+
+	return toTable;
+});

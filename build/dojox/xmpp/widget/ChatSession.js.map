@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"ChatSession.js",
-"lineCount":3,
-"mappings":"A,SACAA,MAAA,uHAA+H,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC/HF,CAAAG,QAAA,iCAEAH,EAAAI,QAAA,gCACAJ,EAAAI,QAAA,oBAEAJ,EAAAK,QAAA,kCACEJ,CAAAK,OAAAC,gBADF,CACgCN,CAAAO,WADhC,kBAGmBR,CAAAS,MAAA,sfAHnB;yGAUeC,QAAAA,IAVf,gBAcmBC,QAAAA,CAASC,CAATD,CAAkBE,CAAlBF,EAEZC,CAFYD,GAIdG,aAAAC,QAAAC,UAJcL,eAGFC,CAAAK,KAHEN,CAGaO,aAHbP,sBAIiDC,CAAAO,KAJjDR,eAKdS,oBAAA,EALcT,EAdnB,iBAwBoBS,QAAAA,GAChBN,aAAAC,QAAAM,UADgBD,CACkBN,aAAAC,QAAAO,aADlBF,CAxBpB,YA4BeG,QAAAA,CAASC,CAATD,MACDC,CAAAC,QADCF,EACYC,CAAAE,SADZH,GAECvB,CAAA2B,KAAAC,MAFDL,MAEsBM,cAAAC,MAFtBP,CAGVQ,aAAAC,YAAA,OAAiCH,cAAAC,MAAjC,EAHUP;AAIVZ,mBAAA,OAA4BkB,cAAAC,MAA5B,QAJUP,CAKVM,cAAAC,MALUP,IA5Bf,EAN+H,CAA/H;",
-"sources":["ChatSession.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","layout","LayoutContainer","_Templated","cache","postCreate","displayMessage","message","type","messages","domNode","innerHTML","from","chatWith","body","goToLastMessage","scrollTop","scrollHeight","onKeyPress","e","keyCode","charCode","keys","ENTER","chatInput","value","instance","sendMessage"]
-}

@@ -1,7 +1,103 @@
-//>>built
-define("gridx/modules/filter/FilterTooltip","dojo/_base/array dojo/_base/event dojo/dom-class dijit/popup dojo/_base/declare dojo/string dijit/TooltipDialog".split(" "),function(h,k,d,g,l,m,n){return l(n,{grid:null,filterBar:null,postCreate:function(){this.inherited(arguments);this.filterBar=this.grid.filterBar;this.connect(this,"onClick","_onClick");this.connect(this,"onMouseEnter","_onMouseEnter");this.connect(this,"onMouseLeave","_onMouseLeave");d.add(this.domNode,"gridxFilterTooltip");d.add(this.domNode,
-"dijitTooltipBelow")},show:function(a){this.inherited(arguments);g.open({popup:this,x:a.pageX,y:a.pageY,padding:{x:-6,y:-3}})},hide:function(){this.inherited(arguments);g.close(this)},buildContent:function(){var a=this.filterBar,c=a._nls,b=a.filterData;if(b&&b.conditions.length){var e=['\x3cdiv class\x3d"gridxFilterTooltipTitle"\x3e\x3cb\x3e${i18n.statusTipTitleHasFilter}\x3c/b\x3e ',"all"===b.type?c.statusTipHeaderAll:c.statusTipHeaderAny,"\x3c/div\x3e\x3ctable\x3e\x3ctr\x3e\x3cth\x3e${i18n.statusTipHeaderColumn}\x3c/th\x3e\x3cth\x3e${i18n.statusTipHeaderCondition}\x3c/th\x3e\x3c/tr\x3e"];
-h.forEach(b.conditions,function(b,c){var d=c%2?' class\x3d"gridxFilterTooltipOddRow"':"";if(b.colId)var f=this.grid.column(b.colId).name(),f=this.grid.enforceTextDirWithUcc(b.colId,f);e.push("\x3ctr",d,"\x3e\x3ctd\x3e",b.colId?f:"${i18n.anyColumnOption}",'\x3c/td\x3e\x3ctd class\x3d"gridxFilterTooltipValueCell"\x3e',"\x3cdiv\x3e",a._getRuleString(b.condition,b.value,b.type),'\x3cspan action\x3d"remove-rule" title\x3d"${i18n.removeRuleButton}"',' class\x3d"gridxFilterTooltipRemoveBtn"\x3e\x3cspan class\x3d"gridxFilterTooltipRemoveBtnText"\x3ex\x3c/span\x3e\x3c/span\x3e\x3c/div\x3e\x3c/td\x3e\x3c/tr\x3e')},
-this);e.push("\x3c/table\x3e");this.i18n=this.grid.nls;this.set("content",m.substitute(e.join(""),this));d.toggle(this.domNode,"gridxFilterTooltipSingleRule",1===b.conditions.length)}},_onMouseEnter:function(a){this.isMouseOn=!0},_onMouseLeave:function(a){this.isMouseOn=!1;this.hide()},_onClick:function(a){var c=this._getTr(a),b=this.filterBar;c&&/^span$/i.test(a.target.tagName)?(b.filterData.conditions.splice(c.rowIndex-1,1),c.parentNode.removeChild(c),b.applyFilter(b.filterData),k.stop(a)):(this.filterBar.showFilterDialog(),
-this.hide())},_getTr:function(a){for(a=a.target;a&&!/^tr$/i.test(a.tagName)&&a!==this.domNode;)a=a.parentNode;return a&&/^tr$/i.test(a.tagName)?a:null}})});
-//@ sourceMappingURL=FilterTooltip.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/event",
+	"dojo/dom-class",
+	"dijit/popup",
+	"dojo/_base/declare",
+	"dojo/string",
+	"dijit/TooltipDialog"
+], function(array, event, domClass, popup, declare, string, TooltipDialog){
+
+/*=====
+	return declare([], {
+		// summary:
+		//		Show status dialog of filter.
+	});
+=====*/
+
+	return declare(TooltipDialog, {
+		grid: null,
+		filterBar: null,
+		postCreate: function(){
+			this.inherited(arguments);
+			this.filterBar = this.grid.filterBar;
+			this.connect(this, 'onClick', '_onClick');
+			this.connect(this, 'onMouseEnter', '_onMouseEnter');
+			this.connect(this, 'onMouseLeave', '_onMouseLeave');
+			domClass.add(this.domNode, 'gridxFilterTooltip');
+			domClass.add(this.domNode, 'dijitTooltipBelow');
+		},
+		show: function(evt){
+			this.inherited(arguments);
+			popup.open({
+				popup: this,
+				x: evt.pageX,
+				y: evt.pageY,
+				padding: {x: -6, y: -3}
+			});
+		},
+		hide: function(){
+			this.inherited(arguments);
+			popup.close(this);
+		},
+
+		buildContent: function(){
+			// summary:
+			//		Build the status of current filter.
+			
+			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
+			if(!data || !data.conditions.length){return;}
+			
+			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
+			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
+				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
+			];
+			array.forEach(data.conditions, function(d, idx){
+				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
+				if(d.colId){
+					var colName = this.grid.column(d.colId).name();
+					colName = this.grid.enforceTextDirWithUcc(d.colId, colName);
+				}
+				arr.push('<tr', odd, '><td>', (d.colId ? colName : '${i18n.anyColumnOption}'), 
+					'</td><td class="gridxFilterTooltipValueCell">', 
+					'<div>',
+					fb._getRuleString(d.condition, d.value, d.type),
+					'<span action="remove-rule" title="${i18n.removeRuleButton}"',
+					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
+			}, this);
+			arr.push('</table>');
+			this.i18n = this.grid.nls;
+			this.set('content', string.substitute(arr.join(''), this));
+			domClass.toggle(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
+		},
+		_onMouseEnter: function(e){
+			this.isMouseOn = true;
+		},
+		_onMouseLeave: function(e){
+			this.isMouseOn = false;
+			this.hide();
+		},
+		_onClick: function(e){
+			var tr = this._getTr(e), fb = this.filterBar;
+			if(tr && /^span$/i.test(e.target.tagName)){
+				//remove the rule
+				fb.filterData.conditions.splice(tr.rowIndex - 1, 1);
+				tr.parentNode.removeChild(tr);
+				fb.applyFilter(fb.filterData);
+				event.stop(e);
+			}else{
+				this.filterBar.showFilterDialog();
+				this.hide();
+			}
+		},
+		_getTr: function(e){
+			// summary:
+			//		Get table row of status
+			var tr = e.target;
+			while(tr && !/^tr$/i.test(tr.tagName) && tr !== this.domNode){
+				tr = tr.parentNode;
+			}
+			return (tr && /^tr$/i.test(tr.tagName)) ? tr : null;
+		}
+	});
+});

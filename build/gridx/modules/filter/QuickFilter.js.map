@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"QuickFilter.js",
-"lineCount":2,
-"mappings":"A,SAAAA,MAAA,oCAA2C,mHAAA,MAAA,KAA3C,CAQG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAAiCC,CAAjC,CAA0CC,CAA1C,QAaKJ,EAAA,CAAQG,CAAR,uFASGE,QAAAA,OAEPC,EAAIC,SAFGF,CAGPG,EAAMF,CAAAE,IAHCH,CAKPI,qCAIcL,CAJdK,iFAQYC,QAAA,aARZD,OASQC,QAAA,SATRD,cAUeC,QAAA;qBAVfD,aAWcC,QAAA,mCAXdD,kBAYmBC,QAAA,6CAZnBD,WAaYC,QAAA,0BAbZD,eAcgBC,QAAA,kCAdhBD,CAgBEH,EAAAK,MArBKN,GAsBPI,CAAAD,IAtBOH,eAuBPI,CAAAG,SAvBOP,KAwBPG,CAAAK,OAAAC,KAAA,CAAgB,QAAA,GACfR,CAAAS,OAAAC,KAAA,CAAcR,CAAAS,gBAAd,CADe,CAAhB,CAxBOZ,CA4BRG,EAAAU,KAAAC,KAAA,CAAcV,CAAd,CA5BQJ,CATH,EAbL,CARH;",
-"sources":["QuickFilter.js.uncompressed.js"],
-"names":["define","declare","domClass","tap","_Module","QuickFilter","preload","g","grid","bar","args","arg","touch","priority","loaded","then","puller","bind","quickFilterNode","defs","push"]
-}

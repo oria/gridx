@@ -1,3 +1,7 @@
-//>>built
-define("dojox/widget/nls/ca/Wizard",{next:"Seg\u00fcent",previous:"Anterior",done:"Fet"});
-//@ sourceMappingURL=Wizard.js.map
+define(
+({
+next: "Següent",
+previous: "Anterior",
+done: "Fet"
+})
+);

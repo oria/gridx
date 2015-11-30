@@ -1,3 +1,9 @@
-//>>built
-define("dojox/wire",["./wire/_base"],function(){});
-//@ sourceMappingURL=wire.js.map
+define(['./wire/_base'],function(){
+	/*=====
+	 return {
+	 // summary:
+	 //		Deprecated.  Should require dojox/wire modules directly rather than trying to access them through
+	 //		this module.
+	 };
+	 =====*/
+});

@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"_Base.js",
-"lineCount":3,
-"mappings":"A,SAAAA,MAAA,+FAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA2BC,CAA3B,QAwBKF,EAAA,CAAQE,CAAR,aACMC,QAAAA,OACPC,aAGJA,EAAAC,OAAA,CAAYC,UAAZ,CAJWH,YAKJC,EALID,CADN,SASGI,QAAAA,OACJC,MADID,CACME,EAAID,CAAAE,KAClBF,EAAAG,iBAFQJ,GAGRC,EAAAI,UAAA,uBAAoCH,CAAAI,GAApC,CAA0C,QAAA,CAASC,CAAT,EACtCA,CADsC,EAC9BN,CAAAF,MAD8B,EAExCE,CAAAO,MAAA,EAFwC,CAA1C,CAKAP,EAAAP,QAAA,CAAUQ,CAAAO,KAAV,wBACGR,EAAAS,IAAA,YATKV,EAUPE,CAAAS,QAAAC,aAAA,2BAEDX,EAAAY,MAAA,EAZQb,CATH,kDAgCMc,QAAAA,IAhCN;aAkCQC,QAAAA,IAlCR,mBAoCaC,QAAAA,IApCb,mBAsCaC,QAAAA,IAtCb,cAyCQC,QAAAA,IAzCR,aA2COC,QAAAA,SACLC,gBAAAC,MAAA,MAA4BC,SAA5B,CADKH,CA3CP,eA+CSI,QAAAA,YA/CT,oBAmDcC,QAAAA,OACLC,EAAcC,gBAAA,EAC5BT,uBAAA,CAAoBQ,CAApB,CAAiCrB,qBAAjC,CACAA,sBAHmBoB,CAGEC,CAHFD,CAnDd,SAyDGG,QAAAA,CAASC,CAATD,CAAeE,CAAfF,MACMG,GACXpB,SAAA,WAFKiB,EAEeJ,kBAAA,CAAgBK,CAAhB,CAFfD,GAGJjB,QAAA,YAHIiB,GAGkBE,CAHlBF,EAG+BjB,QAAA,eAH/BiB,EAING,CAJMH,EAIMR,gBAAA,CAAcS,CAAd,CAJND,CAMNnB,UAAA,CAAQoB,CAAR,CANMD;AAQPjC,CAAAqC,QAAA,uBAAwC5B,SAAAG,GAAxC,EAAoDP,UAApD,EARO4B,CASPK,cAAA,CAAYJ,CAAZ,CAAkBE,CAAlB,CATOH,EAzDH,EAxBL,CAJH;",
-"sources":["_Base.js.uncompressed.js"],
-"names":["define","declare","connect","_Module","getAPIPath","path","select","_type","preload","t","g","grid","_lastSelectedIds","subscribe","id","type","clear","body","arg","domNode","setAttribute","_init","onSelected","onDeselected","onHighlightChange","onSelectionChange","_getMarkType","_isSelected","isSelected","apply","arguments","_isSelectable","_onSelectionChange","selectedIds","getSelected","_select","item","extending","toSelect","publish","_markById"]
-}

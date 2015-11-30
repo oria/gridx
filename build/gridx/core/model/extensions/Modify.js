@@ -1,9 +1,417 @@
-//>>built
-define("gridx/core/model/extensions/Modify","dojo/_base/declare dojo/_base/lang dojo/DeferredList dojo/_base/Deferred dojo/_base/array ../_Extension".split(" "),function(k,f,l,h,m,n){return k(n,{name:"modify",priority:19,constructor:function(a,b){this._globalOptList=[];this._globalOptIndex=-1;this._cellOptList={};this._lazyData={};this._lazyRawData={};this._cache=a._cache;this._mixinAPI("set","redo","undo","isChanged","getChanged","save","clearLazyData");a.onSetLazyData=function(){};a.onRedo=a.onUndo=
-function(){}},byId:function(a){var b=this.inner._call("byId",arguments);if(!b)return b;b=f.mixin({},b);b.rawData=f.mixin({},b.rawData,this._lazyRawData[a]);b.data=f.mixin({},b.data,this._lazyData[a]);return b},byIndex:function(a,b){var c=this.inner._call("byIndex",arguments),d=this.inner._call("indexToId",arguments);if(!c)return c;c=f.mixin({},c);c.rawData=f.mixin({},c.rawData,this._lazyRawData[d]);c.data=f.mixin({},c.data,this._lazyData[d]);return c},set:function(a,b){var c={},d=this._globalOptList,
-e=this._globalOptIndex;c.type=0;c.rowId=a;c.newData=b;c.oldData={};var g=this.byId(a).rawData,f;for(f in b)c.oldData[f]=g[f];d.splice(e+1,d.length-1-e,c);this._globalOptIndex++;c=this.byId(a);this._set(a,b);d=this.byId(a);this.onSet(a,e,d,c)},undo:function(){var a=this._globalOptList[this._globalOptIndex];return a?(this._globalOptIndex--,0===a.type&&this._onUndo(a.rowId,a.oldData,a.newData),!0):!1},redo:function(){var a=this._globalOptList[this._globalOptIndex+1];return a?(this._globalOptIndex++,
-0===a.type&&this._onRedo(a.rowId,a.newData,a.oldData),!0):!1},clearLazyData:function(){for(this.getChanged();0<=this._globalOptIndex;)this.undo();this._globalOptList=[];this._lazyRawData={};this._lazyData={}},save:function(){var a=this,b=a.getChanged(),c=[],d,e=new h;b.length?(m.forEach(b,function(b){b=a._saveRow(b);c.push(b)}),d=new l(c),d.then(function(){a._globalOptList=[];a._globalOptIndex=-1;a._lazyRawData={};a._lazyData={};a.onSave(d);e.callback()},function(){e.errback()})):e.callback();return e},
-isChanged:function(a,b){var c=this.inner._call("byId",[a]),d=this._lazyRawData[a];if(b){if(d)return void 0!==d[b]?d[b]!==c.rawData[b]:!1}else if(d)for(var e in d)if(d[e]!==c.rawData[e])return!0;return!1},getChanged:function(){var a=[],b;for(b in this._lazyRawData)this.isChanged(b)&&a.push(b);return a},onSave:function(a){},onUndo:function(a,b,c){},onRedo:function(a,b,c){},_onSet:function(){this._globalOptList=[];this._globalOptIndex=-1;this.onSet.apply(this,arguments)},_onUndo:function(a,b,c){var d=
-this._cache.idToIndex(a),e=this.byId(a);this._set(a,b);var f=this.byId(a);this.onSet(a,d,f,e);this.onUndo(a,b,c)},_onRedo:function(a,b,c){var d=this._cache.idToIndex(a),e=this.byId(a);this._set(a,b);var f=this.byId(a);this.onSet(a,d,f,e);this.onRedo(a,b,c)},_set:function(a,b){var c=this.inner._call("byId",[a]),d={};this._lazyRawData[a]?f.mixin(this._lazyRawData[a],b):this._lazyRawData[a]=f.mixin({},b);var e=this._cache.columns,c=f.mixin({},c.rawData,this._lazyRawData[a]),g;for(g in e)d[g]=e[g].formatter?
-e[g].formatter(c):c[e[g].field||g];this._lazyData[a]=d},_saveRow:function(a){var b=this.model.store,c=this.byId(a).item;a=this._lazyRawData[a];var d;if(b.setValue){d=new h;try{for(var e in a)b.setValue(c,e,a[e]);b.save({onComplete:f.hitch(d,d.callback),onError:f.hitch(d,d.errback)})}catch(g){d.errback(g)}}return d||h.when(b.put(f.mixin({},c,a)))}})});
-//@ sourceMappingURL=Modify.js.map
+define([
+	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/DeferredList',
+	'dojo/_base/Deferred',
+	'dojo/_base/array',
+	'../_Extension'
+], function(declare, lang, DeferredList, Deferred, array, _Extension){
+/*=====
+	return declare([], {
+		// Summary:
+		//			Enable model to change data without affecting the store.
+		//			All the changes will be saved in the modify extension.
+		//			The byId and byIndex function will be wrapped in this extension.
+		
+		set: function(){
+			// summary:
+			//		Set some fields in a row.
+			//		Can set multiple fields altogether.
+			//		This is one single operation.
+			// rowId: String
+			// rawData: object
+			//		{field1: '...', feild2: '...'}
+			
+			//Fire this.onSet();
+			
+		},
+		
+		undo: function(){
+			// summary:
+			//		Undo last edit change.
+			// returns:
+			//		True if successful, false if nothing to undo.
+			return false;	//Boolean
+		},
+		
+		redo: function(){
+			// summary:
+			//		redo next edit change.
+			// returns:
+			//		True if successful, false if nothing to redo.		
+			return false;	//Boolean
+		},
+		
+		save:  function(){
+			// summary:
+			//		write to store. Clear undo list.
+			// returns:
+			//		A Deferred object indicating all the store save operation has finished.			
+		},
+		
+		clearLazyDat: function(){
+			// summary:
+			//		Undo all. Clear undo list. The initial name of this function is 'clear'.
+			//		When use grid.model.clear(), this function won't be run because 
+			//		there is a function named 'clear'in ClientFilter.
+			//		So rename this function to clearLazyData which is more in detail about what this 
+			//		function really do.			
+		
+		},
+		
+		isChanged: function(){
+			// summary:
+			//		Check whether a field is changed for the given row.
+			// rowId:
+			// field: String?
+			//		If omitted, checked whether any field of the row is changed.
+			// returns:
+			//		True if it does get changed.
+			return false;	//Boolean
+		},
+		
+		getChanged: function(){
+			// summary:
+			//		Get all the changed rows Ids.
+			// returns:
+			//		An array of changed row IDs.
+			return [];	//Array
+		},
+
+		onSave: function(rowids){
+			// summary:
+			//		Fired when successfully saved to store.
+			// rowIds: array
+			//		
+			
+		},
+		
+		onUndo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully undid.
+			//
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from 
+		},
+
+		onRedo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully redid.
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from
+
+		}
+	
+	})
+=====*/
+
+	return declare(_Extension, {
+		name: 'modify',
+
+		priority: 19,
+		
+		constructor: function(model, args){
+			var t = this,
+				s = model.store;
+			
+			t._globalOptList = [];
+			t._globalOptIndex = -1;
+			t._cellOptList = {};
+			
+			t._lazyData = {};
+			t._lazyRawData = {};
+			
+			t._cache = model._cache;
+			t._mixinAPI('set', 'redo', 'undo', 'isChanged', 'getChanged', 'save', 'clearLazyData');
+			
+			model.onSetLazyData = function(){};
+			model.onRedo = model.onUndo = function(){};
+			
+			var old = s.fetch;
+		},
+
+		//Public--------------------------------------------------------------
+		byId: function(id){
+			var t = this,
+				c = t.inner._call('byId', arguments);
+			if(!c) return c;
+			var d = lang.mixin({}, c);
+			
+			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
+			if (d.data) {
+				d.data = lang.mixin({}, d.data, t._lazyData[id]);
+			}
+			return d;
+		},
+		
+		byIndex: function(index, parentId){
+			var t = this,
+				c = t.inner._call('byIndex', arguments),
+				id = t.inner._call('indexToId', arguments);
+
+			if(!c) return c;
+			var d = lang.mixin({}, c);
+			
+			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
+			if (d.data) {
+				d.data = lang.mixin({}, d.data, t._lazyData[id]);
+			}
+			return d;
+		},
+		
+		set: function(rowId, rawData){
+			var t = this,
+				opt = {},
+				list = t._globalOptList,
+				index = t._globalOptIndex;
+			opt.type = 0;			//set row
+			opt.rowId = rowId;
+			opt.newData = rawData;
+			opt.oldData = {};
+			
+			
+			var rd = t.byId(rowId).rawData;
+			for(var f in rawData){
+				opt.oldData[f] = rd[f];
+			}
+			
+			list.splice(index + 1, (list.length - 1 - index), opt);
+			t._globalOptIndex++;
+			
+			var oldRowData = t.byId(rowId);
+			t._set(rowId, rawData);
+			var newRowData = t.byId(rowId);
+			
+			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
+		},
+
+		undo: function(){
+			var t = this,
+				opt = t._globalOptList[t._globalOptIndex];
+			if(opt){
+				t._globalOptIndex--;
+				if(opt.type === 0){
+					var rowId = opt.rowId,
+						oldData = opt.newData,
+						newData = opt.oldData;
+						
+					t._onUndo(rowId, newData, oldData);
+				}
+				return true;
+			}
+			return false;
+		},
+
+		redo: function(){
+			var t = this,
+				opt = t._globalOptList[t._globalOptIndex + 1];
+			if(opt){
+				t._globalOptIndex++;
+				if(opt.type === 0){
+					var rowId = opt.rowId,
+						oldData = opt.oldData,
+						newData = opt.newData;
+					t._onRedo(rowId, newData, oldData);
+				}
+				return true;
+			}
+			return false;
+		},
+
+		clearLazyData: function(){
+			var t = this,
+				cl = t.getChanged();
+			
+			while(0 <= t._globalOptIndex){
+				t.undo();
+			}
+			
+			t._globalOptList = [];
+			t._lazyRawData = {};
+			t._lazyData = {};
+		},
+
+		save: function(){
+			var t = this,
+				cl = t.getChanged(),
+				da = [],
+				dl,
+				d = new Deferred();
+
+			if(cl.length){
+				array.forEach(cl, function(rid){
+					var d = t._saveRow(rid);
+					da.push(d);
+				});
+				dl = new DeferredList(da);
+				dl.then(function(){
+					//t.clear();
+					t._globalOptList = [];
+					t._globalOptIndex = -1;
+					t._lazyRawData = {};
+					t._lazyData = {};
+					t.onSave(dl);
+					d.callback();
+				}, function(){
+					d.errback();
+				});
+			}else{
+				d.callback();
+			}
+			return d;
+		},
+
+		isChanged: function(rowId, field){
+			var t = this,
+				cache = t.inner._call('byId', [rowId]),
+				ld = t._lazyRawData[rowId];
+			if(field){
+				if(ld){
+					return ld[field] !== undefined? ld[field] !== cache.rawData[field] : false;
+				}
+			}else{
+				if(ld){
+					var bool = false;
+					for(var f in ld){
+						if(ld[f] !== cache.rawData[f]){
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+
+		getChanged: function(){
+			var t = this,
+				a = [];
+			for(var rid in t._lazyRawData){
+				if(t.isChanged(rid)){
+					a.push(rid);
+				}
+			}
+			return a;
+		},
+
+		onSave: function(rowids){
+			// summary:
+			//		Fired when successfully saved to store.
+			// rowIds: array
+			//		
+			
+		},
+		
+		onUndo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully undid.
+			//
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from 
+		},
+
+		onRedo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully redid.
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from
+
+		},
+
+		//Private-------------------------------------------------------------------
+		_onSet: function(){
+			//clear
+			//fire onSet
+			var t = this;
+			
+			t._globalOptList = [];
+			t._globalOptIndex = -1;
+
+			t.onSet.apply(t, arguments);
+		},
+		
+		_onUndo: function(rowId, newData, oldData){
+			var index = this._cache.idToIndex(rowId),
+				t = this;
+			
+			var oldRowData = t.byId(rowId);
+			t._set(rowId, newData);
+			var newRowData = t.byId(rowId);
+			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
+			this.onUndo(rowId, newData, oldData);
+		},
+		
+		_onRedo: function(rowId, newData, oldData){
+			var index = this._cache.idToIndex(rowId),
+				t = this;
+			
+			var oldRowData = t.byId(rowId);
+			t._set(rowId, newData);
+			var newRowData = t.byId(rowId);
+			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
+			this.onRedo(rowId, newData, oldData);
+		},
+		
+		_set: function(rowId, rawData){
+			var t = this,
+				c = t.inner._call('byId', [rowId]),
+				obj = {};
+			
+			if(t._lazyRawData[rowId]){
+				lang.mixin(t._lazyRawData[rowId], rawData);
+			}else{
+				t._lazyRawData[rowId] = lang.mixin({}, rawData);
+			}
+			// if(c.lazyData){
+				// lang.mixin(c.lazyData, rawData);
+			// }else{
+				// c.lazyData = lang.mixin({}, rawData);
+			// }
+			var columns = t._cache.columns,
+				crd = lang.mixin({}, c.rawData, t._lazyRawData[rowId]);
+				
+			
+			for(var cid in columns){
+				obj[cid] = columns[cid].formatter? columns[cid].formatter(crd) : crd[columns[cid].field || cid];
+			}
+			t._lazyData[rowId] = obj; 
+		},
+
+		_saveRow: function(rowId){
+			var t = this,
+				s = t.model.store,
+				item = t.byId(rowId).item,
+				rawData = t._lazyRawData[rowId],
+				d;
+
+			if(s.setValue){
+				d = new Deferred();
+				try{
+					for(var field in rawData){
+						s.setValue(item, field, rawData[field]);
+					}
+					s.save({
+						onComplete: lang.hitch(d, d.callback),
+						onError: lang.hitch(d, d.errback)
+					});
+				}catch(e){
+					d.errback(e);
+				}
+			}
+			return d || Deferred.when(s.put(lang.mixin({}, item, rawData)));
+		}
+		
+	});
+	
+});

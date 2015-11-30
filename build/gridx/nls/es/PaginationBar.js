@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/es/PaginationBar",{pagerWai:"Buscapersonas",pageIndex:"${0}",pageIndexTitle:"P\u00e1gina ${0}",firstPageTitle:"Primera p\u00e1gina",prevPageTitle:"P\u00e1gina anterior",nextPageTitle:"P\u00e1gina siguiente",lastPageTitle:"\u00daltima p\u00e1gina",pageSize:"${0}",pageSizeTitle:"${0} elementos por p\u00e1gina",pageSizeAll:"Todos",pageSizeAllTitle:"Todos los elementos",description:"${0} - ${1} de ${2} elementos.",descriptionEmpty:"La cuadr\u00edcula est\u00e1 vac\u00eda.",summary:"Total: ${0}",
-summaryWithSelection:"Total: ${0} Seleccionados: ${1}",gotoBtnTitle:"Ir a una p\u00e1gina espec\u00edfica",gotoDialogTitle:"Ir a la p\u00e1gina",gotoDialogMainMsg:"Especifique el n\u00famero de p\u00e1gina:",gotoDialogPageCount:" (${0} p\u00e1ginas)",gotoDialogOKBtn:"Ir",gotoDialogCancelBtn:"Cancelar",pageLabel:"P\u00e1gina",pageSizeLabel:"Filas"});
-//@ sourceMappingURL=PaginationBar.js.map

@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/fr/PaginationBar",{pagerWai:"Pager",pageIndex:"${0}",pageIndexTitle:"Page ${0}",firstPageTitle:"Premi\u00e8re page",prevPageTitle:"Page pr\u00e9c\u00e9dente",nextPageTitle:"Page suivante",lastPageTitle:"Derni\u00e8re page",pageSize:"${0}",pageSizeTitle:"${0} \u00e9l\u00e9ments par page",pageSizeAll:"Tout",pageSizeAllTitle:"Tous les \u00e9l\u00e9ments",description:"${0} - ${1} sur ${2} \u00e9l\u00e9ments.",descriptionEmpty:"La grille est vide.",summary:"Total : ${0}",summaryWithSelection:"Total : ${0} S\u00e9lectionn\u00e9 : ${1}",
-gotoBtnTitle:"Aller \u00e0 une page donn\u00e9e",gotoDialogTitle:"Aller \u00e0 la page",gotoDialogMainMsg:"Sp\u00e9cifiez le num\u00e9ro de page :",gotoDialogPageCount:"(${0} pages)",gotoDialogOKBtn:"Aller",gotoDialogCancelBtn:"Annuler",pageLabel:"Page",pageSizeLabel:"Lignes"});
-//@ sourceMappingURL=PaginationBar.js.map

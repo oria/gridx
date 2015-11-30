@@ -1,5 +1,103 @@
-//>>built
-define("gridx/core/model/extensions/FormatSort",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/data/util/sorter","../_Extension"],function(p,q,n,l,r){function s(a,d,g,c){return function(e,h){return c.getValue?d*g(c.getValue(e,a),c.getValue(h,a)):d*g(e[a],h[a])}}function t(a,d,g,c,e,h){var b={};return function(a,k){var f=c.getIdentity(a),m=c.getIdentity(k);b[f]||(b[f]=h(e._itemToObject(a)));b[m]||(b[m]=h(e._itemToObject(k)));return d*g(b[f],b[m])}}return p(r,{name:"formatSort",priority:50,
-constructor:function(a){a=this.cache=a._cache;this.aspect(a,"onBeforeFetch","_onBeforeFetch");this.aspect(a,"onAfterFetch","_onAfterFetch")},_onBeforeFetch:function(a){var d=this.model.store;this._oldCreateSortFunction=l.createSortFunction;l.createSortFunction=n.hitch(this,this._createComparator);a.sort&&n.isFunction(d.put)&&(a.sort=this._createComparator(a.sort,d))},_onAfterFetch:function(){this._oldCreateSortFunction&&(l.createSortFunction=this._oldCreateSortFunction,delete this._oldCreateSortFunction)},
-_createComparator:function(a,d){var g=[],c=this.cache,e=d.comparatorMap,h=l.basicComparator;q.forEach(a,function(b){var a=b.attribute,k=b.descending?-1:1,f=h;b=c.columns&&c.columns[b.colId];e&&("string"!==typeof a&&a.toString&&(a=a.toString()),f=e[a]||h);b&&b.comparator&&(f=b.comparator);b=b&&b.sortFormatted&&b.formatter;g.push(b?t(a,k,f,d,c,b):s(a,k,f,d))});return function(a,d){var c,f,e=0;c=0;for(f=g.length;!e&&c<f;++c)e=g[c](a,d);return e}}})});
-//@ sourceMappingURL=FormatSort.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/data/util/sorter",
+	"../_Extension"
+], function(declare, array, lang, sorter, _Extension){
+
+/*=====
+	return declare(_Extension, {
+		// summary:
+		//		Make formatted data sortable
+	});
+=====*/
+
+	function createSortFunc(attr, dir, comp, store){
+		return function(itemA, itemB){
+			return store.getValue ?
+				//Old store
+				dir * comp(store.getValue(itemA, attr), store.getValue(itemB, attr)) :
+				//New store
+				dir * comp(itemA[attr], itemB[attr]);
+		};
+	}
+
+	function createFormatSortFunc(attr, dir, comp, store, cache, formatter){
+		var formatCache = {};
+		return function(itemA, itemB){
+			var idA = store.getIdentity(itemA),
+				idB = store.getIdentity(itemB);
+			if(!formatCache[idA]){
+				formatCache[idA] = formatter(cache._itemToObject(itemA));
+			}
+			if(!formatCache[idB]){
+				formatCache[idB] = formatter(cache._itemToObject(itemB));
+			}
+			return dir * comp(formatCache[idA], formatCache[idB]);
+		};
+	}
+
+	return declare(_Extension, {
+		name: 'formatSort',
+
+		priority: 50,
+
+		constructor: function(model){
+			var t = this, c = t.cache = model._cache;
+			t.aspect(c, "onBeforeFetch", "_onBeforeFetch");
+			t.aspect(c, "onAfterFetch", "_onAfterFetch");
+		},
+
+		//Private--------------------------------------------------------------------
+		_onBeforeFetch: function(req){
+			var t = this,
+				store = t.model.store;
+			t._oldCreateSortFunction = sorter.createSortFunction;
+			sorter.createSortFunction = lang.hitch(t, t._createComparator);
+			//FIXME: How to check whether it is a new store?
+			if(req.sort && lang.isFunction(store.put)){
+				req.sort = t._createComparator(req.sort, store);
+			}
+		},
+
+		_onAfterFetch: function(){
+			if(this._oldCreateSortFunction){
+				sorter.createSortFunction = this._oldCreateSortFunction;
+				delete this._oldCreateSortFunction;
+			}
+		},
+
+		_createComparator: function(sortSpec, store){
+			var sortFunctions = [], c = this.cache,
+				map = store.comparatorMap, bc = sorter.basicComparator;
+			array.forEach(sortSpec, function(sortAttr){
+				var attr = sortAttr.attribute,
+					dir = sortAttr.descending ? -1 : 1,
+					comp = bc,
+					col = c.columns && c.columns[sortAttr.colId];
+				if(map){
+					if(typeof attr !== "string" && attr.toString){
+						attr = attr.toString();
+					}
+					comp = map[attr] || bc;
+				}
+				if(col && col.comparator){
+					comp = col.comparator;
+				}
+				var formatter = col && col.sortFormatted && col.formatter;
+				sortFunctions.push(formatter ?
+					createFormatSortFunc(attr, dir, comp, store, c, formatter) :
+					createSortFunc(attr, dir, comp, store)
+				);
+			});
+			return function(rowA, rowB){
+				var i, len, ret = 0;
+				for(i = 0, len = sortFunctions.length; !ret && i < len; ++i){
+					ret = sortFunctions[i](rowA, rowB);
+				}
+				return ret;
+			};
+		}
+	});
+});

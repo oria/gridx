@@ -1,6 +1,171 @@
-//>>built
-define("gridx/modules/Menu","dojo/_base/declare dojo/_base/connect ../core/_Module dojo/dom-class dojo/keys dojo/_base/event dijit/registry dijit/Menu".split(" "),function(r,f,s,n,q,t,m,u){return r(s,{name:"menu",constructor:function(){this._menus={}},context:null,bind:function(e,a){a=a||{};var b=this,c=b.grid,g=a.hookPoint&&a.hookPoint.toLowerCase()||"grid",h=a.selected?g+"-selected":g,p=b._evtMap[g],d=b._menus[h]=b._menus[h]||{},k=function(a){b._showMenu(h,a)},l=function(a){a.keyCode==q.F10&&a.shiftKey&&
-b._showMenu(h,a)};f.disconnect(d.open);f.disconnect(d.keyopen);f.disconnect(d.close);d.menu=m.byId(e);p?(d.open=b.connect(c,p[0],k),d.keyopen=b.connect(c,p[1],l)):"body"==g?(d.open=b.connect(c.bodyNode,"oncontextmenu",k),d.keyopen=b.connect(c.bodyNode,"onkeydown",l)):(d.open=b.connect(c.domNode,"oncontextmenu",k),d.keyopen=b.connect(c.domNode,"onkeydown",l));d.close=b.connect(d.menu,"onClose",function(){b._mutex=0})},unbind:function(e){var a,b=this._menus,c;e=m.byId(e);for(a in b)if(c=b[a],c.menu==
-e){f.disconnect(c.open);f.disconnect(c.keyopen);f.disconnect(c.close);delete b[a];break}},_evtMap:{header:["onHeaderContextMenu","onHeaderKeyDown"],headercell:["onHeaderCellContextMenu","onHeaderCellKeyDown"],cell:["onCellContextMenu","onCellKeyDown"],row:["onRowContextMenu","onRowKeyDown"]},_showMenu:function(e,a){var b=this._menus;if(!this._mutex&&b[e].menu){var c=this.grid,g=a.rowId,h=a.columnId,f=!e.indexOf("row"),d=!e.indexOf("cell"),k=!e.indexOf("headercell"),l=0<e.indexOf("-"),m=!!(d&&n.contains(a.cellNode,
-"gridxCellSelected")||k&&n.contains(c.header.getHeaderNode(h),"gridxColumnSelected")||f&&n.contains(c.body.getRowNode({rowId:g}),"gridxRowSelected"));if(l==m||!l&&m&&!b[e+"-selected"])this.context={grid:c,column:k&&c.column(h,1),row:f&&c.row(g,1),cell:d&&c.cell(g,h,1)},t.stop(a),this._mutex=1,b[e].menu._openMyself({target:a.target,coords:a.keyCode!=q.F10&&"pageX"in a?{x:a.pageX,y:a.pageY}:null})}}})});
-//@ sourceMappingURL=Menu.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"../core/_Module",
+	"dojo/dom-class",
+	"dojo/keys",
+	"dojo/_base/event",
+	"dijit/registry",
+	"dijit/Menu"
+], function(declare, connect, _Module, domClass, keys, event, registry, Menu){
+
+/*=====
+	var Menu = declare(_Module, {
+		// summary:
+		//		module name: menu.
+		//		Manage context menu for grid.
+
+		// context: [readonly] __MenuContext
+		//		An object representing the current context when user triggers a context menu.
+		//		This property is updated everytime a menu of grid is popped up.
+		//		Users can refer to this in their menu action handlers by grid.menu.context.
+		context: null,
+
+		bind: function(menu, args){
+			// summary:
+			//		Bind a memu to grid, according to the provided args
+			// menu: dijit.Menu | ID
+			//		The menu to be binded.
+			// args: __MenuArgs
+			//		Indicates how to bind the menu
+		},
+
+		unbind: function(menu){
+			// summary:
+			//		Unbind a menu from grid.
+			// menu: dijit.Menu | ID
+			//		The menu to be unbinded.
+		}
+	});
+
+	Menu.__MenuArgs = declare([], {
+		// hookPoint: String?
+		//		Indicates from where the menu should occur.
+		//		One of "cell", "headercell", "row", "header", "body", "grid". If invalid, default to "grid".
+		hookPoint: '',
+
+		// selected: Boolean?
+		//		Indicates whether to bind this menu only to the selected items. Default is false.
+		selected: false
+	});
+
+	Menu.__MenuContext = declare([], {
+		// grid: Grid
+		//		This grid that triggers this menu.
+		grid: null,
+
+		// column: Column
+		//		The column that triggers this menu. Only valid for "headercell" hookpoint.
+		column: null,
+
+		// row: Row
+		//		The row that triggers this menu. Only valid for "row" hookpoint.
+		row: null,
+
+		// cell: Cell
+		//		The cell that triggers this menu. Only valid for "cell" hookpoint.
+		cell: null
+	});
+
+	return Menu;
+=====*/
+
+	return declare(_Module, {
+		name: 'menu',
+
+		constructor: function(){
+			this._menus = {};
+		},
+
+		//Public---------------------------------------------
+		context: null,
+
+		bind: function(/* dijit.Menu|ID */ menu, /* __MenuArgs? */ args){
+			args = args || {};
+			var t = this,
+				g = t.grid,
+				hookPoint = args.hookPoint && args.hookPoint.toLowerCase() || 'grid',
+				type = args.selected ? hookPoint + '-selected' : hookPoint,
+				evtName = t._evtMap[hookPoint],
+				m = t._menus[type] = t._menus[type] || {},
+				showMenu = function(evt){
+					t._showMenu(type, evt);
+				},
+				keyShowMenu = function(evt){
+					if(evt.keyCode == keys.F10 && evt.shiftKey){
+						t._showMenu(type, evt);
+					}
+				};
+			connect.disconnect(m.open);
+			connect.disconnect(m.keyopen);
+			connect.disconnect(m.close);
+			m.menu = registry.byId(menu);
+			if(evtName){
+				m.open = t.connect(g, evtName[0], showMenu);
+				m.keyopen = t.connect(g, evtName[1], keyShowMenu);
+			}else if(hookPoint == 'body'){
+				m.open = t.connect(g.bodyNode, 'oncontextmenu', showMenu);
+				m.keyopen = t.connect(g.bodyNode, 'onkeydown', keyShowMenu);
+			}else{
+				m.open = t.connect(g.domNode, 'oncontextmenu', showMenu);
+				m.keyopen = t.connect(g.domNode, 'onkeydown', keyShowMenu);
+			}
+			m.close = t.connect(m.menu, 'onClose', function(){
+				t._mutex = 0;
+			});
+		},
+
+		unbind: function(menu){
+			var type, menus = this._menus, m;
+			menu = registry.byId(menu);
+			for(type in menus){
+				m = menus[type];
+				if(m.menu == menu){
+					connect.disconnect(m.open);
+					connect.disconnect(m.keyopen);
+					connect.disconnect(m.close);
+					delete menus[type];
+					return;
+				}
+			}
+		},
+		
+		//[private]==
+		_evtMap: {
+			header: ['onHeaderContextMenu', 'onHeaderKeyDown'],
+			headercell: ['onHeaderCellContextMenu', 'onHeaderCellKeyDown'],
+			cell: ['onCellContextMenu', 'onCellKeyDown'],
+			row: ['onRowContextMenu', 'onRowKeyDown']
+		},
+
+		_showMenu: function(type, e){
+			var t = this, menus = t._menus;
+			if(!t._mutex && menus[type].menu){
+				var g = t.grid,
+					rid = e.rowId,
+					cid = e.columnId,
+					isRow = !type.indexOf('row'),
+					isCell = !type.indexOf('cell'),
+					isHeaderCell = !type.indexOf('headercell'),
+					isSelectedType = type.indexOf('-') > 0,
+					selected = !!((isCell && domClass.contains(e.cellNode, "gridxCellSelected")) ||
+						(isHeaderCell && domClass.contains(g.header.getHeaderNode(cid), "gridxColumnSelected")) ||
+						(isRow && domClass.contains(g.body.getRowNode({rowId: rid}), "gridxRowSelected")));
+				if(isSelectedType == selected || (!isSelectedType && selected && !menus[type + '-selected'])){
+					t.context = {
+						grid: g,
+						column: isHeaderCell && g.column(cid, 1),
+						row: isRow && g.row(rid, 1),
+						cell: isCell && g.cell(rid, cid, 1)
+					};
+					event.stop(e);
+					t._mutex = 1;
+					menus[type].menu._openMyself({
+						target: e.target, 
+						coords: e.keyCode != keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY} : null
+					});
+				}
+			}
+		}
+	});
+});

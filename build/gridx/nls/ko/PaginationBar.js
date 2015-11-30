@@ -1,5 +1,0 @@
-//>>built
-define("gridx/nls/ko/PaginationBar",{pagerWai:"\ud398\uc774\uc800",pageIndex:"${0}",pageIndexTitle:"${0} \ud398\uc774\uc9c0",firstPageTitle:"\uccab \ud398\uc774\uc9c0",prevPageTitle:"\uc774\uc804 \ud398\uc774\uc9c0",nextPageTitle:"\ub2e4\uc74c \ud398\uc774\uc9c0",lastPageTitle:"\ub9c8\uc9c0\ub9c9 \ud398\uc774\uc9c0",pageSize:"${0}",pageSizeTitle:"\ud398\uc774\uc9c0\ub2f9 ${0}\uac1c \ud56d\ubaa9",pageSizeAll:"\ubaa8\ub450",pageSizeAllTitle:"\ubaa8\ub4e0 \ud56d\ubaa9",description:"${0} - ${2}\uac1c \uc911 ${1} \ud56d\ubaa9",
-descriptionEmpty:"\uadf8\ub9ac\ub4dc\uac00 \ube44\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.",summary:"\ucd1d\uacc4: ${0}",summaryWithSelection:"\ucd1d\uacc4: ${0} \uc120\ud0dd\ub428: ${1}",gotoBtnTitle:"\ud2b9\uc815 \ud398\uc774\uc9c0\ub85c \uc774\ub3d9",gotoDialogTitle:"\ud398\uc774\uc9c0 \uc774\ub3d9",gotoDialogMainMsg:"\ud398\uc774\uc9c0 \ubc88\ud638 \uc9c0\uc815:",gotoDialogPageCount:" (${0}\ud398\uc774\uc9c0)",gotoDialogOKBtn:"\uc774\ub3d9",gotoDialogCancelBtn:"\ucde8\uc18c",pageLabel:"\ud398\uc774\uc9c0",
-pageSizeLabel:"\ud589"});
-//@ sourceMappingURL=PaginationBar.js.map

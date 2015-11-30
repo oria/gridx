@@ -1,4 +1,81 @@
-//>>built
-define("gridx/core/model/extensions/Sort",["dojo/_base/declare","dojo/_base/lang","dojo/_base/json","../_Extension"],function(m,k,l,n){return m(n,{name:"sort",priority:30,constructor:function(a,e){var c=e.baseSort;this._mixinAPI("sort");c&&c.length&&(this._baseSort=c,this._sort())},sort:function(){this.model._addCmd({name:"_cmdSort",scope:this,args:arguments})},_cmdSort:function(){var a=arguments;this._sort.apply(this,a[a.length-1])},_sort:function(a){var e=this.model,c=this._baseSort,d=e._cache,
-f=d.options=d.options||{},g,b,h;if(k.isArrayLike(a)){for(g=0;g<a.length;++g)b=a[g],b.colId?b.attribute=d.columns?d.columns[b.colId].field||b.colId:b.colId:b.colId=b.attribute;c&&(a=a.concat(c))}else a=c;f.sort&&f.sort.length?l.toJson(f.sort)!==l.toJson(a)&&(h=1):a&&a.length&&(h=1);f.sort=k.clone(a);h&&d.clear();e._msg("storeChange")}})});
-//@ sourceMappingURL=Sort.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/json",
+	/*====='../Model',=====*/
+	'../_Extension'
+], function(declare, lang, json,
+	/*=====Model, =====*/
+	_Extension){
+
+/*=====
+	Model.sort = function(){};
+
+	return declare(_Extension, {
+		// summary:
+		//		Using store's sorting feature. Can define a base sort order for grid.
+	});
+=====*/
+
+	return declare(_Extension, {
+		name: 'sort',
+
+		priority: 30,
+
+		constructor: function(model, args){
+			var t = this, bs = args.baseSort;
+			t._mixinAPI('sort');
+			if(bs && bs.length){
+				t._baseSort = bs;
+				t._sort();
+			}
+		},
+
+		//Public--------------------------------------------------------------
+		sort: function(/* sortSpec */){
+			this.model._addCmd({
+				name: '_cmdSort',
+				scope: this,
+				args: arguments
+			});
+		},
+
+		//Private--------------------------------------------------------------
+		_cmdSort: function(){
+			var a = arguments;
+			this._sort.apply(this, a[a.length - 1]);
+		},
+
+		_sort: function(sortSpec){
+			var t = this, m = t.model, bs = t._baseSort, c = m._cache,
+				op = c.options = c.options || {}, i, s, toSort;
+			if(lang.isArrayLike(sortSpec)){
+				for(i = 0; i < sortSpec.length; ++i){
+					s = sortSpec[i];
+					if(s.colId){
+						s.attribute = c.columns ? (c.columns[s.colId].field || s.colId) : s.colId;
+					}else{
+						s.colId = s.attribute;
+					}
+				}
+				if(bs){
+					sortSpec = sortSpec.concat(bs);
+				}
+			}else{
+				sortSpec = bs;
+			}
+			if(op.sort && op.sort.length){
+				if(json.toJson(op.sort) !== json.toJson(sortSpec)){
+					toSort = 1;	//1 as true
+				}
+			}else if(sortSpec && sortSpec.length){
+				toSort = 1;
+			}
+			op.sort = lang.clone(sortSpec);
+			if(toSort){
+				c.clear();
+			}
+			m._msg('storeChange');
+		}
+	});
+});

@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"TitleBar.js",
-"lineCount":2,
-"mappings":"A,SAAAA,MAAA,4GAKG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAAwCC,CAAxC,EACFH,CAAAI,WAAA,yDADE,OAoBKH,EAAA,CAAQE,CAAR,8BAGOE,QAAAA,GACZC,YADYD,CACGH,CAAAK,OAAA,QACd,OADc,2BAEHC,QAAA,SAFG,EADHH,CAHP,SAUGI,QAAAA,GACRC,SAAAC,QAAAC,SAAA,iCADQH,CAVH,SAcGI,QAAAA,GACRC,cAAA,CAAeC,SAAf,CACAb,EAAAW,QAAA,CAAqBP,YAArB,CAFQO,CAdH,mBAqBIG,QAAAA,CAASC,CAATD,EACTV,YAAAY,UADSF;AACgBC,UADhBD,CAC6BC,CAD7BD,CArBJ,EApBL,CALH;",
-"sources":["TitleBar.js.uncompressed.js"],
-"names":["define","kernel","declare","domConstruct","_Module","deprecated","constructor","domNode","create","arg","preload","grid","vLayout","register","destroy","inherited","arguments","setLabel","label","innerHTML"]
-}

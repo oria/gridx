@@ -1,11 +1,479 @@
-//>>built
-define("gridx/core/model/cache/Async","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/Deferred dojo/DeferredList ./Sync".split(" "),function(t,m,n,q,r,u){function v(b,c,e,f){var a,d,g,h=c.range,k=b.store.getChildren;c.pids={};c.pids[b.layerId()]=c.range;if(k)for(a=h.length-1;0<=a;--a)d=h[a],g=d.parentId,b.model.isId(g)||(g=b.layerId()),b.model.isId(g)&&(c.id.push(g),c.pids[g]=c.pids[g]||[],c.pids[g].push(d),h.splice(a,1));a=p(b,c.id);var l=[];a.length?(m.forEach(a,function(a){var c=
-b.idToIndex(a);0<=c&&!b.treePath(a).pop()?h.push({start:c,count:1}):l.push(a)}),w(b,l,function(a){a.length&&k?x(b,a,function(a){a.length&&console.warn("Requested row ids are not found: ",a);e(c)},f):e(c)},f)):e(c)}function y(b,c,e,f){var a=[],d=[],g=function(a,b){0<b.count&&a<b.start+b.count&&(b.count=a-b.start);return b.start<a},h;for(h in c.pids){var k=b._size[h],l=c.pids[h]=z(b,A(b,h,d,B(b,h,C(c.pids[h]))));0<k&&(l=m.filter(l,n.partial(g,k)));for(k=0;k<l.length;++k)l[k].parentId=h;[].push.apply(a,
-l)}c._req=d.length&&new r(d,0,1);b._requests.push(c);a.length?(new r(m.map(a,function(a){return b._storeFetch(a)}),0,1)).then(e,f):e(c)}function A(b,c,e,f){var a,d=b._requests;for(b=d.length-1;0<=b;--b)a=d[b],f=D(f,a.pids[c]),f._overlap&&0>m.indexOf(e,a._def)&&e.push(a._def);return f}function D(b,c){if(!c.length||!b.length)return b;var e=[],f=0,a,d=[];a=function(a,b){var c,d;for(c=a.length-1;0<=c;--c){d=a[c];var f=d.start,g=b;e[f]=e[f]||0;e[f]+=g;d.count&&(d=d.start+d.count,f=-b,e[d]=e[d]||0,e[d]+=
-f)}};a(b,1);a(c,2);for(var g=0,h=e.length;g<h;++g)if(e[g])if(f+=e[g],1===f)d.push({start:g});else if(3===f&&(d._overlap=!0),(a=d[d.length-1])&&!a.count)a.count=g-a.start;return d}function C(b){for(var c=[],e,f,a,d,g,h;0<b.length;){g=a=b.pop();h=0;for(e=b.length-1;0<=e;--e){d=b[e];a.start<d.start&&(f=d,d=a,a=f);if(d.count)if(a.start<=d.start+d.count)a.count&&a.start+a.count>d.start+d.count?d.count=a.start+a.count-d.start:a.count||(d.count=null);else{a=g;continue}b[e]=d;h=1;break}h||c.push(g)}return c}
-function z(b,c){var e=[],f,a,d=b.pageSize;for(c.sort(function(a,b){return a.start-b.start});c.length;){f=c.shift();if(c.length)if(a=c[0],a.count&&a.count+a.start-f.start<=d){a.count=a.count+a.start-f.start;a.start=f.start;continue}else if(!a.count&&a.start-f.start<d){a.start=f.start;continue}e.push(f)}1==e.length&&e[0].count<d&&(e[0].count=d);return e}function p(b,c){var e=b._cache;return m.filter(c,function(b){return!e[b]})}function B(b,c,e){var f,a,d,g,h,k=[],l=b._struct[c]||[],m=b._size[c];for(f=
-e.length-1;0<=f;--f){d=e[f];g=d.count?d.start+d.count:l.length-1;h=1;for(a=d.start;a<g;++a){var s=l[a+1];!s||!b._cache[s]?(h?k.push({parentId:c,start:a,count:1}):++k[k.length-1].count,h=0):h=1}d.count||(h?(0>m||a<m)&&k.push({parentId:c,start:a}):delete k[k.length-1].count)}return k}function w(b,c,e,f){var a=b._struct[""],d=[],g,h;if(c.length){for(var k=1,l=a.length;k<l;++k)a[k]||(h?g.count++:(h=1,d.push(g={start:k-1,count:1})));d.push({start:2>a.length?0:a.length-2})}var m=function(a){a.length&&d.length?
-b._storeFetch(d.shift()).then(function(){m(p(b,a))},f):e(a)};m(c)}function x(b,c,e,f){var a=b._struct,d=a[""].slice(1),g=function(c){if(c.length&&d.length){var k=d.shift();b._storeFetch({parentId:k}).then(function(){[].push.apply(d,a[k].slice(1));g(p(b,c))},f)}else e(c)};g(c)}var E=n.hitch;return t(u,{isAsync:!0,constructor:function(b,c){var e=parseInt(c.cacheSize,10),f=parseInt(c.pageSize,10);this.cacheSize=0<=e?e:-1;this.pageSize=0<f?f:100},when:function(b,c){var e=this,f=b._def=new q,a=E(f,f.errback),
-d=function(b){e._requests.pop();a(b)};v(e,b,function(a){y(e,a,function(a){q.when(a._req,function(){var a;if(c)try{c()}catch(b){a=b}e._requests.shift();a?f.errback(a):f.callback()},d)},d)},a);return f},keep:function(b,c){var e=this._kept;this._cache[b]&&(this._struct[b]&&!e[b])&&(e[b]=1,++this._keptSize);e[b]&&(!this._lock[b]&&c)&&(this._lock[b]=1,++this._lockSize)},free:function(b,c){this.model.isId(b)?this._kept[b]&&(this._lock[b]?c&&(delete this._lock[b],--this._lockSize):(delete this._kept[b],
---this._keptSize)):(this._kept=n.clone(this._lock),this._keptSize=this._lockSize)},clear:function(){this._requests&&this._requests.length?this._clearLock=1:(this.inherited(arguments),this._requests=[],this._priority=[],this._kept={},this._lock={},this._lockSize=this._keptSize=0)},_init:function(){},_checkSize:function(){var b,c=this.cacheSize,e=this._priority;if(this._clearLock)this._clearLock=0,this.clear();else if(0<=c)for(c+=this._keptSize;e.length>c;)b=e.shift(),this._kept[b]?e.push(b):delete this._cache[b]}})});
-//@ sourceMappingURL=Async.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/Deferred",
+	"dojo/DeferredList",
+	"./Sync"
+], function(declare, array, lang, Deferred, DeferredList, Sync){
+
+/*=====
+	return declare(Sync, {
+		// summary:
+		//		Implement lazy-loading for server side store.
+
+		// isAsync: Boolean
+		//		Whether this cache is for asynchronous(server side) store.
+		isAsync: true,
+
+		// cacheSize: Integer
+		//		The max cached row count in client side.
+		//		By default, do not clear cache when scrolling, this is the same with DataGrid
+		cacheSize: -1,
+
+		// pageSize: Integer
+		//		The recommended row count for every fetch.
+		pageSize: 100
+	});
+=====*/
+
+	var hitch = lang.hitch;
+
+	function fetchById(self, args, success, fail){
+		//Although store supports query by id, it does not support get index by id, so must find the index by ourselves.
+		var i, r, len, pid,
+			ranges = args.range,
+			isTree = self.store.getChildren;
+		// classify range requests into different parent ids.
+		args.pids = {};
+		args.pids[self.layerId()] = args.range;
+		if(isTree && ranges && ranges.length){
+			for(i = ranges.length - 1; i >= 0; --i){
+				r = ranges[i];
+				pid = r.parentId;
+				if(!self.model.isId(pid)){
+					pid = self.layerId();
+				}
+				if(self.model.isId(pid)){
+					args.id.push(pid);
+					args.pids[pid] = args.pids[pid] || [];
+					args.pids[pid].push(r);
+					ranges.splice(i, 1);
+				}
+			}
+		}
+		var ids = findMissingIds(self, args.id),
+			mis = [];
+		if(ids.length){
+			array.forEach(ids, function(id){
+				var idx = self.idToIndex(id);
+				if(idx >= 0 && !self.treePath(id).pop()){
+					// the requested row is a root and have index,
+					// so fetch it by index, which is a quicker way.
+					ranges.push({
+						start: idx,
+						count: 1
+					});
+				}else{
+					mis.push(id);
+				}
+			});
+			searchRootLevel(self, mis, function(ids){
+				if(ids.length && isTree){
+					// some row not found in root level, search in children
+					searchChildLevel(self, ids, function(ids){
+						if(ids.length){
+							console.warn('Requested row ids are not found: ', ids);
+						}
+						success(args);
+					}, fail);
+				}else{
+					success(args);
+				}
+			}, fail);
+		}else{
+			success(args);
+		}
+	}
+
+	function fetchByIndex(self, args, success, fail){
+		var toFetch = [],
+			dl = [],
+			checkValid = function(size, r){
+				if(r.count > 0 && size < r.start + r.count){
+					r.count = size - r.start;
+				}
+				return r.start < size;
+			};
+		for(var pid in args.pids){
+			var size = self._size[pid],
+				ranges = args.pids[pid] =
+					connectRanges(self,
+						mergePendingRequests(self, pid, dl,
+							findMissingIndexes(self, pid,
+								mergeRanges(args.pids[pid]))));
+			if(size > 0){
+				ranges = array.filter(ranges, lang.partial(checkValid, size));
+			}
+			for(var i = 0; i < ranges.length; ++i){
+				ranges[i].parentId = pid;
+			}
+			[].push.apply(toFetch, ranges);
+		}
+		args._req = dl.length && new DeferredList(dl, 0, 1);
+		self._requests.push(args);
+		if(toFetch.length){
+			new DeferredList(array.map(toFetch, function(r){
+				return self._storeFetch(r);
+			}), 0, 1).then(success, fail);
+		}else{
+			success(args);
+		}
+	}
+
+	function mergePendingRequests(self, parentId, dl, ranges){
+		var i, req,
+			reqs = self._requests;
+		for(i = reqs.length - 1; i >= 0; --i){
+			req = reqs[i];
+			// check if some part of this range request is already covered by previous pending requests.
+			ranges = minus(ranges, req.pids[parentId]);
+			if(ranges._overlap && array.indexOf(dl, req._def) < 0){
+				dl.push(req._def);
+			}
+		}
+		return ranges;
+	}
+
+	function minus(rangesA, rangesB){
+		//Minus index range list B from index range list A, 
+		//assuming A and B do not have overlapped ranges.
+		//This is a set operation
+		if(!rangesB || !rangesB.length || !rangesA.length){
+			return rangesA;
+		}
+		var indexes = [], f = 0, r, res = [],
+			mark = function(idx, flag){
+				indexes[idx] = indexes[idx] || 0;
+				indexes[idx] += flag;
+			},
+			markRanges = function(ranges, flag){
+				var i, r;
+				for(i = ranges.length - 1; i >= 0; --i){
+					r = ranges[i];
+					mark(r.start, flag);
+					if(r.count){
+						mark(r.start + r.count, -flag);
+					}
+				}
+			};
+		markRanges(rangesA, 1);
+		markRanges(rangesB, 2);
+		for(var i = 0, len = indexes.length; i < len; ++i){
+			if(indexes[i]){
+				f += indexes[i];
+				if(f === 1){
+					res.push({
+						start: i
+					});
+				}else{
+					if(f === 3){
+						res._overlap = true;
+					}
+					r = res[res.length - 1];
+					if(r && !r.count){
+						r.count = i - r.start;
+					}
+				}
+			}
+		}
+		return res;
+	}
+
+	function mergeRanges(r){
+		//Merge index ranges into separate ones.
+		var ranges = [], i, t, a, b, c, merged;
+		while(r.length > 0){
+			c = a = r.pop();
+			merged = 0;
+			for(i = r.length - 1; i >= 0; --i){
+				b = r[i];
+				if(a.start < b.start){
+					//make sure a is always after b, so the logic can be simplified
+					t = b;
+					b = a;
+					a = t;
+				}
+				//If b is an open range, and starts before a, then b must include a.
+				if(b.count){
+					//b is a closed range, it's possible to overlap.
+					if(a.start <= b.start + b.count){
+						//overlap
+						if(a.count && a.start + a.count > b.start + b.count){
+							b.count = a.start + a.count - b.start;
+						}else if(!a.count){
+							b.count = null;
+						}
+						//otherwise, b includes a
+					}else{
+						//not overlap, try next range
+						a = c;
+						continue;
+					}
+				}
+				//now n is a merged range
+				r[i] = b;
+				merged = 1;
+				break;
+			}
+			if(!merged){
+				//Can not merge, this is a sperate range
+				ranges.push(c);
+			}
+		}
+		return ranges;
+	}
+
+	function connectRanges(self, ranges){
+		//Connect small ranges into big ones to reduce request count
+		//FIXME: find a better way to do this!
+		var results = [], a, b, ps = self.pageSize;
+		ranges.sort(function(a, b){
+			return a.start - b.start;
+		});
+		while(ranges.length){
+			a = ranges.shift();
+			if(ranges.length){
+				b = ranges[0];
+				if(b.count && b.count + b.start - a.start <= ps){
+					b.count = b.count + b.start - a.start;
+					b.start = a.start;
+					continue;
+				}else if(!b.count && b.start - a.start < ps){
+					b.start = a.start;
+					continue;
+				}
+			}
+			results.push(a);
+		}
+		//Improve performance for most cases
+		if(results.length == 1 && results[0].count < ps){
+			results[0].count = ps;
+		}
+		return results;
+	}
+
+	function findMissingIds(self, ids){
+		var c = self._cache;
+		return array.filter(ids, function(id){
+			return !c[id];
+		});
+	}
+
+	function findMissingIndexes(self, parentId, ranges){
+		//Removed loaded rows from the request index ranges.
+		//generate unsorted range list.
+		var i, j, r, end, newRange,
+			results = [],
+			indexMap = self._struct[parentId] || [],
+			totalSize = self._size[parentId];
+		for(i = ranges.length - 1; i >= 0; --i){
+			r = ranges[i];
+			end = r.count ? r.start + r.count : indexMap.length - 1;
+			newRange = 1;
+			for(j = r.start; j < end; ++j){
+				var id = indexMap[j + 1];
+				if(!id || !self._cache[id]){
+					if(newRange){
+						results.push({
+							parentId: parentId,
+							start: j,
+							count: 1
+						});
+					}else{
+						++results[results.length - 1].count;
+					}
+					newRange = 0;
+				}else{
+					newRange = 1;
+				}
+			}
+			if(!r.count){
+				if(!newRange){
+					delete results[results.length - 1].count;
+				}else if(totalSize < 0 || j < totalSize){
+					results.push({
+						parentId: parentId,
+						start: j
+					});
+				}
+			}
+		}
+		return results;
+	}
+
+	function searchRootLevel(self, ids, success, fail){
+		//search root level for missing ids
+		var indexMap = self._struct[''],
+			ranges = [],
+			lastRange,
+			premissing; //Whether the previous item is missing
+		if(ids.length){
+			for(var i = 1, len = indexMap.length; i < len; ++i){
+				if(!indexMap[i]){
+					if(premissing){
+						lastRange.count++;
+					}else{
+						premissing = 1;
+						ranges.push(lastRange = {
+							start: i - 1,
+							count: 1
+						});
+					}
+				}
+			}
+			ranges.push({
+				start: indexMap.length < 2 ? 0 : indexMap.length - 2
+			});
+		}
+		var func = function(ids){
+			if(ids.length && ranges.length){
+				self._storeFetch(ranges.shift()).then(function(){
+					func(findMissingIds(self, ids));
+				}, fail);
+			}else{
+				success(ids);
+			}
+		};
+		func(ids);
+	}
+
+	function searchChildLevel(self, ids, success, fail){
+		//Search children level of current level for missing ids
+		var st = self._struct,
+			parentIds = st[''].slice(1),
+			func = function(ids){
+				if(ids.length && parentIds.length){
+					var pid = parentIds.shift();
+					self._storeFetch({
+						parentId: pid
+					}).then(function(){
+						[].push.apply(parentIds, st[pid].slice(1));
+						func(findMissingIds(self, ids));
+					}, fail);
+				}else{
+					success(ids);
+				}
+			};
+		func(ids);
+	}
+
+	return declare(Sync, {
+		isAsync: true,
+
+		constructor: function(model, args){
+			var cs = parseInt(args.cacheSize, 10),
+				ps = parseInt(args.pageSize, 10);
+			this.cacheSize = cs >= 0 ? cs : -1;
+			this.pageSize = ps > 0 ? ps : 100;
+		},
+
+		when: function(args, callback){
+			var t = this,
+				d = args._def = new Deferred(),
+				fail = hitch(d, d.errback),
+				innerFail = function(e){
+					t._requests.pop();
+					fail(e);
+				};
+			// fetch by row id first, because this can greatly 
+			// increase the hit-rate for fetchByIndex
+			fetchById(t, args, function(args){
+				fetchByIndex(t, args, function(args){
+					Deferred.when(args._req, function(){
+						var err;
+						if(callback){
+							try{
+								callback();
+							}catch(e){
+								err = e;
+							}
+						}
+						t._requests.shift();
+						if(err){
+							d.errback(err);
+						}else{
+							d.callback();
+						}
+					}, innerFail);
+				}, innerFail);
+			}, fail);
+			return d;
+		},
+
+		keep: function(id, lock){
+			var t = this,
+				k = t._kept;
+			if(t._cache[id] && t._struct[id] && !k[id]){
+				k[id] = 1;
+				++t._keptSize;
+			}
+			if(k[id] && !t._lock[id] && lock){
+				t._lock[id] = 1;
+				++t._lockSize;
+			}
+		},
+
+		free: function(id, unlock){
+			var t = this;
+			if(!t.model.isId(id)){
+				//free all. Not free locked items.
+				t._kept = lang.clone(t._lock);
+				t._keptSize = t._lockSize;
+			}else if(t._kept[id]){
+				if(!t._lock[id]){
+					//free unlocked items.
+					delete t._kept[id];
+					--t._keptSize;
+				}else if(unlock){
+					//if explictly unlock an item, only unlock it, but not free it,
+					//so that next time it'll be freed.
+					delete t._lock[id];
+					--t._lockSize;
+				}
+			}
+		},
+
+		clear: function(){
+			var t = this;
+			if(t._requests && t._requests.length){
+				t._clearLock = 1;	//1 as true
+				return;
+			}
+			t.inherited(arguments);
+			t._requests = [];
+			t._priority = [];
+			t._kept = {};
+			t._lock = {};
+			t._keptSize = 0;
+			t._lockSize = 0;
+		},
+
+		//-----------------------------------------------------------------------------------------------------------
+		_init: function(){},
+
+		_checkSize: function(){
+			// only meaningful when casheSize is limited
+			var t = this, id,
+				cs = t.cacheSize,
+				p = t._priority;
+			if(t._clearLock){
+				t._clearLock = 0;	//0 as false
+				t.clear();
+			}else if(cs >= 0){
+				cs += t._keptSize;
+//                console.warn("### Cache size:", p.length,
+//                        ", To release: ", p.length - cs,
+//                        ", Keep size: ", this._keptSize);
+				while(p.length > cs){
+					id = p.shift();
+					if(t._kept[id]){
+						p.push(id);
+					}else{
+						delete t._cache[id];
+					}
+				}
+			}
+		}
+	});
+});

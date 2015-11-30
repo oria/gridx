@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/hu/NestedSort",{singleSort:"Egyszer\u0171 rendez\u00e9s",nestedSort:"Be\u00e1gyazott rendez\u00e9s",ascending:"Kattintson ide a n\u00f6vekv\u0151 rendez\u00e9shez",descending:"Kattintson ide a cs\u00f6kken\u0151 rendez\u00e9shez",sortingState:"${0} - ${1}",unsorted:"Ne rendezze ezt az oszlopot",waiSingleSortLabel:"${0} - ${1} alapj\u00e1n van rendezve. V\u00e1lassza ezt, ha ${2} alapj\u00e1n akarja rendezni.",waiNestedSortLabel:"${0} - ${1} alapj\u00e1n van be\u00e1gyazottan rendezve. V\u00e1lassza ezt, ha ${2} alapj\u00e1n akarja be\u00e1gyazottan rendezni."});
-//@ sourceMappingURL=NestedSort.js.map

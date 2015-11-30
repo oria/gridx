@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"test_grid_columnLock.js",
-"lineCount":1,
-"mappings":"A,SAAAA,MAAA,8BAAqC,iNAAA,MAAA,KAArC,CAUG,QAAA,IAVH;",
-"sources":["test_grid_columnLock.js.uncompressed.js"],
-"names":["define"]
-}

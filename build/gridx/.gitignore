@@ -5,11 +5,14 @@
 *.pydevproject
 .project
 .metadata
+*.txt
 bin/
 tmp/
+node_modules/
 *.tmp
 *.bak
 *.swp
+*.zip
 *~.nib
 local.properties
 .classpath
@@ -167,3 +170,7 @@ pip-log.txt
 #############
 
 .c9revisions
+/cn.txtresources/less_compile.bat
+
+/resources/less_compile.bat
+/cn.txt

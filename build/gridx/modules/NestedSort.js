@@ -1,11 +1,281 @@
-//>>built
-define("gridx/modules/NestedSort","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/event dojo/query dojo/string dojo/dom-class dojo/dom-construct dojo/keys ../core/_Module ../core/model/extensions/Sort ./HeaderRegions".split(" "),function(u,k,l,v,m,r,s,w,x,y,z){var n=k.filter,t=k.indexOf,q=s.remove,g=s.add;return u(y,{name:"sort",required:["headerRegions"],modelExtensions:[z],preload:function(c){var a=this;c=a.grid;a._sortData=a.arg("initialOrder",[]);if(c.persist){var b=c.persist.registerAndLoad("sort",
-function(){return a._sortData});b&&(a._sortData=b)}a._sortData=n(a._sortData,function(b){return a.isSortable(b.colId)});a._sortData.length&&c.model.sort(a._sortData);a.connect(c.headerRegions,"refresh",a._updateUI);c.headerRegions.add(l.hitch(a,a._createBtn,1),10,1);c.headerRegions.add(l.hitch(a,a._createBtn,0),11,1)},columnMixin:{isSorted:function(){return this.grid.sort.isSorted(this.id)},isSortable:function(){return this.grid.sort.isSortable(this.id)}},getSortData:function(){return this._sortData},
-sort:function(c){var a=this;a._sortData=n(c,function(b){return a.isSortable(b.colId)});a._doSort()},isSorted:function(c){var a=0;k.some(this._sortData,function(b){if(b.colId==c)return a=b.descending?-1:1,1});return a},isSortable:function(c){return(c=this.grid._columnsById[c])&&(c.sortable||void 0===c.sortable)},clear:function(){this._sortData.length=0;this._doSort()},_createBtn:function(c,a){var b=this,d=b.grid.nls;if(b.isSortable(a.id)){var e=w.create("div",{"class":"gridxSortBtn gridxSortBtn"+(c?
-"Single":"Nested"),tabIndex:-1,title:c?d.singleSort+" - "+d.ascending:d.nestedSort+" - "+d.ascending,innerHTML:c?'\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#1784;\x3c/span\x3e\x26nbsp;':b._sortData.length+1+'\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#1784;\x3c/span\x3e'});b.connect(e,"onmousedown",function(){b._sort(a,e,c)});b.connect(e,"onkeydown",function(d){d.keyCode==x.ENTER&&(v.stop(d),b._sort(a,e,c))});return e}},_sort:function(c,a,b){a=this._sortData;b?(1<a.length&&(a.length=
-0),b=n(a,function(a){return a.colId===c.id})[0],a.length=0,b&&a.push(b)):b=n(a,function(a){return a.colId===c.id})[0];b?(b.descending&&a.splice(t(a,b),1),b.descending=!b.descending):(b={colId:c.id,descending:!1},a.push(b));this._doSort()},_doSort:function(){var c=this.grid,a=this._sortData;this._updateUI();c.model.sort(a.length?a:null);c.body.refresh()},_updateUI:function(){var c=this,a=c.grid,b=a.nls,d=a.domNode,e=k.filter(c._sortData,function(b){return a._columnsById[b.colId]});q(d,"gridxSingleSorted");
-q(d,"gridxNestedSorted");1==e.length?g(d,"gridxSingleSorted"):1<e.length&&g(d,"gridxNestedSorted");m(".gridxCell",a.header.domNode).forEach(function(a){var d=a.getAttribute("colid");if(c.isSortable(d)){k.forEach(["","Desc","Asc","Main"],function(b){q(a,"gridxCellSorted"+b)});var h=m(".gridxSortBtnSingle",a)[0],f=m(".gridxSortBtnNested",a)[0];h.title=b.singleSort+" - "+b.ascending;f.title=b.nestedSort+" - "+b.ascending;h.innerHTML='\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#1784;\x3c/span\x3e\x26nbsp;';
-f.innerHTML=e.length+1+'\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#1784;\x3c/span\x3e';var p=n(e,function(a){return a.colId===d})[0];c._setWaiState(a,d,p);if(p){f.innerHTML=t(e,p)+1;g(a,"gridxCellSorted");p==e[0]&&g(a,"gridxCellSortedMain");var l=e.length;p.descending?(g(a,"gridxCellSortedDesc"),1==l?(h.title=b.singleSort+" - "+b.unsorted,h.innerHTML='\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#9662;\x3c/span\x3e\x26nbsp;'):(f.title=b.nestedSort+" - "+b.unsorted,f.innerHTML+='\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#9662;\x3c/span\x3e')):
-(g(a,"gridxCellSortedAsc"),1==l?(h.title=b.singleSort+": "+b.descending,h.innerHTML='\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#9652;\x3c/span\x3e\x26nbsp;'):(f.title=b.nestedSort+" - "+b.descending,f.innerHTML+='\x3cspan class\x3d"gridxNestedSortBtnText"\x3e\x26#9652;\x3c/span\x3e'))}}})},_setWaiState:function(c,a,b){a="Column "+this.grid.column(a).name();var d="none",e="ascending";b&&(d=b.descending?"descending":"ascending",e=b.descending?"none":"descending");b=r.substitute(this.grid.nls.waiSingleSortLabel,
-[a,d,e]);a=r.substitute(this.grid.nls.waiNestedSortLabel,[a,d,e]);m(".gridxSortBtnSingle",c)[0].setAttribute("aria-label",b);m(".gridxSortBtnNested",c)[0].setAttribute("aria-label",a)}})});
-//@ sourceMappingURL=NestedSort.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/query",
+	"dojo/string",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/keys",
+	"../core/_Module",
+	"../core/model/extensions/Sort",
+	"./HeaderRegions"
+], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: sort.
+		//		Sort multiple columns in a nested way.
+
+		getSortData: function(){
+			// summary:
+			//		TODOC
+		},
+
+		sort: function(sortData){
+			// summary:
+			//		TODOC
+		},
+
+		isSorted: function(colId){
+			// summary:
+			//		TODOC
+		},
+
+		clear: function(){
+			// summary:
+			//	Clear the sorting state
+		},
+
+		isSortable: function(colId){
+			// summary:
+			//		TODOC
+		}
+	});
+=====*/
+	
+	var filter = array.filter,
+		indexOf = array.indexOf,
+		removeClass = domClass.remove,
+		addClass = domClass.add,
+		a11yText = {
+			'dojoxGridDescending': '<span class="gridxNestedSortBtnText">&#9662;</span>',
+			'dojoxGridAscending': '<span class="gridxNestedSortBtnText">&#9652;</span>',
+			'dojoxGridAscendingTip': '<span class="gridxNestedSortBtnText">&#1784;</span>',
+			'dojoxGridDescendingTip': '<span class="gridxNestedSortBtnText">&#1783;</span>',
+			'dojoxGridUnsortedTip': '<span class="gridxNestedSortBtnText">x</span>' //'&#10006;'
+		};
+
+	return declare(_Module, {
+		name: 'sort',
+
+		required: ['headerRegions'],
+
+		modelExtensions: [Sort],
+
+		preload: function(args){
+			var t = this,
+				g = t.grid;
+			t._sortData = t.arg('initialOrder', []);
+			if(g.persist){
+				var d = g.persist.registerAndLoad('sort', function(){
+					return t._sortData;
+				});
+				if(d){
+					t._sortData = d;
+				}
+			}
+			t._sortData = filter(t._sortData, function(d){
+				return t.isSortable(d.colId);
+			});
+			if(t._sortData.length){
+				g.model.sort(t._sortData);
+			}
+			
+			t.connect(g.headerRegions, 'refresh', t._updateUI);
+
+			g.headerRegions.add(lang.hitch(t, t._createBtn, 1), 10, 1);
+			g.headerRegions.add(lang.hitch(t, t._createBtn, 0), 11, 1);
+		},
+
+		columnMixin: {
+			isSorted: function(){
+				return this.grid.sort.isSorted(this.id);
+			},
+			isSortable: function(){
+				return this.grid.sort.isSortable(this.id);
+			}
+		},
+
+		getSortData: function(){
+			return this._sortData;
+		},
+
+		sort: function(sortData){
+			var t = this;
+			t._sortData = filter(sortData, function(d){
+				return t.isSortable(d.colId);
+			});
+			t._doSort();
+		},
+
+		isSorted: function(colId){
+			var ret = 0;
+			array.some(this._sortData, function(d){
+				if(d.colId == colId){
+					ret = d.descending ? -1 : 1;
+					return 1;
+				}
+			});
+			return ret;
+		},
+
+		isSortable: function(colId){
+			var col = this.grid._columnsById[colId];
+			return col && (col.sortable || col.sortable === undefined);
+		},
+
+		clear: function(){
+			this._sortData.length = 0;
+			this._doSort();
+		},
+
+		//Private---------------------------------------------------------------------------
+		_createBtn: function(isSingle, col){
+			var t = this,
+				nls = t.grid.nls;
+			if(t.isSortable(col.id)){
+				var btn = domConstruct.create('div', {
+					'class': 'gridxSortBtn gridxSortBtn' + (isSingle ? 'Single' : 'Nested'),
+					tabIndex: -1,
+					title: isSingle ?
+						nls.singleSort + ' - ' + nls.ascending :
+						nls.nestedSort + ' - ' + nls.ascending,
+					innerHTML: isSingle ?
+						a11yText.dojoxGridAscendingTip + '&nbsp;' :
+						t._sortData.length + 1 + a11yText.dojoxGridAscendingTip
+				});
+				t.connect(btn, 'onmousedown', function(){
+					t._sort(col, btn, isSingle);
+				});
+				t.connect(btn, 'onkeydown', function(e){
+					if(e.keyCode == keys.ENTER){
+						event.stop(e);
+						t._sort(col, btn, isSingle);
+					}
+				});
+				return btn;
+			}
+		},
+
+		_sort: function(col, btn, isSingle){
+			var t = this, d,
+				sortData = t._sortData;
+			if(isSingle){
+				if(sortData.length > 1){
+					sortData.length = 0;
+				}
+				d = filter(sortData, function(data){
+					return data.colId === col.id;
+				})[0];
+				sortData.length = 0;
+				if(d){
+					sortData.push(d);
+				}
+			}else{
+				d = filter(sortData, function(d){
+					return d.colId === col.id;
+				})[0];
+			}
+			if(d){
+				if(d.descending){
+					sortData.splice(indexOf(sortData, d), 1);
+				}
+				d.descending = !d.descending;
+			}else{
+				d = {
+					colId: col.id,
+					descending: false
+				};
+				sortData.push(d);
+			}
+			t._doSort();
+		},
+
+		_doSort: function(){
+			var g = this.grid,
+				d = this._sortData;
+			this._updateUI();
+			g.model.sort(d.length ? d : null);
+			g.body.refresh();
+		},
+
+		_updateUI: function(){
+			var t = this,
+				g = t.grid,
+				nls = g.nls,
+				dn = g.domNode,
+				sortData = array.filter(t._sortData, function(s){
+					return g._columnsById[s.colId];
+				});
+			removeClass(dn, 'gridxSingleSorted');
+			removeClass(dn, 'gridxNestedSorted');
+			if(sortData.length == 1){
+				addClass(dn, 'gridxSingleSorted');
+			}else if(sortData.length > 1){
+				addClass(dn, 'gridxNestedSorted');
+			}
+			query('.gridxCell', g.header.domNode).forEach(function(cell){
+				var colid = cell.getAttribute('colid');
+				if(t.isSortable(colid)){
+					array.forEach(['', 'Desc', 'Asc', 'Main'], function(s){
+						removeClass(cell, 'gridxCellSorted' + s);
+					});
+					var singleBtn = query('.gridxSortBtnSingle', cell)[0],
+						nestedBtn = query('.gridxSortBtnNested', cell)[0];
+					singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
+					nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
+					singleBtn.innerHTML = a11yText.dojoxGridAscendingTip + '&nbsp;';
+					nestedBtn.innerHTML = sortData.length + 1 + a11yText.dojoxGridAscendingTip;
+					var d = filter(sortData, function(data){
+						return data.colId === colid;
+					})[0];
+					t._setWaiState(cell, colid, d);
+					if(d){
+						nestedBtn.innerHTML = indexOf(sortData, d) + 1;
+						addClass(cell, 'gridxCellSorted');
+						if(d == sortData[0]){
+							addClass(cell, 'gridxCellSortedMain');
+						}
+						var len = sortData.length;
+						if(d.descending){
+							addClass(cell, 'gridxCellSortedDesc');
+							if(len == 1){
+								singleBtn.title = nls.singleSort + ' - ' + nls.unsorted;
+								singleBtn.innerHTML = a11yText.dojoxGridDescending + '&nbsp;';
+							}else{
+								nestedBtn.title = nls.nestedSort + ' - ' + nls.unsorted;
+								nestedBtn.innerHTML += a11yText.dojoxGridDescending;
+							}
+						}else{
+							addClass(cell, 'gridxCellSortedAsc');
+							if(len == 1){
+								singleBtn.title = nls.singleSort + ': ' + nls.descending;
+								singleBtn.innerHTML = a11yText.dojoxGridAscending + '&nbsp;';
+							}else{
+								nestedBtn.title = nls.nestedSort + ' - ' + nls.descending;
+								nestedBtn.innerHTML += a11yText.dojoxGridAscending;
+							}
+						}
+					}
+				}
+			});
+		},
+
+		_setWaiState: function(cell, colid, data){
+			var col = this.grid.column(colid),
+				columnInfo = 'Column ' + col.name(),
+				orderState = 'none', orderAction = 'ascending';
+			if(data){
+				orderState = data.descending ? 'descending' : 'ascending';
+				orderAction = data.descending ? 'none' : 'descending';
+			}
+			var a11ySingleLabel = string.substitute(this.grid.nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
+				a11yNestedLabel = string.substitute(this.grid.nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
+			query('.gridxSortBtnSingle', cell)[0].setAttribute("aria-label", a11ySingleLabel);
+			query('.gridxSortBtnNested', cell)[0].setAttribute("aria-label", a11yNestedLabel);
+		}
+	});
+});

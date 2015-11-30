@@ -1,14 +1,169 @@
-//>>built
-define("gridx/nls/fi/gridx",{loadingInfo:"Lataus on meneill\u00e4\u00e4n...",emptyInfo:"N\u00e4ytett\u00e4vi\u00e4 tietoja ei ole",loadFailInfo:"Tietojen lataus ei onnistunut.",loadMore:"Lataa seuraavat",loadMoreLoading:"Lataus on meneill\u00e4\u00e4n...",loadPrevious:"Lataa edelliset",loadPreviousLoading:"Lataus on meneill\u00e4\u00e4n...",clearFilterDialogTitle:"Tyhjenn\u00e4 suodatin",filterDefDialogTitle:"Suodatin",defaultRuleTitle:"S\u00e4\u00e4nt\u00f6",ruleTitleTemplate:"S\u00e4\u00e4nt\u00f6 ${ruleNumber}",
-noFilterApplied:"Suodatinta ei ole k\u00e4yt\u00f6ss\u00e4.",defineFilter:"M\u00e4\u00e4rit\u00e4 suodatin",conditionEqual:"on yht\u00e4 suuri kuin",conditionNotEqual:"ei ole yht\u00e4 suuri kuin",conditionLess:"on pienempi kuin",conditionLessEqual:"on pienempi tai yht\u00e4 suuri kuin",conditionGreater:"on suurempi kuin",conditionGreaterEqual:"on suurempi tai yht\u00e4 suuri kuin",conditionContain:"sis\u00e4lt\u00e4\u00e4",conditionIs:"on",conditionStartWith:"alkaa merkeill\u00e4",conditionEndWith:"loppuu merkkeihin",
-conditionNotContain:"ei sis\u00e4ll\u00e4",conditionIsNot:"ei ole",conditionNotStartWith:"ei ala merkeill\u00e4",conditionNotEndWith:"ei lopu merkkihin",conditionBefore:"ennen",conditionAfter:"j\u00e4lkeen",conditionRange:"vaihtelualue",conditionIsEmpty:"on tyhj\u00e4",all:"kaikki",any:"mik\u00e4 tahansa",relationAll:"kaikki s\u00e4\u00e4nn\u00f6t",waiRelAll:"Vastaa kaikkia seuraavia s\u00e4\u00e4nt\u00f6j\u00e4:",relationAny:"mik\u00e4 tahansa s\u00e4\u00e4nt\u00f6",waiRelAny:"Vastaa jotakin seuraavista s\u00e4\u00e4nn\u00f6ist\u00e4:",
-relationMsgFront:"Vastaa",relationMsgTail:"",and:" -",or:"tai",addRuleButton:"Lis\u00e4\u00e4 s\u00e4\u00e4nt\u00f6",waiAddRuleButton:"Lis\u00e4\u00e4 uusi s\u00e4\u00e4nt\u00f6",removeRuleButton:"Poista s\u00e4\u00e4nt\u00f6",waiRemoveRuleButtonTemplate:"Poista s\u00e4\u00e4nt\u00f6 ${0}",addRuleButton:"Lis\u00e4\u00e4 suodatuss\u00e4\u00e4nt\u00f6",cancelButton:"Peruuta",waiCancelButton:"Peruuta t\u00e4m\u00e4 valintaikkuna",clearButton:"Tyhjenn\u00e4",waiClearButton:"Tyhjenn\u00e4 suodatin.",filterButton:"Suodatin",
-waiFilterButton:"L\u00e4het\u00e4 suodatin",columnSelectLabel:"Sarake:",waiColumnSelectTemplate:"Sarake s\u00e4\u00e4nn\u00f6lle ${0}",conditionSelectLabel:"Ehto:",waiConditionSelectTemplate:"Ehto s\u00e4\u00e4nn\u00f6lle ${0}",valueBoxLabel:"Arvo:",waiValueBoxTemplate:"Anna suodatusarvo s\u00e4\u00e4nn\u00f6lle ${0}",rangeTo:"-",rangeTemplate:"${0} - ${1}",statusTipHeaderColumn:"Sarake",statusTipHeaderCondition:"S\u00e4\u00e4nn\u00f6t",statusTipTitle:"Suodatinpalkki",statusTipMsg:"Napsauta suodatinpalkkia t\u00e4ss\u00e4 ja suodata arvot kohteessa ${0}.",
-anycolumn:"mik\u00e4 tahansa sarake",statusTipTitleNoFilter:"Suodatinpalkki",statusTipTitleHasFilter:"Suodatin",statusTipRelPre:"Vastaa",statusTipRelPost:"s\u00e4\u00e4nt\u00f6\u00e4.",statusTipHeaderAll:"Vastaa kaikkia s\u00e4\u00e4nt\u00f6j\u00e4.",statusTipHeaderAny:"Vastaa jotakin s\u00e4\u00e4nt\u00f6\u00e4.",defaultItemsName:"kohdetta",filterBarMsgHasFilterTemplate:"${0} / ${1} ${2} n\u00e4kyy.",filterBarMsgNoFilterTemplate:"Suodatinta ei ole k\u00e4yt\u00f6ss\u00e4",filterBarDefButton:"M\u00e4\u00e4rit\u00e4 suodatin",
-waiFilterBarDefButton:"Suodata taulukko",a11yFilterBarDefButton:"Suodata...",filterBarClearButton:"Tyhjenn\u00e4 suodatin",waiFilterBarClearButton:"Tyhjenn\u00e4 suodatin.",closeFilterBarBtn:"Sulje suodatinpalkki",clearFilterMsg:"T\u00e4m\u00e4 poistaa suodattimen ja n\u00e4ytt\u00e4\u00e4 kaikki k\u00e4ytett\u00e4viss\u00e4 olevat tietueet.",anyColumnOption:"Mik\u00e4 tahansa sarake",trueLabel:"Tosi",falseLabel:"Ep\u00e4tosi",radioTrueLabel:"Arvo tosi",radioFalseLabel:"Arvo ep\u00e4tosi",beginTimeRangeLabel:"Aikav\u00e4lin alkuarvo",
-endTimeRangeLabel:"Aikav\u00e4lin loppuarvo",beginDateRangeLabel:"P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4v\u00e4lin alkuarvo",endDateRangeLabel:"P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4v\u00e4lin loppuarvo",startsWithExpr:"${0}*",singleSort:"Yksinkertainen lajittelu",nestedSort:"Sis\u00e4kk\u00e4inen lajittelu",ascending:"Lajittele nousevaan j\u00e4rjestykseen napsauttamalla",descending:"Lajittele laskevaan j\u00e4rjestykseen napsauttamalla",sortingState:"${0} - ${1}",unsorted:"\u00c4l\u00e4 lajittele t\u00e4t\u00e4 saraketta",
-waiSingleSortLabel:"${0} - on lajiteltu sarakkeen ${1} mukaan. Lajittele sarakkeen ${2} perusteella",waiNestedSortLabel:"${0} - on lajiteltu sis\u00e4kk\u00e4isesti sarakkeen ${1} mukaan. Lajittele sis\u00e4isesti sarakkeen ${2} perusteella",pagerWai:"Sivutus",pageIndex:"${0}",pageIndexTitle:"Sivu ${0}",firstPageTitle:"Ensimm\u00e4inen sivu",prevPageTitle:"Edellinen sivu",nextPageTitle:"Seuraava sivu",lastPageTitle:"Viimeinen sivu",pageSize:"${0}",pageSizeTitle:"${0} kohdetta sivulla",pageSizeAll:"Kaikki",
-pageSizeAllTitle:"Kaikki kohteet",description:"${0} - ${1} / ${2} kohdetta.",descriptionEmpty:"Ruudukko on tyhj\u00e4.",summary:"Kokonaism\u00e4\u00e4r\u00e4: ${0}",summaryWithSelection:"Kokonaism\u00e4\u00e4r\u00e4: ${0} Valitut: ${1}",gotoBtnTitle:"Siirry tietylle sivulle",gotoDialogTitle:"Siirry sivulle",gotoDialogMainMsg:"M\u00e4\u00e4rit\u00e4 sivunumero:",gotoDialogPageCount:" (${0} sivua)",gotoDialogOKBtn:"Siirry",gotoDialogCancelBtn:"Peruuta",pageLabel:"Sivu",pageSizeLabel:"Rivit",filterLabel:"Suodatin",
-clearButtonTitle:"Tyhjenn\u00e4 suodatin",buildFilterMenuLabel:"Muodosta suodatin\x26hellip;",apply:"K\u00e4yt\u00e4 suodatinta",helpMsg:"${0} - Lajittele napsauttamalla tai lis\u00e4\u00e4 lajitteluehtoihin pit\u00e4m\u00e4ll\u00e4 Ctrl-n\u00e4pp\u00e4int\u00e4 painettuna ja napsauttamalla",singleHelpMsg:"${0} - Lajittele napsauttamalla",priorityOrder:"lajitteluprioriteetti ${0}",summaryTotal:"Kokonaism\u00e4\u00e4r\u00e4: ${0}",summarySelected:"Valitut: ${0}",summaryRange:"Alue: ${0}-${1}",indirectSelectAll:"Valitse kaikki painamalla v\u00e4lin\u00e4pp\u00e4int\u00e4.",
-indirectDeselectAll:"Poista kaikkien valinta painamalla v\u00e4lin\u00e4pp\u00e4int\u00e4.",treeExpanded:"Pienenn\u00e4 t\u00e4m\u00e4 rivi painamalla Ctrl- ja vasenta nuolin\u00e4pp\u00e4int\u00e4.",treeCollapsed:"Laajenna t\u00e4m\u00e4 rivi painamalla Ctrl- ja oikeaa nuolin\u00e4pp\u00e4int\u00e4."});
-//@ sourceMappingURL=gridx.js.map
+define({     
+//Body
+	loadingInfo: "Lataus on meneillään...",
+	emptyInfo: "Näytettäviä tietoja ei ole",
+	loadFailInfo: "Tietojen lataus ei onnistunut.",
+	loadMore: "Lataa seuraavat",
+	loadMoreLoading: "Lataus on meneillään...",
+	loadPrevious: "Lataa edelliset",
+	loadPreviousLoading: "Lataus on meneillään...",
+
+//FilterBar
+	"clearFilterDialogTitle": "Tyhjennä suodatin",
+	"filterDefDialogTitle": "Suodatin",
+	"defaultRuleTitle": "Sääntö",
+	"ruleTitleTemplate": "Sääntö ${ruleNumber}",
+	"noFilterApplied": "Suodatinta ei ole käytössä.",
+	"defineFilter": "Määritä suodatin",
+	"defineFilterAriaLabel": "Määritä suodatin: Avaa suodattimen valintaikkunan monimutkaisten suodatussääntöjen määritystä varten. Kukin suodatussääntö koostuu sarakkeen, ehdon ja arvon yhdistelmästä. Kun valintaikkuna aukeaa, näppäimistön kohdealue on arvokentässä.",
+	"conditionEqual": "on yhtä suuri kuin",
+	"conditionNotEqual": "ei ole yhtä suuri kuin",
+	"conditionLess": "on pienempi kuin",
+	"conditionLessEqual": "on pienempi tai yhtä suuri kuin",
+	"conditionGreater": "on suurempi kuin",
+	"conditionGreaterEqual": "on suurempi tai yhtä suuri kuin",
+	"conditionContain": "sisältää",
+	"conditionIs": "on",
+	"conditionStartWith": "alkaa merkeillä",
+	"conditionEndWith": "loppuu merkkeihin",
+	"conditionNotContain": "ei sisällä",
+	"conditionIsNot": "ei ole",
+	"conditionNotStartWith": "ei ala merkeillä",
+	"conditionNotEndWith": "ei lopu merkkihin",
+	"conditionBefore": "ennen",
+	"conditionAfter": "jälkeen",
+	"conditionRange": "vaihtelualue",
+	"conditionIsEmpty": "on tyhjä",
+	"conditionIsNotEmpty": "ei ole tyhjä",
+	"all": "kaikki",
+	"any": "mikä tahansa",
+	"relationAll": "kaikki säännöt",
+	"waiRelAll": "Vastaa kaikkia seuraavia sääntöjä:",
+	"relationAny": "mikä tahansa sääntö",
+	"waiRelAny": "Vastaa jotakin seuraavista säännöistä:",
+	"relationMsgFront": "Vastaa",
+	"relationMsgTail": "",
+	"and": " -",
+	"or": "tai",
+	"addRuleButton": "Lisää sääntö",
+	"waiAddRuleButton": "Lisää uusi sääntö",
+	"removeRuleButton": "Poista sääntö",
+	"waiRemoveRuleButtonTemplate": "Poista sääntö ${0}",
+	"addRuleButton": "Lisää suodatussääntö",
+	"cancelButton": "Peruuta",
+	"waiCancelButton": "Peruuta tämä valintaikkuna",
+	"clearButton": "Tyhjennä",
+	"waiClearButton": "Tyhjennä suodatin.",
+	"filterButton": "Suodatin",
+	"waiFilterButton": "Lähetä suodatin",
+	"columnSelectLabel": "Sarake:",
+	"columnSelectAriaLabel": "Sarake: ehdon osa ${0}/${1}",
+	"waiColumnSelectTemplate": "Sarake säännölle ${0}",
+
+	"conditionSelectLabel": "Ehto:",
+	"conditionSelectAriaLabel": "Operaattori: ehdon osa ${0}/${1}",
+	"waiConditionSelectTemplate": "Ehto säännölle ${0}",
+
+	"valueBoxLabel": "Arvo:",
+	"valueBoxAriaLabel": "Arvo: ehdon osa ${0}/${1}",
+	"waiValueBoxTemplate": "Anna suodatusarvo säännölle ${0}",
+	"rangeTo": "-",
+	"rangeTemplate": "${0} - ${1}",
+	"statusTipHeaderColumn": "Sarake",
+	"statusTipHeaderCondition": "Säännöt",
+	"statusTipTitle": "Suodatinpalkki",
+	"statusTipMsg": "Napsauta suodatinpalkkia tässä ja suodata arvot kohteessa ${0}.",
+	"anycolumn": "mikä tahansa sarake",
+	"statusTipTitleNoFilter": "Suodatinpalkki",
+	"statusTipTitleHasFilter": "Suodatin",
+	"statusTipRelPre": "Vastaa",
+	"statusTipRelPost": "sääntöä.",
+	"statusTipHeaderAll": "Vastaa kaikkia sääntöjä.",
+	"statusTipHeaderAny": "Vastaa jotakin sääntöä.",
+	"defaultItemsName": "kohdetta",
+	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} näkyy.",
+	"filterBarMsgNoFilterTemplate": "Suodatinta ei ole käytössä",
+	"filterBarDefButton": "Määritä suodatin",
+	"waiFilterBarDefButton": "Suodata taulukko",
+	"a11yFilterBarDefButton": "Suodata...",
+	"filterBarClearButton": "Tyhjennä suodatin",
+	"waiFilterBarClearButton": "Tyhjennä suodatin.",
+	"closeFilterBarBtn": "Sulje suodatinpalkki",
+	"clearFilterMsg": "Tämä poistaa suodattimen ja näyttää kaikki käytettävissä olevat tietueet.",
+	"anyColumnOption": "Mikä tahansa sarake",
+	"trueLabel": "Tosi",
+	"falseLabel": "Epätosi",
+	"radioTrueLabel": "Arvo tosi",
+	"radioFalseLabel": "Arvo epätosi",
+	"beginTimeRangeLabel": "Aikavälin alkuarvo",
+	"endTimeRangeLabel": "Aikavälin loppuarvo",
+	"beginDateRangeLabel": "Päivämäärävälin alkuarvo",
+	"endDateRangeLabel": "Päivämäärävälin loppuarvo",
+	"startsWithExpr": "${0}*",
+
+//NestedSort
+	singleSort: "Yksinkertainen lajittelu",
+	nestedSort: "Sisäkkäinen lajittelu",
+	ascending: "Lajittele nousevaan järjestykseen napsauttamalla",
+	descending: "Lajittele laskevaan järjestykseen napsauttamalla",
+	sortingState: "${0} - ${1}",
+	unsorted: "Älä lajittele tätä saraketta",
+	waiSingleSortLabel: "${0} - on lajiteltu sarakkeen ${1} mukaan. Lajittele sarakkeen ${2} perusteella",
+	waiNestedSortLabel:"${0} - on lajiteltu sisäkkäisesti sarakkeen ${1} mukaan. Lajittele sisäisesti sarakkeen ${2} perusteella",
+
+//PaginationBar
+	pagerWai: 'Sivutus',
+
+	pageIndex: '${0}',
+	pageIndexTitle: 'Sivu ${0}',
+
+	firstPageTitle: 'Ensimmäinen sivu',
+	prevPageTitle: 'Edellinen sivu',
+	nextPageTitle: 'Seuraava sivu',
+	lastPageTitle: 'Viimeinen sivu',
+
+	pageSize: '${0}',
+	pageSizeTitle: '${0} kohdetta sivulla',
+	pageSizeAll: 'Kaikki',
+	pageSizeAllTitle: 'Kaikki kohteet',
+
+	description: '${0} - ${1} / ${2} kohdetta.',
+	descriptionEmpty: 'Ruudukko on tyhjä.',
+
+	summary: 'Kokonaismäärä: ${0}',
+	summaryWithSelection: 'Kokonaismäärä: ${0} Valitut: ${1}',
+
+	gotoBtnTitle: 'Siirry tietylle sivulle',
+
+	gotoDialogTitle: 'Siirry sivulle',
+	gotoDialogMainMsg: 'Määritä sivunumero:',
+	gotoDialogPageCount: ' (${0} sivua)',
+	gotoDialogOKBtn: 'Siirry',
+	gotoDialogCancelBtn: 'Peruuta',
+	// for drop down pagination bar
+	pageLabel: 'Sivu',
+	pageSizeLabel: 'Rivit',
+
+//QuickFilter
+	filterLabel: 'Suodatin',
+	clearButtonTitle: 'Tyhjennä suodatin',
+	buildFilterMenuLabel: 'Muodosta suodatin...',
+	apply: 'Käytä suodatinta',
+
+//Sort
+	helpMsg: '${0} - Lajittele napsauttamalla tai lisää lajitteluehtoihin pitämällä Ctrl-näppäintä painettuna ja napsauttamalla',
+	singleHelpMsg: '${0} - Lajittele napsauttamalla',
+	priorityOrder: 'lajitteluprioriteetti ${0}',
+
+//SummaryBar
+	summaryTotal: 'Kokonaismäärä: ${0}',
+	summarySelected: 'Valitut: ${0}',
+	summaryRange: 'Alue: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Valitse kaikki painamalla välinäppäintä.",	//need translation
+	indirectDeselectAll: "Poista kaikkien valinta painamalla välinäppäintä.",	//need translation
+	treeExpanded: "Pienennä tämä rivi painamalla Ctrl- ja vasenta nuolinäppäintä.",	//need translation
+	treeCollapsed: "Laajenna tämä rivi painamalla Ctrl- ja oikeaa nuolinäppäintä."	//need translation
+});
+

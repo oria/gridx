@@ -1,6 +1,137 @@
-//>>built
-define("gridx/modules/TouchVScroller","dojo/_base/kernel dojo/_base/Deferred dojo/_base/declare dojo/query dojo/dom-class ./VScroller dojox/mobile/scrollable".split(" "),function(l,m,n,p,g,q,r){l.experimental("gridx/modules/TouchVScroller");return n(q,{constructor:function(){this.grid.touch&&(g.add(this.grid.domNode,"gridxTouchVScroller"),this.domNode.style.width="")},scrollToRow:function(a,e){if(this.grid.touch){var d=new m,f=p('[visualindex\x3d"'+a+'"]',this.grid.bodyNode)[0];f&&this._scrollable.scrollIntoView(f,
-e);d.callback();return d}return this.inherited(arguments)},scroll:function(a){this.grid.touch?this._scrollable.scrollTo({y:a}):this.inherited(arguments)},position:function(){return this.grid.touch?this._scrollable.getPos().y:this.inherited(arguments)},_init:function(){if(this.grid.touch){var a=this.grid,e=a.view,d=a.header.innerNode,f=a.mainNode,k=a.bodyNode,b=this._scrollable=new r;d.style.height=d.firstChild.offsetHeight+"px";b.init({domNode:f,containerNode:k,scrollDir:"none"==a.hScrollerNode.style.display?
-"v":"vh",noResize:!0});var h=function(){var c=a.layer&&a.layer._wrapper1.firstChild;return c&&c.firstChild};this.aspect(b,"scrollTo",function(c){if("number"==typeof c.x){c=b.makeTranslateStr({x:c.x});d.firstChild.style.webkitTransform=c;d.firstChild.style.transform=c;var a=h();a&&(a.style.webkitTransform=c,a.style.transform=c)}});this.aspect(b,"slideTo",function(a,e,f){b._runSlideAnimation({x:b.getPos().x},{x:a.x},e,f,d.firstChild,2);var g=h();g&&b._runSlideAnimation({x:b.getPos().x},{x:a.x},e,f,
-g,2)});this.aspect(b,"stopAnimation",function(){g.remove(d.firstChild,"mblScrollableScrollTo2");var a=h();a&&g.remove(a,"mblScrollableScrollTo2")});this.aspect(a.hScroller,"refresh",function(){b._h=k.scrollWidth>f.clientWidth});this._onBodyChange=function(){a.hLayout.reLayout();a.vLayout.reLayout()};this.model.when({start:e.rootStart,count:e.rootCount},function(){a.body.renderRows(0,e.visualCount)})}else this.inherited(arguments)}})});
-//@ sourceMappingURL=TouchVScroller.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/Deferred",
+	"dojo/_base/declare",
+	"dojo/query",
+	"dojo/dom-class",
+	"./VScroller",
+	"dojox/mobile/scrollable"
+], function(kernel, Deferred, declare, query, domClass, VScroller, Scrollable){
+	kernel.experimental('gridx/modules/TouchVScroller');
+
+/*=====
+	return declare(VScroller, {
+		// summary:
+		//		module name: vScroller.
+		//		A vertical scroller only for touch devices.
+		// description:
+		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).
+	});
+=====*/
+
+	return declare(VScroller, {
+		constructor: function(){
+			if(this.grid.touch){
+				domClass.add(this.grid.domNode, 'gridxTouchVScroller');
+				this.domNode.style.width = '';
+			}
+		},
+
+		scrollToRow: function(rowVisualIndex, toTop){
+			if(this.grid.touch){
+				var d = new Deferred(),
+					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
+				if(rowNode){
+					this._scrollable.scrollIntoView(rowNode, toTop);
+				}
+				d.callback();
+				return d;
+			}
+			return this.inherited(arguments);
+		},
+
+		scroll: function(top){
+			if(this.grid.touch){
+				this._scrollable.scrollTo({ y: top });
+			}else{
+				this.inherited(arguments);
+			}
+		},
+
+		position: function(){
+			if(this.grid.touch){
+				return this._scrollable.getPos().y;
+			}else{
+				return this.inherited(arguments);
+			}
+		},
+
+		_init: function(){
+			if(this.grid.touch){
+				var t = this,
+					g = t.grid,
+					view = g.view,
+					h = g.header.innerNode,
+					mainNode = g.mainNode,
+					bodyNode = g.bodyNode,
+					scrollableArgs = g.vScroller.arg("scrollable") || {},
+					scrollable = t._scrollable = new Scrollable(scrollableArgs);
+				h.style.height = h.firstChild.offsetHeight + 'px';
+				scrollable.init({
+					domNode: mainNode,
+					containerNode: bodyNode,
+					scrollDir: g.hScrollerNode.style.display == 'none' ? 'v' : 'vh',
+					noResize: true
+				});
+				function getLayerParent(){
+					var layerParent = g.layer && g.layer._wrapper1.firstChild;
+					return layerParent && layerParent.firstChild;
+				}
+				t.aspect(scrollable, 'scrollTo', function(to){
+					if(typeof to.x == "number"){
+						var translateStr = scrollable.makeTranslateStr({x: to.x});
+						h.firstChild.style.webkitTransform = translateStr;
+						h.firstChild.style.transform = translateStr;
+
+						var layerParent = getLayerParent();
+						if(layerParent){
+							layerParent.style.webkitTransform = translateStr;
+							layerParent.style.transform = translateStr;
+						}
+					}
+				});
+				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
+					scrollable._runSlideAnimation({
+						x: scrollable.getPos().x
+					}, {
+						x: to.x
+					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						scrollable._runSlideAnimation({
+							x: scrollable.getPos().x
+						}, {
+							x: to.x
+						}, duration, easing, layerParent, 2);	//2 means it's a containerNode
+					}
+				});
+				t.aspect(scrollable, 'stopAnimation', function(){
+					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						domClass.remove(layerParent, 'mblScrollableScrollTo2');
+					}
+				});
+				t.aspect(g.hScroller, 'refresh', function(){
+					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
+//                    scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
+				});
+				t._onBodyChange = function(){
+					g.hLayout.reLayout();
+					g.vLayout.reLayout();
+				};
+//                t._onForcedScroll = function(){};
+				t.model.when({
+					start: view.rootStart,
+					count: view.rootCount
+				}, function(){
+					g.body.renderRows(0, view.visualCount);
+				});
+			}else{
+				this.inherited(arguments);
+			}
+		}
+	});
+});

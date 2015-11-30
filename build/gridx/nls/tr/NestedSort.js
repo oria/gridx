@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/tr/NestedSort",{singleSort:"Tekli S\u0131ralama",nestedSort:"\u0130\u00e7 \u0130\u00e7e S\u0131ralama",ascending:"Artan d\u00fczende s\u0131ralamak i\u00e7in t\u0131klat\u0131n",descending:"Azalan d\u00fczende s\u0131ralamak i\u00e7in t\u0131klat\u0131n",sortingState:"${0} - ${1}",unsorted:"Bu s\u00fctunu s\u0131ralama",waiSingleSortLabel:"${0} - ${1} \u00f6\u011fesine g\u00f6re s\u0131ral\u0131. ${2} \u00f6\u011fesine g\u00f6re s\u0131ralamak i\u00e7in bu se\u00e7ene\u011fi belirleyin",
-waiNestedSortLabel:"${0} - ${1} \u00f6\u011fesine g\u00f6re i\u00e7 i\u00e7e s\u0131ral\u0131. ${2} \u00f6\u011fesine g\u00f6re i\u00e7 i\u00e7e s\u0131ralamak i\u00e7in bu se\u00e7ene\u011fi belirleyin"});
-//@ sourceMappingURL=NestedSort.js.map

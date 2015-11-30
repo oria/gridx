@@ -1,5 +1,113 @@
-//>>built
-define("gridx/modules/pagination/_PaginationBarBase","dojo/_base/declare dojo/_base/lang dojo/dom-class ../../core/_Module ../../support/Summary ../Bar".split(" "),function(d,g,e,h,k){return d(h,{name:"paginationBar",required:["bar","pagination"],sizes:[10,25,50,0],position:"bottom",description:!0,stepper:!0,sizeSwitch:!0,preload:function(){for(var c=0,b=["top","bottom"];c<b.length;++c){var a=b[c];this._exist(a)&&(this._add(k,0,a,"description",{className:"gridxPagerDescriptionTD",message:this.arg("message")}),
-this._init(a))}},refresh:function(){var c=this,b=c.grid.bar,a=function(a,b){if(a){a=a[0];e.toggle(a[0].domNode,"dijitHidden",!c._exist(b,"description"));c._refresh(a,b);for(var f=0;f<a.length;++f)a[f].refresh()}};a(b.plugins.pagingtop,"top");a(b.plugins.pagingbottom,"bottom")},_add:function(c,b,a,d,e){this.grid.bar.defs.push(g.mixin({bar:"paging"+a,priority:"top"==a?-1:2,container:"top"==a?"headerNode":"footerNode",barClass:"gridxPaginationBar",row:0,col:b,"class":this._exist(a,d)?"":"dijitHidden",
-pluginClass:c},e))},_exist:function(c,b){var a=this.arg(b||"position");return(a=a&&String(a).toLowerCase())&&("top"!=a&&"bottom"!=a||a==c)}})});
-//@ sourceMappingURL=_PaginationBarBase.js.map
+define([
+	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/dom-class',
+	'../../core/_Module',
+	'../../support/Summary',
+	'../Bar'
+], function(declare, lang, domClass, _Module, Summary){
+
+/*=====
+	return declare(_Module, {
+		// sizes: Integer[]
+		sizes: [10, 25, 50, 0],
+
+		// position: String
+		//		The position of the pagination bar, can be "bottom" (default), "top" or "both" (any other value means "both")
+		position: 'bottom',
+
+		// description: Boolean|String
+		//		Whether (and where) to show "description" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
+		description: true,
+
+		// stepper: Boolean|String
+		//		Whether (and where) to show "page stepper" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
+		stepper: true,
+
+		// sizeSwith: Boolean|String
+		//		Whether (and where) to show "page size switcher" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
+		sizeSwitch: true,
+
+		refresh: function(){
+			// summary:
+			//		Redraw the pagination bar using corrent parameters.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'paginationBar',
+
+		required: ['bar', 'pagination'],
+
+		sizes: [10, 25, 50, 0],
+
+		position: 'bottom',
+
+		description: true,
+
+		stepper: true,
+
+		sizeSwitch: true,
+
+		showRange: false,
+
+		showTotal: true,
+
+		//message: '',
+
+		preload: function(){
+			for(var t = this, i = 0, positions = ['top', 'bottom']; i < positions.length; ++i){
+				var pos = positions[i];
+				if(t._exist(pos)){
+					t._add(Summary, 0, pos, 'description', {
+						className: 'gridxPagerDescriptionTD',
+						message: t.arg('message')
+					});
+					t._init(pos);
+				}
+			}
+		},
+
+		refresh: function(){
+			var t = this,
+				bar = t.grid.bar,
+				update = function(bar, pos){
+					if(bar){
+						bar = bar[0];
+						domClass.toggle(bar[0].domNode, 'dijitHidden', !t._exist(pos, 'description'));
+						t._refresh(bar, pos);
+						for(var i = 0; i < bar.length; ++i){
+							bar[i].refresh();
+						}
+					}
+				};
+			update(bar.plugins.pagingtop, 'top');
+			update(bar.plugins.pagingbottom, 'bottom');
+		},
+
+		//Private--------------------------------------------------------------------------
+		_add: function(plugin, col, bar, name, args){
+			this.grid.bar.defs.push(lang.mixin({
+				bar: 'paging' + bar,
+				priority: bar == 'top' ? -1 : 2,
+				container: bar == 'top' ? 'headerNode' : 'footerNode',
+				barClass: 'gridxPaginationBar',
+				row: 0,
+				col: col,
+				'class': this._exist(bar, name) ? '' : 'dijitHidden',
+				pluginClass: plugin,
+				showRange: this.arg('showRange')
+			}, args));
+		},
+
+		_exist: function(pos, argName){
+			var v = this.arg(argName || 'position');
+			v = v && String(v).toLowerCase();
+			return v && ((v != 'top' && v != 'bottom') || v == pos);
+		}
+	});
+});

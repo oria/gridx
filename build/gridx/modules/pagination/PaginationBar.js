@@ -1,5 +1,69 @@
-//>>built
-define("gridx/modules/pagination/PaginationBar","dojo/_base/declare dojo/dom-class ./_PaginationBarBase ../../support/LinkPager ../../support/LinkSizer ../../support/GotoPageButton".split(" "),function(e,c,f,g,h,d){return e(f,{visibleSteppers:3,sizeSeparator:"|",gotoButton:!0,_init:function(a){var b=d.prototype;this._add(g,1,a,"stepper",{className:"gridxPagerStepperTD",visibleSteppers:this.arg("visibleSteppers")});this._add(h,2,a,"sizeSwitch",{className:"gridxPagerSizeSwitchTD",sizes:this.arg("sizes"),
-sizeSeparator:this.arg("sizeSeparator")});this._add(d,3,a,"gotoButton",{className:"gridxPagerGoto",dialogClass:this.arg("dialogClass")||b.dialogClass,dialogProps:this.arg("dialogProps")||b.dialogProps,buttonClass:this.arg("buttonClass")||b.buttonClass,numberTextBoxClass:this.arg("numberTextBoxClass")||b.numberTextBoxClass})},_refresh:function(a,b){c.toggle(a[1].domNode,"dijitHidden",!this._exist(b,"stepper"));c.toggle(a[2].domNode,"dijitHidden",!this._exist(b,"sizeSwitch"));c.toggle(a[3].domNode.parentNode,
-"dijitHidden",!this._exist(b,"gotoButton"));a[1].visibleSteppers=this.arg("visibleSteppers");a[2].sizes=this.arg("sizes");a[2].sizeSeparator=this.arg("sizeSeparator")}})});
-//@ sourceMappingURL=PaginationBar.js.map
+define([
+	'dojo/_base/declare',
+	'dojo/dom-class',
+	'./_PaginationBarBase',
+	'../../support/LinkPager',
+	'../../support/LinkSizer',
+	'../../support/GotoPageButton'
+], function(declare, domClass, _PaginationBarBase, LinkPager, LinkSizer, GotoPageButton){
+
+/*=====
+	return declare(_PaginationBarBase, {
+		// summary:
+		//		module name: paginationBar.
+		//		Show link button pagination bar at the bottom of grid.
+		// description:
+		//		This module directly uses gridx/modules/Bar to show gridx/support/Summary, gridx/support/LinkPager, gridx/support/LinkSizer,
+		//		and gridx/support/GotoPageButton.
+		//		This module depends on "bar" and "pagination" modules.
+
+		// visibleSteppers: Integer
+		visibleSteppers: 3,
+
+		// sizeSeparator: String
+		sizeSeparator: '|',
+
+		// gotoButton: Boolean|String
+		gotoButton: true
+	});
+=====*/
+
+	return declare(_PaginationBarBase, {
+		visibleSteppers: 3,
+
+		sizeSeparator: '|',
+
+		gotoButton: true,
+
+		_init: function(pos){
+			var t = this,
+				gotoBtnProt = GotoPageButton.prototype;
+			t._add(LinkPager, 1, pos, 'stepper', {
+				className: 'gridxPagerStepperTD',
+				visibleSteppers: t.arg('visibleSteppers')
+			});
+			t._add(LinkSizer, 2, pos, 'sizeSwitch', {
+				className: 'gridxPagerSizeSwitchTD',
+				sizes: t.arg('sizes'),
+				sizeSeparator: t.arg('sizeSeparator')
+			});
+			t._add(GotoPageButton, 3, pos, 'gotoButton', {
+				className: 'gridxPagerGoto',
+				dialogClass: t.arg('dialogClass') || gotoBtnProt.dialogClass,
+				dialogProps: t.arg('dialogProps') || gotoBtnProt.dialogProps,
+				buttonClass: t.arg('buttonClass') || gotoBtnProt.buttonClass,
+				numberTextBoxClass: t.arg('numberTextBoxClass') || gotoBtnProt.numberTextBoxClass
+			});
+		},
+
+		_refresh: function(bar, pos){
+			var t = this;
+			domClass.toggle(bar[1].domNode, 'dijitHidden', !t._exist(pos, 'stepper'));
+			domClass.toggle(bar[2].domNode, 'dijitHidden', !t._exist(pos, 'sizeSwitch'));
+			domClass.toggle(bar[3].domNode.parentNode, 'dijitHidden', !t._exist(pos, 'gotoButton'));
+			bar[1].visibleSteppers = t.arg('visibleSteppers');
+			bar[2].sizes = t.arg('sizes');
+			bar[2].sizeSeparator = t.arg('sizeSeparator');
+		}
+	});
+});

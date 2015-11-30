@@ -1,8 +1,281 @@
-//>>built
-define("gridx/modules/SingleSort","dojo/_base/declare dojo/_base/lang dojo/dom-class dojo/keys ../core/model/extensions/Sort ../core/_Module".split(" "),function(f,g,e,h,k,l){return f(l,{name:"sort",forced:["header"],modelExtensions:[k],preload:function(){var a=this,b=a.grid,c;a.connect(b,"onHeaderCellClick","_onClick");a.connect(b,"onHeaderCellKeyDown","_onKey");b.persist&&(c=b.persist.registerAndLoad("sort",function(){return[{colId:a._sortId,descending:a._sortDescend}]}));c=c||a.arg("initialOrder");
-g.isArrayLike(c)&&(c=c[0]);c&&c.colId&&(a._sortId=c.colId,a._sortDescend=c.descending,a.model.sort([c]))},load:function(){var a=this,b=function(){var b=a.grid._columnsById,d;for(d in b)a._initHeader(d);a._sortId&&b[a._sortId]&&a._updateHeader(a._sortId,a._sortDescend)};a.connect(a.grid.header,"onRender",b);b();a.loaded.callback()},columnMixin:{sort:function(a,b){this.grid.sort.sort(this.id,a,b);return this},isSorted:function(){return this.grid.sort.isSorted(this.id)},clearSort:function(a){this.isSorted()&&
-this.grid.sort.clear(a);return this},isSortable:function(){var a=this.grid._columnsById[this.id];return a.sortable||void 0===a.sortable},setSortable:function(a){this.grid._columnsById[this.id].sortable=!!a;return this}},sort:function(a,b,c){var d=this.grid,e=d._columnsById[a];if(e&&(e.sortable||void 0===e.sortable))(this._sortId!=a||this._sortDescend==!b)&&this._updateHeader(a,b),this.model.sort([{colId:a,descending:b}]),c||d.body.refresh()},isSorted:function(a){return a==this._sortId?this._sortDescend?
--1:1:0},clear:function(a){if(null!==this._sortId){var b=this.grid.header.getHeaderNode(this._sortId);b&&(e.remove(b,"gridxCellSorted"),e.remove(b,"gridxCellSortedAsc"),e.remove(b,"gridxCellSortedDesc"));this._sortId=this._sortDescend=null;this.model.sort();a||this.grid.body.refresh()}},getSortData:function(){return this._sortId?[{colId:this._sortId,descending:this._sortDescend}]:null},_sortId:null,_sortDescend:null,_initHeader:function(a){var b=this.grid,c=b.header.getHeaderNode(a);a=b.column(a,1);
-b=[];a.isSortable()&&(b.push("\x3cdiv role\x3d'presentation' class\x3d'gridxArrowButtonNode'\x3e","\x3cdiv class\x3d'gridxArrowButtonCharAsc'\x3e\x26#9652;\x3c/div\x3e","\x3cdiv class\x3d'gridxArrowButtonCharDesc'\x3e\x26#9662;\x3c/div\x3e","\x3c/div\x3e"),c.setAttribute("aria-sort","none"));b.push("\x3cdiv class\x3d'gridxSortNode'\x3e",a.name(),"\x3c/div\x3e");c.innerHTML=b.join("")},_updateHeader:function(a,b){var c=this.grid,d;if(this._sortId&&this._sortId!=a&&(d=c.header.getHeaderNode(this._sortId)))e.remove(d,
-"gridxCellSorted"),e.remove(d,"gridxCellSortedAsc"),e.remove(d,"gridxCellSortedDesc"),d.setAttribute("aria-sort","none");this._sortId=a;this._sortDescend=b=!!b;d=c.header.getHeaderNode(a);e.add(d,"gridxCellSorted");e.toggle(d,"gridxCellSortedAsc",!b);e.toggle(d,"gridxCellSortedDesc",b);d.setAttribute("aria-sort",b?"descending":"ascending");c.vLayout.reLayout()},_onClick:function(a){this.sort(a.columnId,this._sortId!=a.columnId?0:!this._sortDescend)},_onKey:function(a){a.keyCode==h.ENTER&&this._onClick(a)}})});
-//@ sourceMappingURL=SingleSort.js.map
+define([
+/*====="../core/Column", =====*/
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/keys",
+	"../core/model/extensions/Sort",
+	"../core/_Module"
+], function(/*=====Column, =====*/declare, lang, domClass, keys, Sort, _Module){
+
+/*=====
+	Column.sort = function(isDescending, skipUpdateBody){
+		// summary:
+		//		Sort this column.
+	};
+
+	Column.isSorted = function(){
+		// summary:
+		//		Check wheter this column is sorted.
+	};
+
+	Column.clearSort = function(skipUpdateBody){
+		// summary:
+		//		Clear sort on this column
+	};
+
+	Column.isSortable = function(){
+		// summary:
+		//		Check whether this column is sortable.
+	};
+
+	Column.setSortable = function(isSortable){
+		// summary:
+		//		Set sortable for this column
+	};
+
+	var SingleSort = declare(_Module, {
+		// summary:
+		//		module name: sort.
+		//		This module provides the single column sorting functionality for grid.
+
+		// initialOrder: Object|Array
+		//		The initial sort order when grid is created.
+		//		This is of the same format of the sort argument of the store fetch function.
+		//		If an array of sort orders is provided, only the first will be used.
+		initialOrder: null,
+
+		sort: function(colId, isDescending, skipUpdateBody){
+			// summary:
+			//		Sort the grid on given column.
+			// colId: String
+			//		The column ID
+			// isDescending: Boolean?
+			//		Whether to sort the column descendingly
+			// skipUpdateBody: Boolean?
+			//		If set to true, the grid body will not automatically be refreshed after this call,
+			//		so that several grid operations could be done altogether
+			//		without refreshing the grid over and over.
+		},
+
+		isSorted: function(colId){
+			// summary:
+			//		Check wheter (and how) the grid is sorted on the given column.
+			// colId: String
+			//		The columnn ID
+			// returns:
+			//		Positive number if the column is sorted ascendingly;
+			//		Negative number if the column is sorted descendingly;
+			//		Zero if the column is not sorted.
+		},
+
+		clear: function(skipUpdateBody){
+			// summary:
+			//		Clear sort.
+			// skipUpdateBody:
+			//		If set to true, the grid body will not automatically be refreshed after this call,
+			//		so that several grid operations could be done altogether
+			//		without refreshing the grid over and over.
+		},
+
+		getSortData: function(){
+			// summary:
+			//		Get an array of objects that can be accepted by the store's "sort" argument.	
+			// returns:
+			//		An array containing the sort info
+		}
+	});
+
+	SingleSort.__ColumnDefinition = declare([], {
+		// sortable: Boolean
+		sortable: true
+	});
+
+	return SingleSort;
+=====*/
+
+	return declare(_Module, {
+		name: 'sort',
+
+		forced: ['header'],
+
+		modelExtensions: [Sort],
+
+		preload: function(){
+			var t = this,
+				g = t.grid, sort;
+			t.connect(g, 'onHeaderCellClick', '_onClick');
+			t.connect(g, 'onHeaderCellKeyDown', '_onKey');
+			//persistence support
+			if(g.persist){
+				sort = g.persist.registerAndLoad('sort', function(){
+					return [{
+						colId: t._sortId,
+						descending: t._sortDescend 
+					}];
+				});
+			}
+			//Presort...
+			sort = sort || t.arg('initialOrder');
+			if(lang.isArrayLike(sort)){
+				sort = sort[0];
+			}
+			if(sort && sort.colId){
+				t._sortId = sort.colId;
+				t._sortDescend = sort.descending;
+				//sort here so the body can render correctly.
+				t.model.sort([sort]);
+			}
+		},
+
+		load: function(){
+			var t = this,
+				refresh = function(){
+					var columnsById = t.grid._columnsById;
+					for(var colId in columnsById){
+						t._initHeader(colId);
+					}
+					if(t._sortId && columnsById[t._sortId]){
+						t._updateHeader(t._sortId, t._sortDescend);
+					}
+				};
+			t.connect(t.grid.header, 'onRender', refresh);
+			//If presorted, update header UI
+			refresh();
+			t.loaded.callback();
+		},
+
+		columnMixin: {
+			sort: function(isDescending, skipUpdateBody){
+				this.grid.sort.sort(this.id, isDescending, skipUpdateBody);
+				return this;
+			},
+
+			isSorted: function(){
+				return this.grid.sort.isSorted(this.id);
+			},
+
+			clearSort: function(skipUpdateBody){
+				if(this.isSorted()){
+					this.grid.sort.clear(skipUpdateBody);
+				}
+				return this;
+			},
+
+			isSortable: function(){
+				var col = this.grid._columnsById[this.id];
+				return col.sortable || col.sortable === undefined;
+			},
+
+			setSortable: function(isSortable){
+				this.grid._columnsById[this.id].sortable = !!isSortable;
+				return this;
+			}
+		},
+
+		//Public--------------------------------------------------------------
+		sort: function(colId, isDescending, skipUpdateBody){
+			var t = this,
+				g = t.grid,
+				col = g._columnsById[colId];
+			if(col && (col.sortable || col.sortable === undefined)){
+				if(t._sortId != colId || t._sortDescend == !isDescending){
+					t._updateHeader(colId, isDescending);
+				}
+				t.model.sort([{colId: colId, descending: isDescending}]);
+				if(!skipUpdateBody){
+					g.body.refresh();
+				}
+			}
+		},
+
+		isSorted: function(colId){
+			if(colId == this._sortId){
+				return this._sortDescend ? -1 : 1;
+			}
+			return 0;
+		},
+
+		clear: function(skipUpdateBody){
+			var t = this;
+			if(t._sortId !== null){
+				var headerCell = t.grid.header.getHeaderNode(t._sortId);
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+				}
+				t._sortId = t._sortDescend = null;
+				t.model.sort();
+				if(!skipUpdateBody){
+					t.grid.body.refresh();
+				}
+			}
+		},
+
+		getSortData: function(){
+			return this._sortId ? [{
+				colId: this._sortId,
+				descending: this._sortDescend
+			}] : null;
+		},
+
+		//Private--------------------------------------------------------------
+		_sortId: null,
+
+		_sortDescend: null,
+
+		_initHeader: function(colId){
+			var g = this.grid,
+				headerCell = g.header.getHeaderNode(colId),
+				col = g.column(colId, 1),
+				sb = [];
+			if(col.isSortable()){
+				sb.push("<div role='presentation' class='gridxArrowButtonNode'>",
+					"<div class='gridxArrowButtonCharAsc'>&#9652;</div>",
+					"<div class='gridxArrowButtonCharDesc'>&#9662;</div>",
+				"</div>");
+				headerCell.setAttribute('aria-sort', 'none');
+			}
+			sb.push("<div class='gridxSortNode'>", col.name(), "</div>");
+			headerCell.innerHTML = sb.join('');
+		},
+
+		_updateHeader: function(colId, isDescending){
+			var t = this,
+				g = t.grid,
+				headerCell;
+			if(t._sortId && t._sortId != colId){
+				headerCell = g.header.getHeaderNode(t._sortId);
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+					headerCell.setAttribute('aria-sort', 'none');
+				}
+			}
+			t._sortId = colId;
+			t._sortDescend = isDescending = !!isDescending;
+			headerCell = g.header.getHeaderNode(colId);
+			domClass.add(headerCell, 'gridxCellSorted');
+			domClass.toggle(headerCell, 'gridxCellSortedAsc', !isDescending);
+			domClass.toggle(headerCell, 'gridxCellSortedDesc', isDescending);
+			headerCell.setAttribute('aria-sort', isDescending ? 'descending' : 'ascending');
+			g.vLayout.reLayout();
+		},
+
+		_onClick: function(e){
+			// for Clicking on the divider for resizing a column without moving the mouse (no resize is done), causes a column sort
+			// which should not be allowed
+			if (this.grid._eventFlags.onHeaderCellMouseDown !== "columnResizer") {
+				this.sort(e.columnId, this._sortId != e.columnId ? 0 : !this._sortDescend);
+			}
+		},
+
+		_onKey: function(e){
+			if(e.keyCode == keys.ENTER){
+				this._onClick(e);
+			}
+		}
+	});
+});

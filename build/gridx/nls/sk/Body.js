@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/sk/Body",{loadingInfo:"Na\u010d\u00edtavanie...",emptyInfo:"\u017diadne polo\u017eky na zobrazenie",loadFailInfo:"Zlyhalo na\u010d\u00edtavanie \u00fadajov!",loadMore:"Na\u010d\u00edta\u0165 viac",loadMoreLoading:"Na\u010d\u00edtavanie...",loadPrevious:"Na\u010d\u00edta\u0165 predo\u0161l\u00e9",loadPreviousLoading:"Na\u010d\u00edtavanie..."});
-//@ sourceMappingURL=Body.js.map

@@ -1,3 +1,0 @@
-//>>built
-define("gridx/modules/exporter/CSV",["dojo/_base/kernel","dojo/_base/declare","../../core/_Module","../../support/exporter/toCSV"],function(a,b,c,d){a.deprecated("gridx/modules/exporter/CSV is deprecated.","Use gridx/support/exporter/toCSV instead.","1.3");return b(c,{name:"exportCsv",getAPIPath:function(){var a=this.grid;return{exporter:{toCSV:function(b){return d(a,b||{})}}}}})});
-//@ sourceMappingURL=CSV.js.map

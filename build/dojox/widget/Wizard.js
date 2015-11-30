@@ -1,7 +1,137 @@
-//>>built
-require({cache:{"url:dojox/widget/Wizard/Wizard.html":'\x3cdiv class\x3d"dojoxWizard" dojoAttachPoint\x3d"wizardNode"\x3e\r\n    \x3cdiv class\x3d"dojoxWizardContainer" dojoAttachPoint\x3d"containerNode"\x3e\x3c/div\x3e\r\n    \x3cdiv class\x3d"dojoxWizardButtons" dojoAttachPoint\x3d"wizardNav"\x3e\r\n        \x3cbutton dojoType\x3d"dijit.form.Button" type\x3d"button" dojoAttachPoint\x3d"previousButton"\x3e${previousButtonLabel}\x3c/button\x3e\r\n        \x3cbutton dojoType\x3d"dijit.form.Button" type\x3d"button" dojoAttachPoint\x3d"nextButton"\x3e${nextButtonLabel}\x3c/button\x3e\r\n        \x3cbutton dojoType\x3d"dijit.form.Button" type\x3d"button" dojoAttachPoint\x3d"doneButton" style\x3d"display:none"\x3e${doneButtonLabel}\x3c/button\x3e\r\n        \x3cbutton dojoType\x3d"dijit.form.Button" type\x3d"button" dojoAttachPoint\x3d"cancelButton"\x3e${cancelButtonLabel}\x3c/button\x3e\r\n    \x3c/div\x3e\r\n\x3c/div\x3e\r\n'}});
-define("dojox/widget/Wizard","dojo/_base/lang dojo/_base/declare dojo/_base/connect dijit/layout/StackContainer dijit/_TemplatedMixin dijit/_WidgetsInTemplateMixin dojo/i18n dojo/text!./Wizard/Wizard.html dojo/i18n!dijit/nls/common dojo/i18n!./nls/Wizard dijit/form/Button".split(" "),function(c,f,d,g,h,k,e,l){return f("dojox.widget.Wizard",[g,h,k],{templateString:l,nextButtonLabel:"",previousButtonLabel:"",cancelButtonLabel:"",doneButtonLabel:"",cancelFunction:null,hideDisabled:!1,postMixInProperties:function(){this.inherited(arguments);
-var a=c.mixin({cancel:e.getLocalization("dijit","common",this.lang).buttonCancel},e.getLocalization("dojox.widget","Wizard",this.lang)),b;for(b in a)this[b+"ButtonLabel"]||(this[b+"ButtonLabel"]=a[b])},startup:function(){this._started||(this.inherited(arguments),this.connect(this.nextButton,"onClick","_forward"),this.connect(this.previousButton,"onClick","back"),this.cancelFunction?(c.isString(this.cancelFunction)&&(this.cancelFunction=c.getObject(this.cancelFunction)),this.connect(this.cancelButton,
-"onClick",this.cancelFunction)):this.cancelButton.domNode.style.display="none",this.connect(this.doneButton,"onClick","done"),this._subscription=d.subscribe(this.id+"-selectChild",c.hitch(this,"_checkButtons")),this._started=!0)},resize:function(){this.inherited(arguments);this._checkButtons()},_checkButtons:function(){var a=this.selectedChildWidget,b=a.isLastChild;this.nextButton.set("disabled",b);this._setButtonClass(this.nextButton);a.doneFunction?(this.doneButton.domNode.style.display="",b&&(this.nextButton.domNode.style.display=
-"none")):this.doneButton.domNode.style.display="none";this.previousButton.set("disabled",!this.selectedChildWidget.canGoBack);this._setButtonClass(this.previousButton)},_setButtonClass:function(a){a.domNode.style.display=this.hideDisabled&&a.disabled?"none":""},_forward:function(){this.selectedChildWidget._checkPass()&&this.forward()},done:function(){this.selectedChildWidget.done()},destroy:function(){d.unsubscribe(this._subscription);this.inherited(arguments)}})});
-//@ sourceMappingURL=Wizard.js.map
+define([
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"dijit/layout/StackContainer",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"dojo/i18n",
+	"dojo/text!./Wizard/Wizard.html",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!./nls/Wizard",
+	"dijit/form/Button"		// used by template
+], function (lang, declare, connect, StackContainer, _TemplatedMixin, _WidgetsInTemplateMixin, i18n, template) {
+  
+var Wizard = declare("dojox.widget.Wizard", [StackContainer, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	// summary:
+	//		A set of panels that display sequentially, typically notating a step-by-step
+	//		procedure like an install
+	
+	templateString: template,
+	
+	// nextButtonLabel: String
+	//		Label override for the "Next" button.
+	nextButtonLabel: "",
+
+	// previousButtonLabel: String
+	//		Label override for the "Previous" button.
+	previousButtonLabel: "",
+
+	// cancelButtonLabel: String
+	//		Label override for the "Cancel" button.
+	cancelButtonLabel: "",
+
+	// doneButtonLabel: String
+	//		Label override for the "Done" button.
+	doneButtonLabel: "",
+
+	// cancelFunction: Function|String
+	//		Name of function to call if user presses cancel button.
+	//		Cancel button is not displayed if function is not specified.
+	cancelFunction: null,
+
+	// hideDisabled: Boolean
+	//		If true, disabled buttons are hidden; otherwise, they are assigned the
+	//		"WizardButtonDisabled" CSS class
+	hideDisabled: false,
+
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		var labels = lang.mixin({cancel: i18n.getLocalization("dijit", "common", this.lang).buttonCancel},
+			i18n.getLocalization("dojox.widget", "Wizard", this.lang));
+		var prop;
+		for(prop in labels){
+			if(!this[prop + "ButtonLabel"]){
+				this[prop + "ButtonLabel"] = labels[prop];
+			}
+		}
+	},
+
+	startup: function(){
+		if(this._started){
+			//console.log('started');
+			return;
+		}
+		this.inherited(arguments);
+		
+		this.connect(this.nextButton, "onClick", "_forward");
+		this.connect(this.previousButton, "onClick", "back");
+
+		if(this.cancelFunction){
+			if(lang.isString(this.cancelFunction)){
+				this.cancelFunction = lang.getObject(this.cancelFunction);
+			}
+			this.connect(this.cancelButton, "onClick", this.cancelFunction);
+		}else{
+			this.cancelButton.domNode.style.display = "none";
+		}
+		this.connect(this.doneButton, "onClick", "done");
+
+		this._subscription = connect.subscribe(this.id + "-selectChild", lang.hitch(this,"_checkButtons"));
+		this._started = true;
+		
+	},
+	
+	resize: function(){
+		this.inherited(arguments);
+		this._checkButtons();
+	},
+
+	_checkButtons: function(){
+		
+		var sw = this.selectedChildWidget;
+		
+		var lastStep = sw.isLastChild;
+		this.nextButton.set("disabled", lastStep);
+		this._setButtonClass(this.nextButton);
+		if(sw.doneFunction){
+			//console.log(sw.doneFunction);
+			this.doneButton.domNode.style.display = "";
+			if(lastStep){
+				this.nextButton.domNode.style.display = "none";
+			}
+		}else{
+			// #1438 issue here.
+			this.doneButton.domNode.style.display = "none";
+		}
+		this.previousButton.set("disabled", !this.selectedChildWidget.canGoBack);
+		this._setButtonClass(this.previousButton);
+	},
+
+	_setButtonClass: function(button){
+		button.domNode.style.display = (this.hideDisabled && button.disabled) ? "none" : "";
+	},
+
+	_forward: function(){
+		// summary:
+		//		callback when next button is clicked
+		if(this.selectedChildWidget._checkPass()){
+			this.forward();
+		}
+	},
+	
+	done: function(){
+		// summary:
+		//		Finish the wizard's operation
+		this.selectedChildWidget.done();
+	},
+	
+	destroy: function(){
+		connect.unsubscribe(this._subscription);
+		this.inherited(arguments);
+	}
+	
+});
+
+return Wizard;
+});

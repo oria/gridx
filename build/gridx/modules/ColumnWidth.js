@@ -1,12 +1,344 @@
-//>>built
-define("gridx/modules/ColumnWidth","dojo/_base/declare dojo/_base/array dojo/_base/Deferred gridx/support/query dojo/_base/sniff dojo/dom-geometry dojo/dom-class dojo/dom-style dojo/keys ../core/_Module".split(" "),function(A,n,J,m,k,t,B,C,K,D){function I(d,f,c){d.sort(function(b,c){return(b.minWidth||0)-(c.minWidth||0)});for(var a=d.length-1,b;0<=a;--a)if(b=d[a],b.minWidth&&(b.minWidth+c)*(a+1)>f)b.width=b.minWidth+"px",f-=b.minWidth+c;else break;var l=a+1;if(l){var g=Math.floor(f/l-c);f=f-(g+c)*
-(l-1)-c;0>g&&(g=0);0>f&&(f=0);for(a=0;a<l;++a)b=d[a],b.width=(a?g:f)+"px"}}var v=6>k("safari")||!k("safari")&&k("webkit")&&k("ios");return A(D,{name:"columnWidth",forced:["hLayout"],constructor:function(){this._init()},load:function(){var d=this.grid;this.aspect(d.hLayout,"onUpdateWidth","_onUpdateWidth");this.aspect(d,"setColumns","_onSetColumns");this._adaptWidth();this.loaded.callback()},"default":60,autoResize:!1,onUpdate:function(){},_init:function(){var d=this,f=d.grid,c=d.arg("autoResize"),
-a=d.arg("default")+"px";n.forEach(f._columns,function(b){b.hasOwnProperty("declaredWidth")||(b.declaredWidth=b.width=b.width||"auto");f.autoWidth&&("auto"==b.declaredWidth||/%$/.test(b.declaredWidth))?b.width=d["default"]<b.minWidth?b.minWidth+"px":a:c&&!/%$/.test(b.declaredWidth)&&(b.width="auto")});c&&B.add(f.domNode,"gridxPercentColumnWidth")},_onUpdateWidth:function(){var d=this.grid;if(d.autoWidth)this._adaptWidth();else{var f="none"==d.hScrollerNode.style.display,c=this.autoResize;this._adaptWidth(!f,
-1);!c&&f&&m(".gridxCell",d.bodyNode).forEach(function(a){var b=d._columnsById[a.getAttribute("colId")],f=b.declaredWidth;if(c||!f||"auto"==f||/%$/.test(f))a=a.style,b=b.width,a.width=b,a.minWidth=b,a.maxWidth=b});this.onUpdate()}},_adaptWidth:function(d,f){var c=this.grid,a=c.domNode,b=c.header,l=this.arg("autoResize"),g=c.isLeftToRight(),k=g?"marginLeft":"marginRight",g=g?"marginRight":"marginLeft",u=c.hLayout.lead,p=c.hLayout.tail,w=b.innerNode,A=c.bodyNode.style,E=w.style,q=t.getBorderExtents(b.domNode).w,
-x=q,H=0,r=(a.clientWidth||C.get(a,"width"))-u-p-q,h=(q=m(".gridxCell",w)[0])?t.getMarginBox(q).w-t.getContentBox(q).w:0,y=c.header.arg("groups"),B=!a.offsetHeight;this._padBorder=h;0===x?x=1:H=2;E[k]=u+"px";E[g]=(p>x?p-x:0)+"px";c.mainNode.style[k]=u+"px";c.mainNode.style[g]=p+"px";r=0>r?0:r;if(d)this.onUpdate();else{l&&v&&m(".gridxCell",w).forEach(function(e){var F=c._columnsById[e.getAttribute("colid")];if(/px$/.test(F.declaredWidth)){var b=parseInt(F.declaredWidth,10)+h,b=F.width=b+"px";e.style.width=
-b;e.style.minWidth=b;e.style.maxWidth=b}});if(c.autoWidth){var z=0;m(".gridxCell",w).forEach(function(e){var b=c._columnsById[e.getAttribute("colid")],a=C.get(e,"width");if(y||!v||!B)a+=h;a<b.minWidth&&(a=b.minWidth);z+=a;if("auto"==b.width||/%$/.test(b.width))e.style.width=b.width=a+"px",e.style.minWidth=b.width,e.style.maxWidth=b.width});A.width=z+"px";a.style.width=u+p+z+H+"px"}else if(l)E.borderWidth="none"==c.vScrollerNode.style.display?0:"";else{var s=[],a=c._columns,G=0;!y&&v&&(h=0);n.forEach(a,
-function(e){if("auto"==e.declaredWidth)s.push(e);else if(/%$/.test(e.declaredWidth)){var a=parseFloat(r*parseFloat(e.declaredWidth,10)/100-h,10);0>a&&(a=0);"number"==typeof e.minWidth&&a<e.minWidth&&(a=e.minWidth);var c=b.getHeaderNode(e.id);c.style.width=e.width=a+"px";c.style.minWidth=e.width;c.style.maxWidth=e.width}});n.forEach(a,function(e){if("auto"!=e.declaredWidth){var a=b.getHeaderNode(e.id),a=!y&&v?parseFloat(a.style.width,10):C.get(a,"width")+h;/%$/.test(e.declaredWidth)&&(e.width=(a>h?
-a-h:0)+"px");G+=a}});if(s.length){a=r-G;if(0<a)I(s,a,h);else{var D=this.arg("default");n.forEach(s,function(b,a){var c=D;"number"==typeof b.minWidth&&c<b.minWidth&&(c=b.minWidth);b.width=c+"px"})}n.forEach(s,function(a,c){var d=b.getHeaderNode(a.id);d.style.width=a.width;d.style.minWidth=a.width;d.style.maxWidth=a.width})}}y&&(m(".gridxCell",b.innerNode).forEach(function(a){var b=c._columnsById[a.getAttribute("colid")];if(/px$/.test(b.width)){var d=a.clientWidth-t.getPadExtents(a).w;parseInt(b.width,
-10)!=d&&(b.width=d+="px",a.style.width=d,a.style.minWidth=d,a.style.maxWidth=d)}}),c.autoWidth&&m(".gridxCell",c.bodyNode).forEach(function(a){var b=c._columnsById[a.getAttribute("colId")],b=b&&b.width;a=a.style;b&&(a.width=b,a.minWidth=b,a.maxWidth=b)}));c.hScroller.scroll(0);b._onHScroll(0);c.vLayout.reLayout();if(!f)this.onUpdate()}},_onSetColumns:function(){var d=this.grid;this._init();d.header._build();this._adaptWidth();d.cellWidget&&(d.cellWidget._init(),d.edit&&d.edit._init());d.tree&&d.tree._initExpandLevel();
-d.body.refresh();d.header.onRender()}})});
-//@ sourceMappingURL=ColumnWidth.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/Deferred",
+	// "dojo/query",
+	'../support/query',
+	"dojo/_base/sniff",
+	"dojo/dom-geometry",
+	"dojo/dom", // dom.byId
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/keys",
+	"../core/_Module"
+], function(declare, array, Deferred, query, has, domGeometry, dojoDom, domClass, domStyle, keys, _Module){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: columnWidth.
+		//		Manages column width distribution, allow grid autoWidth and column autoResize.
+
+		// default: Number
+		//		Default column width. Applied when it's not possible to decide accurate column width from user's config.
+		'default': 60,
+
+		// autoResize: Boolean
+		//		If set to true, the column width should be set to auto or percentage values,
+		//		so that the column can automatically resize when the grid width is changed.
+		//		(This is the default behavior of an	HTML table).
+		autoResize: false,
+
+		onUpdate: function(){
+			// summary:
+			//		Fired when column widths are updated.
+		}
+	});
+=====*/
+
+	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
+
+	function calcAutoWidth(autoCols, freeWidth, padBorder){
+		autoCols.sort(function(c1, c2){
+			return (c1.minWidth || 0) - (c2.minWidth || 0);
+		});
+		var i = autoCols.length - 1, c;
+		for(; i >= 0; --i){
+			c = autoCols[i];
+			if(c.minWidth && (c.minWidth + padBorder) * (i + 1) > freeWidth){
+				c.width = c.minWidth + 'px';
+				freeWidth -= c.minWidth + padBorder;
+			}else{
+				break;
+			}
+		}
+		var len = i + 1;
+		if(len){
+			var w = Math.floor(freeWidth / len - padBorder);
+			var ww = freeWidth - (w + padBorder) * (len - 1) - padBorder;
+			if(w < 0){
+				w = 0;
+			}
+			if(ww < 0){
+				ww = 0;
+			}
+			for(i = 0; i < len; ++i){
+				c = autoCols[i];
+				c.width = (i ? w : ww);
+				var titleNode = dojoDom.byId(c._domId);
+				if(titleNode){
+					var clientWidth = titleNode.clientWidth - padBorder;
+					if(c.width < clientWidth)
+						c.width = clientWidth;
+				}
+				c.width += "px";
+			}			
+		}
+	}
+
+	return declare(_Module, {
+		name: 'columnWidth',
+
+		forced: ['hLayout'],
+
+		constructor: function(){
+			this._init();
+		},
+
+		load: function(){
+			var t = this,
+				g = t.grid;
+			t.aspect(g.hLayout, 'onUpdateWidth', '_onUpdateWidth');
+			t.aspect(g, 'setColumns', '_onSetColumns');
+			t._adaptWidth();
+			t.loaded.callback();
+		},
+
+		//Public-----------------------------------------------------------------------------
+		'default': 60,
+
+		autoResize: false,
+
+		onUpdate: function(){},
+
+		//Private-----------------------------------------------------------------------------
+		_init: function(){
+			var t = this,
+				g = t.grid,
+				autoResize = t.arg('autoResize'),
+				defaultWidth = t.arg('default') + 'px';
+			array.forEach(g._columns, function(col){
+				if(!col.hasOwnProperty('declaredWidth')){
+					col.declaredWidth = col.width = col.width || 'auto';
+				}
+				if(g.autoWidth && (col.declaredWidth == 'auto' || /%$/.test(col.declaredWidth))){
+					//If minWidth exists, check it
+					col.width = t['default'] < col.minWidth ? col.minWidth + 'px' : defaultWidth;
+				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
+					col.width = 'auto';
+				}
+			});
+			if(autoResize){
+				domClass.add(g.domNode, 'gridxPercentColumnWidth');
+			}
+		},
+
+		_onUpdateWidth: function(){
+			var t = this,
+				g = t.grid;
+			if(g.autoWidth){
+				t._adaptWidth();
+			}else{
+				var noHScroller = g.hScrollerNode.style.display == 'none',
+					autoResize = t.autoResize;
+				t._adaptWidth(!noHScroller, 1);	//1 as true
+				if(!autoResize && noHScroller){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							declaredWidth = col.declaredWidth;
+						if(autoResize || !declaredWidth || declaredWidth == 'auto' || (/%$/).test(declaredWidth)){
+							var s = cellNode.style,
+								w = col.width;
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
+						}
+					});
+				}
+				t.onUpdate();
+			}
+		},
+
+		_adaptWidth: function(skip, noEvent){
+			var t = this,
+				g = t.grid,
+				dn = g.domNode,
+				header = g.header,
+				autoResize = t.arg('autoResize'),
+				ltr = g.isLeftToRight(),
+				marginLead = ltr ? 'marginLeft' : 'marginRight',
+				marginTail = ltr ? 'marginRight' : 'marginLeft',
+				lead = g.hLayout.lead,
+				tail = g.hLayout.tail,
+				innerNode = header.innerNode,
+				bs = g.bodyNode.style,
+				hs = innerNode.style,
+				headerBorder = domGeometry.getBorderExtents(header.domNode).w,
+				tailBorder = headerBorder,
+				mainBorder = 0,
+				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder,
+				refNode = query('.gridxCell', innerNode)[0],
+				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
+				isGroupHeader = g.header.arg('groups'),
+				isGridHidden = !dn.offsetHeight;
+			t._padBorder = padBorder;
+			//FIXME: this is theme dependent. Any better way to do this?
+			if(tailBorder === 0){
+				tailBorder = 1;
+			}else{
+				mainBorder = 2;
+			}
+			hs[marginLead] = lead + 'px';
+			hs[marginTail] = (tail > tailBorder ? tail - tailBorder : 0)  + 'px';
+			g.mainNode.style[marginLead] = lead + 'px';
+			g.mainNode.style[marginTail] = tail + 'px';
+			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
+			if(skip){
+				t.onUpdate();
+				return;
+			}
+			if(autoResize){
+				if(needHackPadBorder){
+					query('.gridxCell', innerNode).forEach(function(node){
+						var c = g._columnsById[node.getAttribute('colid')];
+						if(/px$/.test(c.declaredWidth)){
+							var w = parseInt(c.declaredWidth, 10) + padBorder;
+							w = c.width = w + 'px';
+							node.style.width = w;
+							node.style.minWidth = w;
+							node.style.maxWidth = w;
+						}
+					});
+				}
+			}
+			if(g.autoWidth){
+				var headers = query('.gridxCell', innerNode),
+					totalWidth = 0;
+				headers.forEach(function(node){
+					var c = g._columnsById[node.getAttribute('colid')];
+					var w = domStyle.get(node, 'width');
+					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
+						w += padBorder;
+					}
+					if(w < c.minWidth){
+						w = c.minWidth;
+					}
+					totalWidth += w;
+					if(c.width == 'auto' || (/%$/).test(c.width)){
+						node.style.width = c.width = w + 'px';
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
+					}
+				});
+				bs.width = totalWidth + 'px';
+				dn.style.width = (lead + tail + totalWidth + mainBorder) + 'px';
+			}else if(autoResize){
+				hs.borderWidth = g.vScrollerNode.style.display == 'none' ? 0 : '';
+			}else{
+				var autoCols = [],
+					cols = g._columns,
+					fixedWidth = 0;
+				if(!isGroupHeader && needHackPadBorder){
+					padBorder = 0;
+				}
+				array.forEach(cols, function(c){
+					if(c.declaredWidth == 'auto'){
+						autoCols.push(c);
+					}else if(/%$/.test(c.declaredWidth)){
+						var w = parseFloat(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
+						//Check if less than zero, prevent error in IE.
+						if(w < 0){
+							w = 0;
+						}
+						if(typeof c.minWidth == 'number' && w < c.minWidth){
+							w = c.minWidth;
+						}
+						var node = header.getHeaderNode(c.id);
+						node.style.width = c.width = w + 'px';
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
+					}
+				});
+				array.forEach(cols, function(c){
+					if(c.declaredWidth != 'auto'){
+						var headerNode = header.getHeaderNode(c.id),
+							w = !isGroupHeader && needHackPadBorder ? parseFloat(headerNode.style.width, 10) :
+								(domStyle.get(headerNode, 'width') + padBorder);
+						if(/%$/.test(c.declaredWidth)){
+							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
+						}
+						fixedWidth += w;
+					}
+				});
+				if(autoCols.length){
+					var freeWidth = bodyWidth - fixedWidth;
+					if(freeWidth > 0){
+						calcAutoWidth(autoCols, freeWidth, padBorder);
+					}else{
+						var w = t.arg('default');
+						array.forEach(autoCols, function(c, i){
+							var cw = w;
+							if(typeof c.minWidth == 'number' && cw < c.minWidth){
+								cw = c.minWidth;
+							}
+							c.width = cw + 'px';
+						});
+					}
+					array.forEach(autoCols, function(c, i){
+						var node = header.getHeaderNode(c.id);
+						node.style.width = c.width;
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
+					});
+				}
+			}
+			if(isGroupHeader){
+				// If group header is used, the column width might not be set properly 
+				// (min-width/max-width not working when colspan cells exist).
+				// So the actual width of the node is honored.
+				query('.gridxCell', header.innerNode).forEach(function(node){
+					var col = g._columnsById[node.getAttribute('colid')];
+					if(/px$/.test(col.width)){
+						var width = node.clientWidth - domGeometry.getPadExtents(node).w;
+						if(parseInt(col.width, 10) != width){
+							col.width = width = width + 'px';
+							node.style.width = width;
+							node.style.minWidth = width;
+							node.style.maxWidth = width;
+						}
+					}
+				});
+				if(g.autoWidth){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							w = col && col.width,
+							s = cellNode.style;
+						if(w){
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
+						}
+					});
+				}
+			}
+			g.hScroller.scroll(0);
+			header._onHScroll(0);
+			g.vLayout.reLayout();
+			if(!noEvent){
+				t.onUpdate();
+			}
+		},
+
+		_onSetColumns: function(){
+			var t = this,
+				g = t.grid;
+			t._init();
+			//Now header and body can be different, so we should not trigger any onRender event at this inconsistent stage,
+			g.header._build();
+			t._adaptWidth();
+			//FIXME: Is there any more elegant way to do this?
+			if(g.cellWidget){
+				g.cellWidget._init();
+				if(g.edit){
+					g.edit._init();
+				}
+			}
+			if(g.tree){
+				g.tree._initExpandLevel();
+			}
+			g.body.refresh();
+			//Now header and body are matched, so we can fire onRender.
+			g.header.onRender();
+		}
+	});
+});

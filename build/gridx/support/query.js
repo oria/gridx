@@ -1,4 +1,52 @@
-//>>built
-define("gridx/support/query",["dojo/query","dojo/_base/array","dojo/_base/lang","dojo/dom-class"],function(a,l,f,k){var e=function(g,h){var d=a.apply(null,arguments);if(!h||"object"===typeof g||"string"===typeof g&&/^[^>]*>\s*[^>\s]*$/.test(g))return d;var b=a(h).closest(".gridx")[0];if(b){var f=b.getAttribute("id");if(!e.isGridInGrid[f]||!a(".gridx",b).length||!b.childNodes[2].childNodes[1].contains(h))return d}else return d;return d.filter(function(c){k.contains(c,"gridx")&&(c=c.parentNode?c.parentNode:
-null);return a(c).closest(".gridx")[0]===b})};e.isGridInGrid={};f.mixin(e,a);return e});
-//@ sourceMappingURL=query.js.map
+define([
+	'dojo/query',
+	'dojo/_base/array',
+	'dojo/_base/lang',
+	'dojo/dom-class'
+], function(query, array, lang, domClass){
+	
+	var _query = function(selector, context){
+		
+		var nlist = query.apply(null, arguments);
+		// return nlist;
+		
+		
+		if(!context || typeof selector === 'object'
+			||(typeof selector === 'string' && /^[^>]*>\s*[^>\s]*$/.test(selector))
+		){
+			return nlist;
+		}
+		
+		var currentGrid = query(context).closest('.gridx')[0];
+		
+		if(currentGrid){
+			var id = currentGrid.getAttribute('id');
+			var bn = currentGrid.childNodes[2].childNodes[1];
+			
+			if(!_query.isGridInGrid[id] || !query('.gridx', currentGrid).length
+				|| (!bn.contains(context) && !context.contains(bn))
+			){
+				return nlist;
+			}
+			
+		}else{
+			return nlist;
+		}
+		
+		return nlist.filter(function(n){
+			if(domClass.contains(n, 'gridx')){
+				n = n.parentNode? n.parentNode : null;
+			}
+			return query(n).closest('.gridx')[0] === currentGrid;
+		});
+		
+		//return new query.NodeList(nlist);
+	};
+	
+	_query.isGridInGrid = {};
+
+	lang.mixin(_query, query);
+	// gq = _query;
+	return _query;
+
+});

@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"WidgetRepeater.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,uIAA+I,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC/IF,CAAAG,QAAA,mCAEAH,EAAAI,QAAA,eACAJ,EAAAI,QAAA,iBACAJ,EAAAI,QAAA,oBACAJ,EAAAI,QAAA,oBAEAJ,EAAAK,QAAA,oCAAkDJ,CAAAK,QAAlD,CAAiEL,CAAAM,WAAjE,CAAmFN,CAAAO,WAAnF;wBAOYC,QAAAA,CAASC,CAATD,MAMNT,CAAAW,SAAA,CAAcC,WAAd,CANMH,GAQRG,WARQH,CAQMT,CAAAa,UAAA,CAAeD,WAAf,CARNH,EAUTK,aAAA,CAAc,IAAIF,WAAJ,CAAgBF,CAAhB,CAAd,CAVSD,CAWTM,iBAAAC,YAAA,CAA8BC,QAAAC,cAAA,MAA9B,CAXST,OAYHU,CAZGV,IAPZ,EAR+I,CAA/I;",
-"sources":["WidgetRepeater.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","_Widget","_Templated","_Container","createNew","obj","isString","widget","getObject","addChild","repeaterNode","appendChild","document","createElement","e"]
-}

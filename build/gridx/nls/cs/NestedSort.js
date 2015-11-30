@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/cs/NestedSort",{singleSort:"Jednotliv\u00e9 \u0159azen\u00ed",nestedSort:"Vno\u0159en\u00e9 \u0159azen\u00ed",ascending:"Klepnut\u00edm se\u0159adit vzestupn\u011b",descending:"Klepnut\u00edm se\u0159adit sestupn\u011b",sortingState:"${0} - ${1}",unsorted:"Ne\u0159adit tento sloupec",waiSingleSortLabel:"${0} - \u0159ad\u00ed se podle ${1}. P\u0159i v\u00fdb\u011bru se bude \u0159adit podle ${2}.",waiNestedSortLabel:"${0} - vno\u0159en\u00e9 \u0159azen\u00ed podle ${1}. P\u0159i v\u00fdb\u011bru se provede vno\u0159en\u00e9 \u0159azen\u00ed podle ${2}."});
-//@ sourceMappingURL=NestedSort.js.map

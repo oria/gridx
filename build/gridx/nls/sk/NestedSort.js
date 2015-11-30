@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/sk/NestedSort",{singleSort:"Jednoduch\u00e9 triedenie",nestedSort:"Vnoren\u00e9 triedenie",ascending:"Kliknut\u00edm aktivujete vzostupn\u00e9 zoradenie",descending:"Kliknut\u00edm aktivujete zostupn\u00e9 zoradenie",sortingState:"${0} - ${1}",unsorted:"Netriedi\u0165 tento st\u013apec",waiSingleSortLabel:"${0} - je zoraden\u00e9 pod\u013ea ${1}. Vyberte zoradenie pod\u013ea ${2}",waiNestedSortLabel:"${0} - je vnoren\u00e9 pod\u013ea ${1}. Vyberte vnoren\u00e9 zoradenie pod\u013ea ${2}"});
-//@ sourceMappingURL=NestedSort.js.map

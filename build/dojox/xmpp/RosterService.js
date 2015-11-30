@@ -1,11 +1,268 @@
-//>>built
-define("dojox/xmpp/RosterService",["dojo","dijit","dojox"],function(h,k,g){h.provide("dojox.xmpp.RosterService");g.xmpp.roster={ADDED:101,CHANGED:102,REMOVED:103};h.declare("dojox.xmpp.RosterService",null,{constructor:function(a){this.session=a},addRosterItem:function(a,e,c){if(!a)throw Error("Roster::addRosterItem() - User ID is null");var b={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"},d=new g.string.Builder(g.xmpp.util.createElement("iq",b,!1));d.append(g.xmpp.util.createElement("query",
-{xmlns:"jabber:iq:roster"},!1));a=g.xmpp.util.encodeJid(a);-1==a.indexOf("@")&&(a=a+"@"+this.session.domain);d.append(g.xmpp.util.createElement("item",{jid:a,name:g.xmpp.util.xmlEncode(e)},!1));if(c)for(a=0;a<c.length;a++)d.append("\x3cgroup\x3e"),d.append(c[a]),d.append("\x3c/group\x3e");d.append("\x3c/item\x3e\x3c/query\x3e\x3c/iq\x3e");c=this.session.dispatchPacket(d.toString(),"iq",b.id);c.addCallback(this,"verifyRoster");return c},updateRosterItem:function(a,e,c){-1==a.indexOf("@")&&(a+=a+"@"+
-this.session.domain);var b={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"},d=new g.string.Builder(g.xmpp.util.createElement("iq",b,!1));d.append(g.xmpp.util.createElement("query",{xmlns:"jabber:iq:roster"},!1));var f=this.session.getRosterIndex(a);if(-1!=f){a={jid:a};e?a.name=e:this.session.roster[f].name&&(a.name=this.session.roster[f].name);a.name&&(a.name=g.xmpp.util.xmlEncode(a.name));d.append(g.xmpp.util.createElement("item",a,!1));if(e=c?c:this.session.roster[f].groups)for(c=
-0;c<e.length;c++)d.append("\x3cgroup\x3e"),d.append(e[c]),d.append("\x3c/group\x3e");d.append("\x3c/item\x3e\x3c/query\x3e\x3c/iq\x3e");b=this.session.dispatchPacket(d.toString(),"iq",b.id);b.addCallback(this,"verifyRoster");return b}},verifyRoster:function(a){if("result"!=a.getAttribute("type")){var e=this.session.processXmppError(a);this.onAddRosterItemFailed(e)}return a},addRosterItemToGroup:function(a,e){if(!a)throw Error("Roster::addRosterItemToGroup() JID is null or undefined");if(!e)throw Error("Roster::addRosterItemToGroup() group is null or undefined");
-var c=this.session.getRosterIndex(a);if(-1!=c){for(var b=this.session.roster[c],d=!1,f=0;b<b.groups.length&&!d;f++)b.groups[f]==e&&(d=!0);return!d?this.updateRosterItem(a,b.name,b.groups.concat(e),c):g.xmpp.xmpp.INVALID_ID}},removeRosterGroup:function(a){for(var e=this.session.roster,c=0;c<e.length;c++){var b=e[c];if(0<b.groups.length)for(var d=0;d<b.groups.length;d++)b.groups[d]==a&&(b.groups.splice(d,1),this.updateRosterItem(b.jid,b.name,b.groups))}},renameRosterGroup:function(a,e){for(var c=this.session.roster,
-b=0;b<c.length;b++){var d=c[b];if(0<d.groups.length)for(var f=0;f<d.groups.length;f++)d.groups[f]==a&&(d.groups[f]=e,this.updateRosterItem(d.jid,d.name,d.groups))}},removeRosterItemFromGroup:function(a,e){if(!a)throw Error("Roster::addRosterItemToGroup() JID is null or undefined");if(!e)throw Error("Roster::addRosterItemToGroup() group is null or undefined");var c=this.session.getRosterIndex(a);if(-1!=c){for(var b=this.session.roster[c],d=!1,f=0;f<b.groups.length&&!d;f++)b.groups[f]==e&&(d=!0,c=f);
-return!0==d?(b.groups.splice(c,1),this.updateRosterItem(a,b.name,b.groups)):g.xmpp.xmpp.INVALID_ID}},rosterItemRenameGroup:function(a,e,c){if(!a)throw Error("Roster::rosterItemRenameGroup() JID is null or undefined");if(!c)throw Error("Roster::rosterItemRenameGroup() group is null or undefined");var b=this.session.getRosterIndex(a);if(-1!=b){for(var b=this.session.roster[b],d=!1,f=0;f<b.groups.length&&!d;f++)b.groups[f]==e&&(b.groups[f]=c,d=!0);return!0==d?this.updateRosterItem(a,b.name,b.groups):
-g.xmpp.xmpp.INVALID_ID}},renameRosterItem:function(a,e){if(!a)throw Error("Roster::addRosterItemToGroup() JID is null or undefined");if(!e)throw Error("Roster::addRosterItemToGroup() New Name is null or undefined");var c=this.session.getRosterIndex(a);if(-1!=c)return this.updateRosterItem(a,e,this.session.roster.groups,c)},removeRosterItem:function(a){if(!a)throw Error("Roster::addRosterItemToGroup() JID is null or undefined");var e={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,
-type:"set"},c=new g.string.Builder(g.xmpp.util.createElement("iq",e,!1));c.append(g.xmpp.util.createElement("query",{xmlns:"jabber:iq:roster"},!1));-1==a.indexOf("@")&&(a+=a+"@"+this.session.domain);c.append(g.xmpp.util.createElement("item",{jid:a,subscription:"remove"},!0));c.append("\x3c/query\x3e\x3c/iq\x3e");a=this.session.dispatchPacket(c.toString(),"iq",e.id);a.addCallback(this,"verifyRoster");return a},getAvatar:function(a){},publishAvatar:function(a,e){},onVerifyRoster:function(a){},onVerifyRosterFailed:function(a){}})});
-//@ sourceMappingURL=RosterService.js.map
+dojo.provide("dojox.xmpp.RosterService");
+
+dojox.xmpp.roster = {
+	ADDED: 101,
+	CHANGED: 102,
+	REMOVED: 103
+};
+
+dojo.declare("dojox.xmpp.RosterService", null, {
+	constructor: function(xmppSession){
+		this.session = xmppSession;
+	},
+
+	addRosterItem: function(jid, name, groups){
+		if(!jid){
+			throw new Error ("Roster::addRosterItem() - User ID is null");
+		}
+		var iqId = this.session.getNextIqId();
+		var req = {
+			id: iqId,
+			from: this.session.jid + "/" + this.session.resource,
+			type: "set"
+		}
+
+		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq", req, false));
+		request.append(dojox.xmpp.util.createElement("query",{xmlns: 'jabber:iq:roster'},false));
+		jid = dojox.xmpp.util.encodeJid(jid);
+		if (jid.indexOf('@')== -1){
+			jid = jid + '@' + this.session.domain;
+		}
+
+
+		request.append(dojox.xmpp.util.createElement("item",{jid:jid,name:dojox.xmpp.util.xmlEncode(name)},false));
+
+		if (groups){
+			for (var i=0; i<groups.length; i++){
+				request.append("<group>");
+				request.append(groups[i]);
+				request.append("</group>");
+			}
+		}
+	
+		request.append("</item></query></iq>");
+		//console.log(request.toString());
+
+		var def = this.session.dispatchPacket(request.toString(),"iq",req.id);
+		def.addCallback(this, "verifyRoster");
+		return def;
+	},
+
+	updateRosterItem: function(jid, name, groups){
+		if (jid.indexOf('@') == -1){
+			jid += jid + '@' + this.session.domain;
+		}
+
+		var req = {
+			id: this.session.getNextIqId(),
+			from: this.session.jid + "/" + this.session.resource,
+			type: "set"
+		}
+
+		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq", req, false));
+		request.append(dojox.xmpp.util.createElement("query",{xmlns: 'jabber:iq:roster'},false));
+
+		var i = this.session.getRosterIndex(jid);
+
+		//item not found
+		if (i==-1){return;}
+		var item = {
+			jid:jid
+		};
+		if(name){
+			item.name = name;
+		} else if(this.session.roster[i].name){
+			item.name = this.session.roster[i].name;
+		}
+		if(item.name) {
+			item.name = dojox.xmpp.util.xmlEncode(item.name);
+		}
+		request.append(dojox.xmpp.util.createElement("item",item,false));
+		
+		var newGroups = groups ? groups : this.session.roster[i].groups;
+		
+		if (newGroups){
+			for (var x=0;x<newGroups.length;x++){
+				request.append("<group>");
+				request.append(newGroups[x]);
+				request.append("</group>");
+			}
+		}
+		
+		request.append("</item></query></iq>");
+		
+		var def = this.session.dispatchPacket(request.toString(),"iq",req.id);
+		def.addCallback(this, "verifyRoster");
+		return def;
+	},
+
+	verifyRoster: function(res){
+		if (res.getAttribute('type')=='result'){
+			//this.onAddRosterItem(res.getAttribute('id'));
+		}else{
+			var err=this.session.processXmppError(res);
+			this.onAddRosterItemFailed(err);
+		}
+		return res;
+	},
+
+	addRosterItemToGroup: function(jid, group){
+		if (!jid) throw new Error("Roster::addRosterItemToGroup() JID is null or undefined");
+		if (!group) throw new Error("Roster::addRosterItemToGroup() group is null or undefined");
+
+		var index = this.session.getRosterIndex(jid);
+		if (index==-1){return;}
+
+		var item = this.session.roster[index];
+		var tgroups = [];
+
+		var found = false;
+
+		for (var i=0; ((item<item.groups.length) && (!found)); i++){
+			if (item.groups[i]!=group){continue;}
+			found=true;
+		}
+	
+		if(!found){
+			return this.updateRosterItem(jid, item.name, item.groups.concat(group),index);
+		}
+	
+		return dojox.xmpp.xmpp.INVALID_ID;
+	},
+	
+	removeRosterGroup: function(group) {
+		var roster = this.session.roster;
+		for(var i=0;i<roster.length;i++){
+			var item = roster[i];
+			if(item.groups.length > 0) {
+				//var found = false;
+				for(var j = 0;j < item.groups.length; j++) {
+					if (item.groups[j]==group){
+						item.groups.splice(j,1);
+						this.updateRosterItem(item.jid, item.name, item.groups);
+						//found=true;
+					}
+				}
+			}
+		}
+	},
+	
+	renameRosterGroup: function(group, newGroup) {
+		var roster = this.session.roster;
+		for(var i=0;i<roster.length;i++){
+			var item = roster[i];
+			if(item.groups.length > 0) {
+				//var found = false;
+				for(var j = 0;j < item.groups.length; j++) {
+					if (item.groups[j]==group){
+						item.groups[j] = newGroup;
+						this.updateRosterItem(item.jid, item.name, item.groups);
+				//		found=true;
+					}
+				}
+			}
+		}
+	},
+
+	removeRosterItemFromGroup: function(jid, group){
+		if (!jid) throw new Error("Roster::addRosterItemToGroup() JID is null or undefined");
+		if (!group) throw new Error("Roster::addRosterItemToGroup() group is null or undefined");
+
+		var index = this.session.getRosterIndex(jid);
+		if (index==-1){return;}
+
+		var item = this.session.roster[index];
+		var found = false;
+
+		for (var i=0; ((i<item.groups.length) && (!found)); i++){
+			if (item.groups[i]!=group){continue;}
+			found=true;
+			index = i;
+		}
+
+		if(found==true){
+			item.groups.splice(index,1);
+			return this.updateRosterItem(jid, item.name, item.groups);
+		}
+		
+		return dojox.xmpp.xmpp.INVALID_ID;
+	},
+	
+	rosterItemRenameGroup: function(jid, oldGroup, newGroup){
+		if (!jid) throw new Error("Roster::rosterItemRenameGroup() JID is null or undefined");
+		if (!newGroup) throw new Error("Roster::rosterItemRenameGroup() group is null or undefined");
+	
+		var index = this.session.getRosterIndex(jid);
+		if (index==-1){return;}
+
+		var item = this.session.roster[index];
+		var found = false;
+
+		for (var i=0; ((i<item.groups.length) && (!found)); i++){
+			if (item.groups[i]==oldGroup){
+				item.groups[i] = newGroup;
+				found=true;
+			}
+		}
+
+		if(found==true){
+			return this.updateRosterItem(jid, item.name, item.groups);
+		}
+		
+		return dojox.xmpp.xmpp.INVALID_ID;
+	},
+
+	renameRosterItem: function(jid,newName){
+		if (!jid) throw new Error("Roster::addRosterItemToGroup() JID is null or undefined");
+		if (!newName) throw new Error("Roster::addRosterItemToGroup() New Name is null or undefined");
+
+		var index = this.session.getRosterIndex(jid);
+		if (index==-1){return;}
+
+		return this.updateRosterItem(jid, newName, this.session.roster.groups,index);
+	},
+
+	removeRosterItem: function(jid){
+		if (!jid) throw new Error("Roster::addRosterItemToGroup() JID is null or undefined");
+		
+		var req={
+			id: this.session.getNextIqId(),
+			from: this.session.jid + "/" + this.session.resource,
+			type: 'set'
+		};
+		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq", req, false));
+		
+		request.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:roster"},false));
+
+		if (jid.indexOf('@')== -1){
+			jid += jid + '@' + this.session.domain;
+		}
+
+		request.append(dojox.xmpp.util.createElement('item',{jid:jid,subscription:"remove"},true));
+
+		request.append("</query></iq>");
+
+		var def = this.session.dispatchPacket(request.toString(),"iq",req.id);
+		def.addCallback(this, "verifyRoster");
+		return def;
+	},
+
+	//Avatar functions...I removed this stuff for now..can we even do anything useful
+	//with this data even if we have it?
+	getAvatar: function(jid){
+	},
+
+	publishAvatar: function(type,binval){
+
+	},
+
+	//EVENTS
+
+	onVerifyRoster: function(id){
+		//console.log("Roster::onVerifyRoster() - ", id);
+	},
+
+	onVerifyRosterFailed: function(err){
+		//console.log("onVerifyRosterFailed: ", err);
+	}
+});

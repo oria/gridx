@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"Query.js",
-"lineCount":1,
-"mappings":"A,SAAAA,MAAA,4EAIG,QAAA,CAASC,CAAT,CAEFC,CAFE,QAaKD,EAAA,CAAQC,CAAR,uCAKOC,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,EACZG,cAAA,SACAC,eAAA,MAAsBF,CAAAG,MAAtB,CAAkCH,CAAAI,aAAlC,EAFYN,CALP,OAWCK,QAAAA,GACNJ,UAAAM,QAAA,mCAGOC,SAHP,EADMH,CAXD,WAoBKD,QAAAA,OACNK,EAAID,SADEJ,CAETF,EAAOO,CAAA,CAAEA,CAAAC,OAAF,GAFEN,CAGTO,EAAIV,UAHKG,CAITQ,EAAID,CAAAE,OAJKT,CAKTU,EAAKF,CAAAG,QAALD,CAAiBF,CAAAG,QAAjBD,IACDA,EAAAT,MANUD,CAMCF,CAAA,GACXY,EAAAR,aAPUF,CAOQF,CAAA,GAClBS,EAAAK,KAAA,eACAJ,EAAAK,MAAA,EATUb,CApBL,EAbL,CAJH;",
-"sources":["Query.js.uncompressed.js"],
-"names":["define","declare","_Extension","constructor","model","args","_mixinAPI","_cmdQuery","query","queryOptions","_addCmd","arguments","a","length","m","c","_cache","op","options","_msg","clear"]
-}

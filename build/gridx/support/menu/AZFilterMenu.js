@@ -1,4 +1,57 @@
-//>>built
-define("gridx/support/menu/AZFilterMenu",["dojo/_base/declare","dojo/_base/array","./_FilterMenuBase","dijit/CheckedMenuItem"],function(d,c,e,f){return d(e,{alphabeticRanges:["A-F","G-L","M-R","S-Z"],_createMenuItems:function(){var a=this;c.forEach(a.alphabeticRanges,function(b){a.addChild(new f({label:b,onChange:function(){a._addRule()}}))})},_addRule:function(){var a=this,b="";c.forEach(a.getChildren(),function(a){a.get("checked")&&(b+=a.get("label"))});b?(b=RegExp("^["+b+"]","i"),a._addFilter("azfilter",
-function(c){return b.test(String(c.data[a.colId]))})):a._removeFilter("azfilter")}})});
-//@ sourceMappingURL=AZFilterMenu.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"./_FilterMenuBase",
+	"dijit/CheckedMenuItem"
+], function(declare, array, _FilterMenuBase, CheckedMenuItem){
+
+/*=====
+	return declare(_FilterMenuBase, {
+		// summary:
+		//		This is a sample implementation for the alphabetic filter, default
+		//		to ['A-F', 'G-L', 'M-R', 'S-Z'].
+		
+		// alphabeticRanges: String[]
+		//		The ranges of alphabetic filter.
+		alphabeticRanges: ['A-F', 'G-L', 'M-R', 'S-Z']
+	});
+=====*/
+
+	return declare(_FilterMenuBase, {
+		
+		alphabeticRanges: ['A-F', 'G-L', 'M-R', 'S-Z'],
+
+		_createMenuItems: function(){
+			var t = this,
+				arr = t.alphabeticRanges;
+			array.forEach(arr, function(item){
+				t.addChild(new CheckedMenuItem({
+					label: item,
+					onChange: function(){
+						t._addRule();
+					}
+				}));
+			});
+		},
+
+		_addRule: function(){
+			var t = this,
+				key = 'azfilter',
+				reg = '';
+			array.forEach(t.getChildren(), function(mi){
+				if(mi.get('checked')){
+					reg += mi.get('label');
+				}
+			});
+			if(reg){
+				reg = new RegExp('^[' + reg + ']', 'i');
+				t._addFilter(key, function(row){
+					return reg.test(String(row.data[t.colId]));
+				});
+			}else{
+				//If reg is empty string, remove this filter
+				t._removeFilter(key);
+			}
+		}
+	});
+});

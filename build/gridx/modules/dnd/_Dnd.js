@@ -1,14 +1,394 @@
-//>>built
-define("gridx/modules/dnd/_Dnd","dojo/_base/declare dojo/_base/lang dojo/_base/Deferred dojo/dom-construct dojo/dom-geometry dojo/dom-class dojo/dom-style dojo/dom dojo/_base/window dojo/_base/sniff dojo/dnd/Source dojo/dnd/Manager ../../core/_Module ../AutoScroll".split(" "),function(r,h,s,k,n,f,t,p,e,u,l,m,q){var g=h.hitch;return q.register(r(q,{name:"_dnd",optional:["selectRow","selectColumn"],constructor:function(){var b=this,a=b.grid,c=e.doc;b.accept=[];b._profiles={};b._selectStatus={};b._node=
-k.create("div");b.batchConnect([a,"onCellMouseOver","_checkDndReady"],[a,"onCellMouseOut","_dismissDndReady"],[a,"onCellMouseDown","_beginDnd"],[c,"onmouseup","_endDnd"],[c,"onmousemove","_onMouseMove"],[a,"onCellMouseUp",function(a){setTimeout(function(){b._checkDndReady(a)},0)}]);b.subscribe("/dnd/cancel","_endDnd")},load:function(b){b=this.grid.mainNode;this._source=new l(b,{isSource:!1,accept:this.accept,getSelectedNodes:function(){return[0]},getItem:g(this,"_getItem"),onSelectStart:function(){this.notSelectText&&
-l.prototype.onSelectStart.apply(this,arguments)},checkAcceptance:g(this,"_checkAcceptance"),onDraggingOver:g(this,"_onDraggingOver"),onDraggingOut:g(this,"_onDraggingOut"),onDropExternal:g(this,"_onDropExternal"),onDropInternal:g(this,"_onDropInternal")});u("ff")&&this._fixFF(this._source,b);this._source.grid=this.grid;this._saveSelectStatus();this.loaded.callback()},destroy:function(){this.inherited(arguments);this._source.destroy();k.destroy(this._node)},getAPIPath:function(){return{dnd:{_dnd:this}}},
-profile:null,register:function(b,a){this._profiles[b]=a;[].push.apply(this.accept,a.arg("accept"))},_fixFF:function(b){return this.connect(e.doc,"onmousemove",function(a){var c=n.position(b.node),d=a.clientX,f=a.clientY;a=b._alreadyIn;c=f>=c.y&&f<=c.y+c.h&&d>=c.x&&d<=c.x+c.w;!a&&c?(b._alreadyIn=1,b.onOverEvent()):a&&!c&&(b._alreadyIn=0,b.onOutEvent())})},_onMouseMove:function(b){this._alreadyIn&&(this._dnding||this._extDnding)&&this._markTargetAnchor(b)},_saveSelectStatus:function(b){var a,c,d=this.grid.select;
-if(d)for(a in d)if((c=d[a])&&h.isObject(c))this._selectStatus[a]=c.arg("enabled"),void 0!==b&&(c.enabled=b)},_loadSelectStatus:function(){var b,a,c=this.grid.select;if(c)for(b in c)if((a=c[b])&&h.isObject(a))a.enabled=this._selectStatus[b]},_checkDndReady:function(b){var a,c;if(!this._dndReady&&!this._dnding&&!this._extDnding)for(a in this._profiles)if(c=this._profiles[a],c.arg("enabled")&&c._checkDndReady(b)){this.profile=c;this._saveSelectStatus(!1);f.add(e.body(),"gridxDnDReadyCursor");this._dndReady=
-this._source.notSelectText=1;break}},_dismissDndReady:function(){this._dndReady&&!this._dndBegun&&(this._loadSelectStatus(),this._dndReady=0,f.remove(e.body(),"gridxDnDReadyCursor"))},_beginDnd:function(b){var a=this;a._checkDndReady(b);if(a._dndReady){var c=a.profile,d=m.manager();a._dndBegun=1;a._source.isSource=!0;a._source.canNotDragOut=!c.arg("provide").length;a._node.innerHTML=c._buildDndNodes();a._oldStartDrag=d.startDrag;d.startDrag=g(a,"_startDrag",b);a.avatar&&(a._oldMakeAvatar=d.makeAvatar,
-d.makeAvatar=function(){return new a.avatar(d)});d._dndInfo={grid:a.grid,cssName:c._cssName,count:c._getDndCount()};a.grid.vScrollerNode.focus();c._onBeginDnd(a._source);p.setSelectable(a.grid.domNode,!1)}},_endDnd:function(){var b=m.manager();this._source.isSource=!1;this._dndBegun=this._alreadyIn=0;delete b._dndInfo;this._oldStartDrag&&(b.startDrag=this._oldStartDrag,delete this._oldStartDrag);this._oldMakeAvatar&&(b.makeAvatar=this._oldMakeAvatar,delete this._oldMakeAvatar);if(this._dndReady||
-this._dnding||this._extDnding)this._dnding=this._extDnding=0,this._destroyUI(),p.setSelectable(this.grid.domNode,!0),f.remove(e.body(),"gridxDnDReadyCursor"),this.profile._onEndDnd(),this._source.notSelectText=0,this._loadSelectStatus()},_createUI:function(){f.add(e.body(),"gridxDnDCursor");this.grid.autoScroll&&(this.profile._onBeginAutoScroll(),this.grid.autoScroll.enabled=!0)},_destroyUI:function(){this._unmarkTargetAnchor();f.remove(e.body(),"gridxDnDCursor");this.grid.autoScroll&&(this.profile._onEndAutoScroll(),
-this.grid.autoScroll.enabled=!1)},_createTargetAnchor:function(){return k.create("div",{"class":"gridxDnDAnchor"})},_markTargetAnchor:function(b){if(this._extDnding||this.profile.arg("canRearrange")){var a=this._targetAnchor,c=n.position(this.grid.mainNode);a||(a=this._targetAnchor=this._createTargetAnchor(),a.style.display="none",this.grid.mainNode.appendChild(a));f.add(a,"gridxDnDAnchor"+this.profile._cssName);(b=this.profile._calcTargetAnchorPos(b,c))?(t.set(a,b),a.style.display="block"):a.style.display=
-"none"}},_unmarkTargetAnchor:function(){var b=this._targetAnchor;b&&(b.style.display="none",f.remove(b,"gridxDnDAnchor"+this.profile._cssName))},_startDrag:function(b,a,c,d){this._dndReady&&a===this._source&&(this._oldStartDrag.call(m.manager(),a,this._node.childNodes,d),this._dndReady=0,this._dnding=this._alreadyIn=1,this._createUI(),this._markTargetAnchor(b))},_getItem:function(b){return{type:this.profile.arg("provide"),data:this.profile._getItemData(b)}},_checkAcceptance:function(b,a){var c=function(a){for(var b=
-{},c=a.length-1;0<=c;--c)b[a[c]]=1;return b},d=l.prototype.checkAcceptance;if(d.apply(this._source,arguments)){if(b.grid===this.grid)return this.profile.arg("canRearrange");if(!b.canNotDragOut)for(var f in this._profiles){var e=this._profiles[f],g=d.apply({accept:c(e.arg("accept"))},arguments);if(e.arg("enabled")&&g&&(!e.checkAcceptance||e.checkAcceptance.apply(e,arguments)))return this.profile=e,this._extDnding=1,!0}}return!1},_onDraggingOver:function(){if(this._dnding||this._extDnding)this._alreadyIn=
-1,this._createUI()},_onDraggingOut:function(){if(this._dnding||this._extDnding)this._alreadyIn=0,this._destroyUI()},_onDropInternal:function(b,a){this.profile._onDropInternal(b,a)},_onDropExternal:function(b,a,c){var d=this;a=d.profile._onDropExternal(b,a,c);s.when(a,function(){if(!c)if(b.grid)b.grid.dnd._dnd.profile.onDraggedOut(d._source);else b.deleteSelectedNodes()})}}))});
-//@ sourceMappingURL=_Dnd.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/Deferred",
+	"dojo/dom-construct",
+	"dojo/dom-geometry",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom",
+	"dojo/_base/window",
+	"dojo/_base/sniff",
+	"dojo/dnd/Source",
+	"dojo/dnd/Manager",
+	"../../core/_Module",
+	"../AutoScroll"
+], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, has,
+	Source, DndManager, _Module){
+
+/*=====
+	return declare(_Module, {
+		_fixFF: function(source){
+			// summary:
+			//		Fix FireFox not firing onmouseover/onmousemove events during dnd.
+			//		Can use this function when drag to/from non-grid sources.
+		}
+	});
+=====*/
+
+	var hitch = lang.hitch;
+
+	return _Module.register(
+	declare(_Module, {
+		name: '_dnd',
+
+		optional: ['selectRow', 'selectColumn'],
+
+		constructor: function(){
+			var t = this,
+				g = t.grid,
+				doc = win.doc;
+			t.accept = [];
+			t._profiles = {};
+			t._selectStatus = {};
+			t._node = domConstruct.create('div');
+			t.batchConnect(
+				[g, 'onCellMouseOver', '_checkDndReady'],
+				[g, 'onCellMouseOut', '_dismissDndReady'],
+				[g, 'onCellMouseDown', '_beginDnd'],
+				[doc, 'onmouseup', '_endDnd'],
+				[doc, 'onmousemove', '_onMouseMove'],
+				[g, 'onCellMouseUp', function(evt){
+					//FIXME: this is ugly.
+					//selection end event fires on document, so it always after onCellMouseUp.
+					//But dnd should check the selection result in order to show dnd cursor,
+					//so do some setTimeout here.
+					setTimeout(function(){
+						t._checkDndReady(evt);
+					}, 0);
+				}]
+			);
+			t.subscribe("/dnd/cancel", '_endDnd');
+		},
+
+		load: function(args){
+			var t = this,
+				n = t.arg('sourceNode', t.grid.mainNode);
+			t._source = new Source(n, {
+				isSource: false,
+				accept: t.accept,
+				getSelectedNodes: function(){return [0];},
+				getItem: hitch(t, '_getItem'),
+				onSelectStart: function(){
+					//Source stops text selecting on anything inside its domnode,
+					//but we still need that when not dnding.
+					if(this.notSelectText){
+						Source.prototype.onSelectStart.apply(this, arguments);
+					}
+				},
+				checkAcceptance: hitch(t, '_checkAcceptance'),
+				onDraggingOver: hitch(t, '_onDraggingOver'),
+				onDraggingOut: hitch(t, '_onDraggingOut'),
+				onDropExternal: hitch(t, '_onDropExternal'),
+				onDropInternal: hitch(t, '_onDropInternal')
+			});
+			if(has('ff')){
+				t._fixFF(t._source, n);
+			}
+			t._source.grid = t.grid;
+			t._saveSelectStatus();
+			t.loaded.callback();
+		},
+		
+		destroy: function(){
+			this.inherited(arguments);
+			this._source.destroy();
+			domConstruct.destroy(this._node);
+		},
+	
+		getAPIPath: function(){
+			return {
+				dnd: {
+					_dnd: this
+				}
+			};
+		},
+
+		//Public----------------------------------------------------------------------
+		profile: null,
+
+		register: function(name, profile){
+			this._profiles[name] = profile;
+			[].push.apply(this.accept, profile.arg('accept'));
+		},
+		
+		//Private-----------------------------------------------------------------
+		_fixFF: function(source){
+			return this.connect(win.doc, 'onmousemove', function(evt){
+				var pos = domGeometry.position(source.node),
+					x = evt.clientX,
+					y = evt.clientY,
+					alreadyIn = source._alreadyIn,
+					isIn = y >= pos.y && y <= pos.y + pos.h && x >= pos.x && x <= pos.x + pos.w;
+				if(!alreadyIn && isIn){
+					source._alreadyIn = 1;	//1 as true
+					source.onOverEvent();
+				}else if(alreadyIn && !isIn){
+					source._alreadyIn = 0;	//0 as false
+					source.onOutEvent();
+				}
+			});
+		},
+
+		_onMouseMove: function(evt){
+			var t = this;
+			if(t._alreadyIn && (t._dnding || t._extDnding)){
+				t._markTargetAnchor(evt);
+				if(this.profile._onMouseMove)
+					this.profile._onMouseMove();
+			}
+		},
+
+		_saveSelectStatus: function(enabled){
+			var name, selector, selectors = this.grid.select;
+			if(selectors){
+				for(name in selectors){
+					selector = selectors[name];
+					if(selector && lang.isObject(selector)){
+						this._selectStatus[name] = selector.arg('enabled');
+						if(enabled !== undefined){
+							selector.enabled = enabled;
+						}
+					}
+				}
+			}
+		},
+
+		_loadSelectStatus: function(){
+			var name, selector, selectors = this.grid.select;
+			if(selectors){
+				for(name in selectors){
+					selector = selectors[name];
+					if(selector && lang.isObject(selector)){
+						selector.enabled = this._selectStatus[name];
+					}
+				}
+			}
+		},
+
+		_checkDndReady: function(evt){
+			var t = this, name, p;
+			if(!t._dndReady && !t._dnding && !t._extDnding){
+				for(name in t._profiles){
+					p = t._profiles[name];
+					if(p.arg('enabled') && p._checkDndReady(evt)){
+						t.profile = p;
+						// t._saveSelectStatus(false);
+						domClass.add(win.body(), 'gridxDnDReadyCursor');
+						t._source.notSelectText = 1;
+						t._dndReady = 1;
+						return;
+					}
+				}
+			}
+		},
+		
+		_dismissDndReady: function(){
+			if(this._dndReady && !this._dndBegun){
+				this._loadSelectStatus();
+				this._dndReady = 0;	//0 as false
+				domClass.remove(win.body(), 'gridxDnDReadyCursor');
+			}
+		},
+
+		_beginDnd: function(evt){
+			var t = this;
+			t._checkDndReady(evt);
+			if(t._dndReady){
+				var p = t.profile,
+					m = DndManager.manager();
+				t._dndBegun = 1;
+				t._source.isSource = true;
+				t._source.canNotDragOut = !p.arg('provide').length;
+				t._node.innerHTML = p._buildDndNodes();
+				t._oldStartDrag = m.startDrag;
+				m.startDrag = hitch(t, '_startDrag', evt);
+				
+				if(t.avatar){
+					t._oldMakeAvatar = m.makeAvatar;
+					m.makeAvatar = function(){
+						return new t.avatar(m);
+					};
+				}
+				m._dndInfo = {
+					grid: t.grid,
+					cssName: p._cssName,
+					count: p._getDndCount()
+				};
+				t.grid.vScrollerNode.focus();
+				p._onBeginDnd(t._source);
+				dom.setSelectable(t.grid.domNode, false);
+				t._saveSelectStatus(false);
+
+			}
+		},
+
+		_endDnd: function(){
+			var t = this,
+				m = DndManager.manager();
+			t._source.isSource = false;
+			t._alreadyIn = 0;	//0 as false
+			t._dndBegun = 0;
+			delete m._dndInfo;
+			if(t._oldStartDrag){
+				m.startDrag = t._oldStartDrag;
+				delete t._oldStartDrag;
+			}
+			if(t._oldMakeAvatar){
+				m.makeAvatar = t._oldMakeAvatar;
+				delete t._oldMakeAvatar;
+			}
+			if(t._dndReady || t._dnding || t._extDnding){
+				t._dnding = t._extDnding = 0;	//0 as false
+				t._destroyUI();
+				dom.setSelectable(t.grid.domNode, true);
+				domClass.remove(win.body(), 'gridxDnDReadyCursor');
+				t.profile._onEndDnd();
+				t._source.notSelectText = 0;
+				t._loadSelectStatus();
+			}
+		},
+		
+		_createUI: function(){
+			domClass.add(win.body(), 'gridxDnDCursor');
+			if(this.grid.autoScroll){
+				this.profile._onBeginAutoScroll();
+				this.grid.autoScroll.enabled = true;
+			}
+		},
+
+		_destroyUI: function(){
+			var t = this;
+			t._unmarkTargetAnchor();
+			domClass.remove(win.body(), 'gridxDnDCursor');
+			if(t.grid.autoScroll){
+				t.profile._onEndAutoScroll();
+				t.grid.autoScroll.enabled = false;
+			}
+		},
+
+		_createTargetAnchor: function(){
+			return domConstruct.create("div", {
+				"class": "gridxDnDAnchor"
+			});
+		},
+
+		_markTargetAnchor: function(evt){
+			var t = this;
+			if(t._extDnding || t.profile.arg('canRearrange')){
+				var targetAnchor = t._targetAnchor,
+					containerPos = domGeometry.position(t.grid.mainNode);
+				if(!targetAnchor){
+					targetAnchor = t._targetAnchor = t._createTargetAnchor();
+					targetAnchor.style.display = "none";
+					t.grid.mainNode.appendChild(targetAnchor);
+				}
+				domClass.add(targetAnchor, 'gridxDnDAnchor' + t.profile._cssName);
+				var pos = t.profile._calcTargetAnchorPos(evt, containerPos);
+				if(pos){
+					domStyle.set(targetAnchor, pos);
+					targetAnchor.style.display = "block";
+				}else{
+					targetAnchor.style.display = "none";
+				}
+			}
+		},
+
+		_unmarkTargetAnchor: function(){
+			var targetAnchor = this._targetAnchor;
+			if(targetAnchor){
+				targetAnchor.style.display = "none";
+				domClass.remove(targetAnchor, 'gridxDnDAnchor' + this.profile._cssName);
+			}
+		},
+
+		//---------------------------------------------------------------------------------
+		_startDrag: function(evt, source, nodes, copy){
+			var t = this;
+			if(t._dndReady && source === t._source){
+				t._oldStartDrag.call(DndManager.manager(), source, t._node.childNodes, copy);
+				t._dndReady = 0;	//0 as false
+				t._dnding = t._alreadyIn = 1;	//1 as true
+				t._createUI();
+				t._markTargetAnchor(evt);
+			}
+		},
+
+		_getItem: function(id){
+			return {
+				type: this.profile.arg('provide'),
+				data: this.profile._getItemData(id)
+			};
+		},
+
+		_checkAcceptance: function(source, nodes){
+			var t = this,
+				getHash = function(arr){
+					var res = {};
+					for(var i = arr.length - 1; i >= 0; --i){
+						res[arr[i]] = 1;
+					}
+					return res;
+				},
+				checkAcceptance = Source.prototype.checkAcceptance,
+				res = checkAcceptance.apply(t._source, arguments);
+			if(res){
+				if(source.grid === t.grid){
+					return t.profile.arg('canRearrange');
+				}
+				if(!source.canNotDragOut){
+					for(var name in t._profiles){
+						var p = t._profiles[name];
+						var accepted = checkAcceptance.apply({
+							accept: getHash(p.arg('accept'))
+						}, arguments);
+						if(p.arg('enabled') && accepted &&
+							(!p.checkAcceptance || p.checkAcceptance.apply(p, arguments))){
+							t.profile = p;
+							t._extDnding = 1;	//1 as true
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+
+		_onDraggingOver: function(){
+			var t = this;
+			if(t._dnding || t._extDnding){
+				t._alreadyIn = 1;	//1 as true
+				t._createUI();
+			}
+		},
+
+		_onDraggingOut: function(){
+			var t = this;
+			if(t._dnding || t._extDnding){
+				t._alreadyIn = 0;	//0 as false
+				t._destroyUI();
+			}
+		},
+
+		_onDropInternal: function(nodes, copy){
+			this.profile._onDropInternal(nodes, copy);
+			//
+			// Fix IE anchor not hide when drop
+			//
+			this._endDnd();
+		},
+		
+		_onDropExternal: function(source, nodes, copy){
+			var t = this, dropped = t.profile._onDropExternal(source, nodes, copy);
+			Deferred.when(dropped, function(){
+				if(!copy){
+					if(source.grid){
+						source.grid.dnd._dnd.profile.onDraggedOut(t._source);
+					}else{
+						source.deleteSelectedNodes();
+					}
+				}
+			});
+		}
+	}));
+});

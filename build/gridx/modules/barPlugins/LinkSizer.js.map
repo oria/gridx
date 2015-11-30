@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"LinkSizer.js",
-"lineCount":1,
-"mappings":"A,SAAAA,MAAA,sFAIG,QAAA,CAAgCC,CAAhC,CAAwCC,CAAxC,EACFD,CAAAE,WAAA,yGADE,OAUKD,EAVL,CAJH;",
-"sources":["LinkSizer.js.uncompressed.js"],
-"names":["define","kernel","widget","deprecated"]
-}

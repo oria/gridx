@@ -1,5 +1,64 @@
-//>>built
-define("dojox/wire/demos/TableContainer",["dojo","dijit","dojox","dojo/require!dojo/parser,dijit/_Widget,dijit/_Templated"],function(a,b,f){a.provide("dojox.wire.demos.TableContainer");a.require("dojo.parser");a.require("dijit._Widget");a.require("dijit._Templated");a.declare("dojox.wire.demos.TableContainer",[b._Widget,b._Templated,b._Container],{templateString:"\x3ctable class\x3d'tablecontainer'\x3e\x3ctbody dojoAttachPoint\x3d'tableContainer'\x3e\x3c/tbody\x3e\x3c/table\x3e",rowCount:0,headers:"",
-addRow:function(e){try{var c=document.createElement("tr");0===this.rowCount%2&&a.addClass(c,"alternate");this.rowCount++;for(var g in e){var d=document.createElement("td"),b=document.createTextNode(e[g]);d.appendChild(b);c.appendChild(d)}this.tableContainer.appendChild(c)}catch(f){}},clearTable:function(){for(;this.tableContainer.firstChild.nextSibling;)this.tableContainer.removeChild(this.tableContainer.firstChild.nextSibling);this.rowCount=0},postCreate:function(){var a=this.headers.split(","),
-c=document.createElement("tr");for(i in a){var b=a[i],d=document.createElement("th"),b=document.createTextNode(b);d.appendChild(b);c.appendChild(d)}this.tableContainer.appendChild(c)}})});
-//@ sourceMappingURL=TableContainer.js.map
+dojo.provide("dojox.wire.demos.TableContainer");
+
+dojo.require("dojo.parser");
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+
+dojo.declare("dojox.wire.demos.TableContainer", [ dijit._Widget, dijit._Templated, dijit._Container ], {
+	// summary:
+	//		Extremely simple 'widget' that is a table generator with an addRow function that takes an array
+	//		as the row to add, where each entry is a cell in the row.  This demo widget is for use with the
+	//		wire demos.
+
+	templateString: "<table class='tablecontainer'><tbody dojoAttachPoint='tableContainer'></tbody></table>",
+	rowCount: 0,
+	headers: "",
+	addRow: function(array){
+		// summary:
+		//		Function to add in a new row from the elements in the array map to cells in the row.
+		// array:
+		//		Array of row values to add.
+		try{
+			var row = document.createElement("tr");
+			if((this.rowCount%2) === 0){
+				dojo.addClass(row, "alternate");
+			}
+			this.rowCount++;
+			for(var i in array){
+				var cell = document.createElement("td");
+				var text = document.createTextNode(array[i]);
+				cell.appendChild(text);
+				row.appendChild(cell);
+				
+			}
+			this.tableContainer.appendChild(row);
+		}catch(e){ console.debug(e); }
+	},
+
+	clearTable: function(){
+		// summary:
+		//		Function to clear all the current rows in the table, except for the header.
+
+		//Always leave the first row, which is the table header.
+		while(this.tableContainer.firstChild.nextSibling){
+			this.tableContainer.removeChild(this.tableContainer.firstChild.nextSibling);
+		}
+		this.rowCount = 0;
+	},
+
+	postCreate: function(){
+		// summary:
+		//		Widget lifecycle function to handle generation of the header elements in the table.
+		var headers = this.headers.split(",");
+		var tr = document.createElement("tr");
+		for(i in headers){
+			
+			var header = headers[i];
+			var th = document.createElement("th");
+			var text = document.createTextNode(header);
+			th.appendChild(text);
+			tr.appendChild(th);
+		}
+		this.tableContainer.appendChild(tr);
+	}
+});

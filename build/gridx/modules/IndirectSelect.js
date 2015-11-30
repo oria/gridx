@@ -1,12 +1,270 @@
-//>>built
-define("gridx/modules/IndirectSelect","dojo/_base/declare dojo/_base/array dojo/_base/event dojo/query dojo/_base/lang dojo/dom-class dojo/_base/Deferred dojo/keys ../core/_Module ./RowHeader".split(" "),function(s,m,p,k,q,h,r,t,u){return s(u,{name:"indirectSelect",required:["rowHeader","selectRow"],preload:function(){var a=this,b=a.grid,d=b.focus,c=b.select.row,e=b.rowHeader;e.cellProvider=q.hitch(a,a._createSelector);a.batchConnect([c,"onHighlightChange","_onHighlightChange"],[c,"clear","_onClear"],
-[c,"onSelectionChange","_onSelectionChange"],[b.body,"onRender","_onSelectionChange"],[b,"onRowKeyDown","_onKeyDown"],[b,"onHeaderKeyDown","_onKeyDown"],b.filter&&[b.filter,"onFilter","_onSelectionChange"]);b.select.row.holdingCtrl=!0;c.selectByIndex&&a.arg("all")&&(a._allSelected={},e.headerProvider=q.hitch(a,a._createSelectAllBox),e.loaded.then(function(){d&&a._initFocus();a.connect(b,"onRowHeaderHeaderMouseDown","_onSelectAll");a.connect(b,"onRowHeaderHeaderKeyDown",function(b){b.keyCode==t.SPACE&&
-(p.stop(b),a._onSelectAll())})}))},all:!0,_createSelector:function(a){var b=a.node(),d=b&&h.contains(b,"gridxRowSelected");a=!this.grid.row(a.id,1).isSelectable();b=b&&h.contains(b,"gridxRowPartialSelected");return this._createCheckBox(d,b,a)},_createCheckBox:function(a,b,d){var c=this._getDijitClass(),e="";d&&(e=a?"CheckedDisabled":b?"PartialDisabld":"Disabled");return['\x3cspan role\x3d"',this._isSingle()?"radio":"checkbox",'" class\x3d"gridxIndirectSelectionCheckBox dijitReset dijitInline ',c,
-" ",d?c+e:"",a?c+"Checked":"",b?c+"Partial":"",'" aria-checked\x3d"',a?"true":b?"mixed":"false",'"\x3e\x3cspan class\x3d"gridxIndirectSelectionCheckBoxInner"\x3e',this._isSingle()?a?"\x26#x25C9;":"\x26#x25CC;":a?"\x26#10003;":b?"\x26#9646;":"\x26#9744;","\x3c/span\x3e\x3c/span\x3e"].join("")},_createSelectAllBox:function(){var a=this._allSelected[this._getPageId()];this.grid.rowHeader.headerCellNode.setAttribute("aria-label",a?this.grid.nls.indirectDeselectAll:this.grid.nls.indirectSelectAll);return this._createCheckBox(a)},
-_getPageId:function(){return this.grid.view.rootStart+","+this.grid.view.rootCount},_onClear:function(a){var b=this._getDijitClass(),d=b+"Checked",b=b+"Partial",c=this.grid;k("."+d,c.rowHeader.bodyNode).removeClass(d);k("."+b,c.rowHeader.bodyNode).removeClass(b);c.select.row.isSelected(a)&&k('[rowid\x3d"'+c._escapeId(a)+'"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox',c.rowHeader.bodyNode).addClass(d);k("."+d,c.rowHeader.headerCellNode).removeClass(d).attr("aria-checked","false");this._allSelected=
-{}},_onHighlightChange:function(a,b){var d=k('[visualindex\x3d"'+a.row+'"].gridxRowHeaderRow',this.grid.rowHeader.bodyNode)[0],c=d?k(".gridxIndirectSelectionCheckBox",d)[0]:void 0;if(c){var e=this._getDijitClass(),f="mixed"==b,g=b&&!f,d=d.getAttribute("rowid"),d=!this.grid.row(d,1).isSelectable();h.toggle(c,e+"Checked",g);h.toggle(c,e+"Partial",f);h.toggle(c,e+"CheckedDisabled",g&&d);h.toggle(c,e+"PartialDisabled",f&&d);h.toggle(c,e+"Disabled",!g&&!f&&d);c.setAttribute("aria-checked",g?"true":f?"mixed":
-"false");this._isSingle()?c.firstChild.innerHTML=g?"\x26#x25C9":"\x26#x25CC":c.firstChild.innerHTML=g?"\x26#10003;":f?"\x26#9646;":"\x26#9744;"}},_getDijitClass:function(){return this._isSingle()?"dijitRadio":"dijitCheckBox"},_isSingle:function(){var a=this.grid.select.row;return a.hasOwnProperty("multiple")&&!a.arg("multiple")},_onSelectAll:function(){var a=this.grid;a.select.row[this._allSelected[this._getPageId()]?"deselectByIndex":"selectByIndex"]([0,a.view.visualCount-1])},_onSelectionChange:function(){var a=
-this,b,d=a.grid,c,e=a.grid.view,f=a.model,g=e.rootStart,l=e.rootCount;if(d.select.row.selectByIndex&&a.arg("all")){var k=m.filter(d.select.row.getSelected(),function(a){return!f.parentId(a)}),e=d.select.row._getUnselectableRows(),n=m.filter(e,function(a){return!f.parentId(a)&&!d.select.row.isSelected(a)});l===f.size()?c=l&&l-n.length==k.length:(b=new r,f.when({start:g,count:l},function(){var a=m.filter(m.map(k,function(a){return f.idToIndex(a)}),function(a){return a>=g&&a<g+l});n=m.filter(n,function(a){a=
-f.idToIndex(a);return a>=g&&a<g+l});c=l-n.length==a.length;b.callback()}));r.when(b,function(){a._allSelected[a._getPageId()]=c;var b=a.grid.rowHeader.headerCellNode.firstChild;b&&(h.toggle(b,a._getDijitClass()+"Checked",c),b.setAttribute("aria-checked",c?"true":"false"),a.grid.rowHeader.headerCellNode.setAttribute("aria-label",c?d.nls.indirectDeselectAll:d.nls.indirectSelectAll))})}},_initFocus:function(){var a=this.grid,b=a.rowHeader,d=b.headerCellNode,c=function(b){if(a.header.hidden)return!1;
-h.add(d,"gridxHeaderCellFocus");d.focus();return!0},e=function(){h.remove(d,"gridxHeaderCellFocus");return!0};a.focus.registerArea({name:"selectAll",priority:-0.1,focusNode:b.headerNode,doFocus:c,doBlur:e,onFocus:c,onBlur:e})},_onKeyDown:function(a){65==a.keyCode&&(this.grid._isCtrlKey(a)&&!a.shiftKey)&&(this._allSelected[this._getPageId()]||this._onSelectAll(),p.stop(a))}})});
-//@ sourceMappingURL=IndirectSelect.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/event",
+	"dojo/query",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/_base/Deferred",
+	"dojo/keys",
+	"../core/_Module",
+	"./RowHeader"
+], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: indirectSelect.
+		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
+		// description:
+		//		This module depends on "rowHeader" and "selectRow" modules.
+		//		This module will check whether the SelectRow module provides the functionality of "select rows by index" 
+		//		(which means the "selectByIndex" method exists). If so, a "select all" checkbox can be provided 
+		//		in the header node of the row header column.
+		//		This module will also check whether the SelectRow module is configured to "single selection" mode
+		//		(which means the "multiple" attribute is set to false). If so, radio button instead of checkbox
+		//		will be used in row headers.
+
+		// all: Boolean
+		//		Whether the "select all" checkbox is allowed to appear.
+		all: true
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'indirectSelect',
+
+		required: ['rowHeader', 'selectRow'],
+
+		preload: function(){
+			var t = this,
+				g = t.grid,
+				focus = g.focus,
+				sr = g.select.row,
+				rowHeader = g.rowHeader;
+			rowHeader.rowHeaderCellAriaLabel = this.grid.nls.indirectSelectInstruction;
+			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
+			t.batchConnect(
+				[sr,'onHighlightChange', '_onHighlightChange' ],
+				[sr,'clear', '_onClear' ],
+				[sr, 'onSelectionChange', '_onSelectionChange'],
+				// defect 13758
+				// todo: refine the function of selecting all
+				//[g.body, 'onRender', '_onSelectionChange'],
+				[g, 'onRowKeyDown', '_onKeyDown'],
+				[g, 'onHeaderKeyDown', '_onKeyDown'],
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
+			g.select.row.holdingCtrl = true;
+			if(sr.selectByIndex && t.arg('all')){
+				t._allSelected = {};
+				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
+				rowHeader.loaded.then(function(){
+					if(focus){
+						t._initFocus();
+					}
+					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+					t.connect(g, 'onRowHeaderHeaderKeyDown', function(evt){
+						if(evt.keyCode == keys.SPACE){
+							event.stop(evt);
+							t._onSelectAll();
+						}
+					});
+				});
+			}
+		},
+
+		all: true,
+
+		//Private----------------------------------------------------------
+		_createSelector: function(row){
+			var rowNode = row.node(),
+				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
+				isUnselectable =  !this.grid.row(row.id, 1).isSelectable(),
+				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
+			return this._createCheckBox(selected, partial, isUnselectable);
+		},
+
+		_createCheckBox: function(selected, partial, isUnselectable){
+			var dijitClass = this._getDijitClass(),
+				suffix = '';
+			if(isUnselectable){
+				if(selected){
+					suffix = 'CheckedDisabled';
+				}else if(partial){
+					suffix = 'PartialDisabld';
+				}else{
+					suffix = 'Disabled';
+				}
+			}
+			
+			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
+				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
+				dijitClass, ' ',
+				isUnselectable? dijitClass + suffix : '',
+				selected ? dijitClass + 'Checked' : '',
+				partial ? dijitClass + 'Partial' : '',
+				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
+				'"><span class="gridxIndirectSelectionCheckBoxInner">',
+				//in high contrast mode, change to radio-liked character for single select mode
+				this._isSingle()? (selected? '&#x25C9;' : '&#x25CC;'):
+									(selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;'),
+				'</span></span>'
+			].join('');
+		},
+
+		_createSelectAllBox: function(){
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this.grid.nls.indirectDeselectAll : this.grid.nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
+		},
+
+		_getPageId: function(){
+			return this.grid.view.rootStart + ',' + this.grid.view.rootCount;
+		},
+
+		_onClear: function(reservedRowId){
+			var dijitCls = this._getDijitClass(),
+				cls = dijitCls + 'Checked',
+				partialCls = dijitCls + 'Partial',
+				g = this.grid;
+			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
+			query('.' + partialCls, g.rowHeader.bodyNode).removeClass(partialCls);
+			if(g.select.row.isSelected(reservedRowId)){
+				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
+			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
+		},
+
+		_onHighlightChange: function(target, toHighlight){
+			var row = query('[visualindex="' + target.row + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0],
+				node = row? query('.gridxIndirectSelectionCheckBox', row)[0] : undefined;
+			if(node){
+				var dijitClass = this._getDijitClass(),
+					partial = toHighlight == 'mixed',
+					selected = toHighlight && !partial,
+					rowId = row.getAttribute('rowid'),
+					isUnselectable = !this.grid.row(rowId, 1).isSelectable();
+					
+				domClass.toggle(node, dijitClass + 'Checked', selected);
+				domClass.toggle(node, dijitClass + 'Partial', partial);
+				domClass.toggle(node, dijitClass + 'CheckedDisabled', selected && isUnselectable);
+				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
+				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
+				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
+				if(this._isSingle()){
+					node.firstChild.innerHTML = selected ? '&#x25C9' : '&#x25CC';
+				}else{
+					node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
+				}
+			}
+		},
+
+		_getDijitClass: function(){
+			return this._isSingle() ? 'dijitRadio' : 'dijitCheckBox';
+		},
+
+		_isSingle: function(){
+			var select = this.grid.select.row;
+			return select.hasOwnProperty('multiple') && !select.arg('multiple');
+		},
+
+		_onSelectAll: function(){
+			var t = this,
+				g = t.grid;
+			g.select.row[t._allSelected[t._getPageId()] ? 
+				'deselectByIndex' :
+				'selectByIndex'
+			]([0, g.view.visualCount - 1]);
+		},
+
+		_onSelectionChange: function(){
+			var t = this, d,
+				g = t.grid,
+				allSelected,
+				view = t.grid.view,
+				model = t.model,
+				start = view.rootStart,
+				count = view.rootCount;
+			if(g.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
+					return !model.parentId(id);
+				});
+				var unselectableRows = g.select.row._getUnselectableRows();
+				var unselectableRoots = array.filter(unselectableRows, function(id){
+					return !model.parentId(id) && !g.select.row.isSelected(id);
+				});
+				if(count === model.size()){
+					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						unselectableRoots = array.filter(unselectableRoots, function(id){
+							var index = model.idToIndex(id);
+							return index >= start && index < start + count;
+						});
+						allSelected = count - unselectableRoots.length == indexes.length;
+						d.callback();
+					});
+				}
+				Deferred.when(d, function(){
+					t._allSelected[t._getPageId()] = allSelected;
+					var node = t.grid.rowHeader.headerCellNode.firstChild;
+					if(node){
+						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						node.firstChild.innerHTML = allSelected ? '&#10003;' : '&#9744;';
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? g.nls.indirectDeselectAll : g.nls.indirectSelectAll);
+					}
+				});
+			}
+		},
+
+		//Focus------------------------------------------------------
+		_initFocus: function(){
+			var g = this.grid,
+				rowHeader = g.rowHeader,
+				headerCellNode = rowHeader.headerCellNode,
+				focus = function(evt){
+					if(g.header.hidden){
+						return false;
+					}
+					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
+					headerCellNode.focus();
+					g.focus.stopEvent(evt);
+					return true;
+				},
+				blur = function(){
+					domClass.remove(headerCellNode, 'gridxHeaderCellFocus');
+					return true;
+				};
+			g.focus.registerArea({
+				name: 'selectAll',
+				priority: -0.1,
+				focusNode: rowHeader.headerNode,
+				doFocus: focus,
+				doBlur: blur,
+				// onFocus: focus,
+				onBlur: blur
+			});
+		},
+		_onKeyDown: function(evt){
+			// CTRL - A
+			if(this.grid.select.row.selectByIndex && this.arg('all') && evt.keyCode == 65 && this.grid._isCtrlKey(evt) && !evt.shiftKey){
+				if(!this._allSelected[this._getPageId()]){
+					this._onSelectAll();
+				}
+				event.stop(evt);
+			}
+		}
+	});
+});

@@ -1,6 +1,115 @@
-//>>built
-define("gridx/modules/Puller","dojo/_base/kernel dojo/_base/declare dojo/query dojo/_base/lang dojo/_base/sniff dojo/aspect dojo/dom-construct dojo/dom-class dojo/dom-style dojo/dom-geometry dojo/keys ../core/_Module".split(" "),function(f,g,h,k,l,m,n,c,p,q,r,e){f.experimental("gridx/modules/Puller");return e.register(g(e,{name:"puller",forced:["vScroller"],load:function(){this.bind(this.arg("node"));this.loaded.callback()},bind:function(b){var a=this,d=a.grid;a.unbind();b&&b!=a.node&&(a.node=b,a.innerNode=
-b.firstChild,d.vScroller.loaded.then(function(){var b=d.vScroller._scrollable;b&&(a._height=a.node.clientHeight,a._binds=[a.aspect(b,"onTouchStart",function(){a.node.style.height=a.node.clientHeight+"px";c.add(a.node,"gridxPuller");c.add(a.innerNode,"gridxPullerInner");a._pos=b.getPos();a._stage=1}),a.aspect(b,"scrollTo",function(b){if("number"==typeof b.y&&1==a._stage){var c=b.y-a._pos.y,e=a.node.clientHeight,c=e+c;0>c?c=0:c>a._height&&(c=a._height);a._pos=b;a.node.style.height=c+"px";d.mainNode.style.height=
-d.mainNode.clientHeight-(c-e)+"px";d.vLayout.reLayout()}}),a.aspect(b,"onTouchEnd",function(){a.node.clientHeight<a._height/2?a._slide(0):a.node.clientHeight>=a._height/2?a._slide(1):a._stage=0},a,"before")])}))},unbind:function(){if(this._binds){for(var b=0;b<this._binds.length;++b)this._binds[b].remove();c.remove(this.node,"gridxPuller");c.remove(this.innerNode,"gridxPullerInner");this.node.style.height="";this.grid.vLayout.reLayout();this._binds=this.node=null}},_slide:function(b){var a=this,d=
-a.grid,e=b?a._height:0;a._stage=2;c.add(a.node,"gridxPullerAnim");c.add(d.mainNode,"gridxPullerAnim");setTimeout(function(){var b=a.node.offsetHeight-e;a.node.style.height=e+"px";d.mainNode.style.height=d.mainNode.clientHeight+b+"px";setTimeout(function(){c.remove(a.node,"gridxPullerAnim");c.remove(d.mainNode,"gridxPullerAnim");d.vLayout.reLayout();a._stage=0},500)},10)}}))});
-//@ sourceMappingURL=Puller.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/query",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/aspect",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"../core/_Module"
+], function(kernel, declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
+	kernel.experimental('gridx/modules/Puller');
+
+	return _Module.register(
+	declare(_Module, {
+		name: 'puller',
+
+		forced: ['vScroller'],
+		//node: null,
+
+		load: function(){
+			this.bind(this.arg('node'));
+			this.loaded.callback();
+		},
+
+		bind: function(node){
+			var t = this;
+			var g = t.grid;
+			t.unbind();
+			if(node && node != t.node){
+				t.node = node;
+				t.innerNode = node.firstChild;
+				g.vScroller.loaded.then(function(){
+					var scrollable = g.vScroller._scrollable;
+					if(scrollable){
+						t._height = t.node.clientHeight;
+						t._binds = [
+							t.aspect(scrollable, 'onTouchStart', function(){
+								t.node.style.height = t.node.clientHeight + 'px';
+								domClass.add(t.node, 'gridxPuller');
+								domClass.add(t.innerNode, 'gridxPullerInner');
+								t._pos = scrollable.getPos();
+								t._stage = 1;
+							}),
+							t.aspect(scrollable, 'scrollTo', function(to){
+								if(typeof to.y == 'number' && t._stage == 1){
+									var delta = to.y - t._pos.y;
+									var oldh = t.node.clientHeight;
+									var h = oldh + delta;
+									if(h < 0){
+										h = 0;
+									}else if(h > t._height){
+										h = t._height;
+									}
+									delta = h - oldh;
+									t._pos = to;
+									t.node.style.height = h + 'px';
+									g.mainNode.style.height = (g.mainNode.clientHeight - delta) + 'px';
+									g.vLayout.reLayout();
+								}
+							}),
+							t.aspect(scrollable, 'onTouchEnd', function(){
+								if(t.node.clientHeight < t._height / 2){
+									t._slide(0);
+								}else if(t.node.clientHeight >= t._height / 2){
+									t._slide(1);
+								}else{
+									t._stage = 0;
+								}
+							}, t, 'before')
+						];
+					}
+				});
+			}
+		},
+
+		unbind: function(){
+			var t = this;
+			if(t._binds){
+				for(var i = 0; i < t._binds.length; ++i){
+					t._binds[i].remove();
+				}
+				domClass.remove(t.node, 'gridxPuller');
+				domClass.remove(t.innerNode, 'gridxPullerInner');
+				t.node.style.height = '';
+				t.grid.vLayout.reLayout();
+				t._binds = t.node = null;
+			}
+		},
+
+		_slide: function(toShow){
+			var t = this;
+			var g = t.grid;
+			var targetHeight = toShow ? t._height : 0;
+			t._stage = 2;
+			domClass.add(t.node, 'gridxPullerAnim');
+			domClass.add(g.mainNode, 'gridxPullerAnim');
+			setTimeout(function(){
+				var h = t.node.offsetHeight - targetHeight;
+				t.node.style.height = targetHeight + 'px';
+				g.mainNode.style.height = (g.mainNode.clientHeight + h) + 'px';
+				setTimeout(function(){
+					domClass.remove(t.node, 'gridxPullerAnim');
+					domClass.remove(g.mainNode, 'gridxPullerAnim');
+					g.vLayout.reLayout();
+					t._stage = 0;
+				}, 500);
+			}, 10);
+		}
+	}));
+
+});

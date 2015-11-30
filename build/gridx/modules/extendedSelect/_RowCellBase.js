@@ -1,4 +1,36 @@
-//>>built
-define("gridx/modules/extendedSelect/_RowCellBase",["dojo/_base/declare","dojo/_base/lang","dojo/query","./_Base","../../core/model/extensions/Mark"],function(c,g,d,e,f){return c(e,{modelExtensions:[f],_getRowId:function(a){var b=d('[visualindex\x3d"'+a+'"]',this.grid.bodyNode)[0];return b?b.getAttribute("rowid"):this.grid.view.getRowInfo({visualIndex:a}).rowId},_init:function(){var a=this.model;this.batchConnect([this.grid.body,"onMoveToCell","_onMoveToCell"],[a,"onMarkChange","_onMark"],[a,"setStore",
-"clear"])}})});
-//@ sourceMappingURL=_RowCellBase.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	// "dojo/query",
+	'../../support/query',
+	"./_Base",
+	"../../core/model/extensions/Mark"
+], function(declare, lang, query, _Base, Mark){
+
+/*=====
+	return declare(_Base, {
+		// summary:
+		//		Base class for extended row selection and cell selection.
+		//		Both can be regarded as marking a row using some tag.
+	});
+=====*/
+
+	return declare(_Base, {
+		modelExtensions: [Mark],
+
+		_getRowId: function(visualIndex){
+			var node = query('[visualindex="' + visualIndex + '"]', this.grid.bodyNode)[0];
+			return node? node.getAttribute('rowid') : this.grid.view.getRowInfo({visualIndex: visualIndex}).rowId;
+		},
+
+		_init: function(){
+			var t = this, m = t.model;
+			t.batchConnect(
+				[t.grid.body, 'onMoveToCell', '_onMoveToCell'],
+				[m, 'onMarkChange', '_onMark'],
+				[m, 'setStore', 'clear']
+			);
+		}
+	});
+});
+

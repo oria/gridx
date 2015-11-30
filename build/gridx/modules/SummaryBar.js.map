@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"SummaryBar.js",
-"lineCount":1,
-"mappings":"A,SAAAA,MAAA,kGAKG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA2BC,CAA3B,QAaKF,EAAA,CAAQE,CAAR,6CAOGC,QAAAA,GACRC,SAAAC,IAAAC,KAAAC,KAAA,uCAIcN,CAJd,qCAMUO,QAAA,WANV,oCADQL,CAPH,EAbL,CALH;",
-"sources":["SummaryBar.js.uncompressed.js"],
-"names":["define","declare","Summary","_Module","preload","grid","bar","defs","push","arg"]
-}

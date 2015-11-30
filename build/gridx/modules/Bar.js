@@ -1,9 +1,349 @@
-//>>built
-define("gridx/modules/Bar","require dojo/_base/declare dojo/_base/lang dojo/_base/array dijit/registry dijit/a11y dojo/dom-construct ../core/_Module".split(" "),function(p,q,f,r,v,h,n,l){return l.register(q(l,{name:"bar",constructor:function(){this.defs=[]},load:function(a,c){var b=this;b._init();b.loaded.callback();c.then(function(){b._forEachPlugin(function(a){a&&a.startup&&a.startup()});setTimeout(function(){b.grid.vLayout.reLayout()},10)})},destroy:function(){this.inherited(arguments);this._forEachPlugin(function(a){a.destroy&&
-a.destroy()})},_init:function(){var a,c=this._defDict={},b=function(a){a.sort(function(a,c){return a.col-c.col})},d=function(a){f.isArray(a)&&(a.length&&!f.isArray(a[0]))&&(a=[a]);return a},g=d(this.arg("top")),d=d(this.arg("bottom"));r.forEach(this.defs,function(a){var b=c[a.bar]=c[a.bar]||[];(b[a.row]=b[a.row]||[]).push(a);b.priority="priority"in a?a.priority:b.priority||-5;b.container=a.container?a.container:b.container||"headerNode";b.barClass=a.barClass?a.barClass:b.barClass||""});for(a in c)r.forEach(c[a],
-b);g&&(c.top=g.concat(c.top||[]));c.top&&(c.top.priority=-5,c.top.container="headerNode");d&&(c.bottom=(c.bottom||[]).concat(d));c.bottom&&(c.bottom.priority=5,c.bottom.container="footerNode");for(a in c)b=c[a],g=a+"Node",d=this[g]=n.create("div",{"class":"gridxBar "+b.barClass||"",innerHTML:'\x3ctable border\x3d"0" cellspacing\x3d"0" role\x3d"presentation"\x3e\x3c/table\x3e'}),this.grid.vLayout.register(this,g,b.container,b.priority),this._initFocus(a,b.priority),this.plugins=this.plugins||{},this.plugins[a]=
-this._parse(b,d.firstChild)},_parse:function(a,c){for(var b,d=[],g=n.create("tbody"),t=function(a,b,c,d){b[d]&&(a.setAttribute(c||d,b[d]),delete b[d])},m=0,w=a.length;m<w;++m){for(var u=[],h=a[m],l=n.create("tr"),s=0,p=h.length;s<p;++s){var e=this._normalizePlugin(h[s]),k=n.create("td");r.forEach(["colSpan","rowSpan","style"],f.partial(t,k,e,0));t(k,e,"class","className");b=null;try{if(e.plugin)b=v.byId(e.plugin),k.appendChild(b.domNode);else if(e.pluginClass){var q=e.pluginClass;delete e.pluginClass;
-b=new q(e);k.appendChild(b.domNode)}else e.content&&(k.innerHTML=e.content)}catch(x){console.error(x)}e.hookPoint&&e.hookName&&(e.hookPoint[e.hookName]=b||k);u.push(b||k);l.appendChild(k)}d.push(u);g.appendChild(l)}c.appendChild(g);return d},_normalizePlugin:function(a){a=!a||!f.isObject(a)||f.isFunction(a)?{pluginClass:a}:a.domNode?{plugin:a}:f.mixin({},a);if(f.isString(a.pluginClass))try{a.pluginClass=p(a.pluginClass)}catch(c){console.error(c)}f.isFunction(a.pluginClass)?a.grid=this.grid:a.pluginClass=
-null;return a},_forEachPlugin:function(a){var c=this.plugins,b;for(b in c){var d=c[b];if(d)for(var g=0,f=d.length;g<f;++g)for(var m=d[g],h=0,l=m.length;h<l;++h)a(m[h])}},_initFocus:function(a,c){var b=this.grid.focus,d=this[a+"Node"];b&&d&&b.registerArea({name:a+"bar",priority:c,focusNode:d,doFocus:f.hitch(this,this._doFocus,d),doBlur:f.hitch(this,this._doBlur,d)})},_doFocus:function(a,c,b){this.grid.focus.stopEvent(c);(a=h._getTabNavigable(a)[0>b?"last":"first"])&&a.focus();return!!a},_doBlur:function(a,
-c,b){a=h._getTabNavigable(a);if(c){var d;if(!(d=c.target==(0>b?a.first:a.last)))if(c=c.target,b=0>b?a.first:a.last,!c||!b)d=!1;else{for(;c&&c!=b;)c=c.parentNode;d=!!c}b=d}else b=!0;return b}}))});
-//@ sourceMappingURL=Bar.js.map
+define([
+	"require",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dijit/registry",
+	"dijit/a11y",
+	"dojo/dom-construct",
+	"../core/_Module"
+], function(require, declare, lang, array, registry, a11y, domConstruct, _Module){
+
+/*=====
+	var Bar = declare(_Module, {
+		// summary:
+		//		module name: bar.
+		//		This is a general-purpose bar for gridx.
+		// description:
+		//		This module can be configured to hold various plugins, such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
+		//		This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.
+		// example:
+		//		Bar with single row:
+		//	|	barTop: [
+		//	|		gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
+		//	|		"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
+		//	|		{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"},		//or an object with attributes
+		//	|		MyQuickFilterInstance		//or an instance of a plugin widget
+		//	|		{plugin: MyQuickFilterInstance, style: "color: red;"}		//or with other attributes
+		//	|	]
+		//		or multiple rows:
+		//	|	barTop: [
+		//	|		[		//every sub-array is a table row.
+		//	|			{content: "This is <b>a message</b>", style: "background-color: blue;"},	//Can add some html
+		//	|			null	//if null, just an empty cell
+		//	|		],
+		//	|		[
+		//	|			{pluginClass: gridx.support.LinkPager, 'class': 'myclass'},		//can provide custom class for the plugin
+		//	|			{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
+		//	|		]
+		//	|	]
+
+		// top: __BarItem[]?
+		//		An array of bar content declarations. Located above grid header.
+		//		The top bar is a big html table, and every content occupies a cell in it.
+		//		If it is a single dimensional array, then the top bar will contain only one row.
+		//		If it is a two dimensional array, then every sub-array represents a row.
+		top: null,
+
+		// bottom: __BarItem[]?
+		//		An array of bar content declarations. Located below grid horizontal scroller.
+		//		The bottom bar is a big html table, and every content occupies a cell in it.
+		//		If it is a single dimensional array, then the bottom bar will contain only one row.
+		//		If it is a two dimensional array, then every sub-array represents a row.
+		bottom: null,
+
+		// plugins: [readonly]Object
+		//		A place to access to the plugins.
+		//		For plugins in top bar, use plugins.top, which is an array of bar rows.
+		//		e.g.: plugins.top[0][0] is the first plugin the first row of the top bar.
+		//		plugin.bottom is similar.
+		plugins: null
+	});
+
+	Bar.__BarItem = declare([], {
+		// summary:
+		//		Configurations for a <td> in the grid bar.
+		//		This configuration object will also be passed to the constructor of the plugin, if "pluginClass" is used,
+		//		so the plugin-related parameters can also be declared here.
+
+		// content: String
+		//		The HTML content in this bar position (<td>)
+		content: '',
+
+		// pluginClass: String|Function
+		//		The class name (MID) or contructor of the plugin. The plugin instance will be created automatically.
+		//		If there's no other configurations, this class name/constructor can be used directly in place 
+		//		of the whole __BarItem configuration object.
+		//		If this parameter exists, the "content" parameter will be ignored.
+		pluginClass: null,
+
+		// plugin: Object
+		//		A plugin instance. If this parameter exists, the "pluginClass" and "content" parameter will be ignored.
+		//		Note that if declared in this way, the same instance can not be used in other bar positions.
+		//		If there's no other configurations, and this plugin has "domNode" attribute, then this instance can be used directly in place 
+		//		of the whole __BarItem configuration object.
+		plugin: null,
+
+		// colSpan: Integer
+		//		Column span of this <td>
+		colSpan: 1,
+
+		// rowSpan: Integer
+		//		Row span of this <td>
+		rowSpan: 1,
+
+		// style: String
+		//		Style of this <td>
+		style: '',
+
+		// className: String
+		//		Class of this <td>
+		className: ''
+	});
+
+	return Bar;
+=====*/
+
+	return _Module.register(
+	declare(_Module, {
+		name: 'bar',
+
+		constructor: function(){
+			this.defs = [];
+		},
+
+		load: function(args, startup){
+			var t = this;
+			t._init();
+			t.loaded.callback();
+			startup.then(function(){
+				t._forEachPlugin(function(plugin){
+					if(plugin && plugin.startup){
+						plugin.startup();
+					}
+				});
+				setTimeout(function(){
+					t.grid.vLayout.reLayout();
+				}, 10);
+			});
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			this._forEachPlugin(function(plugin){
+				if(plugin.destroy){
+					plugin.destroy();
+				}
+			});
+		},
+
+		//Private---------------------------------------------------------
+		_init: function(){
+			var t = this,
+				bar,
+				defDict = t._defDict = {},
+				sortDefCols = function(row){
+					row.sort(function(a, b){
+						return a.col - b.col;
+					});
+				},
+				normalize = function(def){
+					if(lang.isArray(def) && def.length && !lang.isArray(def[0])){
+						def = [def];
+					}
+					return def;
+				},
+				top = normalize(t.arg('top')),
+				bottom = normalize(t.arg('bottom'));
+			array.forEach(t.defs, function(def){
+				var barDef = defDict[def.bar] = defDict[def.bar] || [],
+					row = barDef[def.row] = barDef[def.row] || [];
+				row.push(def);
+				barDef.priority = 'priority' in def ? def.priority : barDef.priority || -5;
+				barDef.container = def.container ? def.container : barDef.container || 'headerNode';
+				barDef.barClass = def.barClass ? def.barClass : barDef.barClass || '';
+			});
+			for(bar in defDict){
+				array.forEach(defDict[bar], sortDefCols);
+			}
+			if(top){
+				defDict.top = top.concat(defDict.top || []);
+			}
+			if(defDict.top){
+				defDict.top.priority = -5;
+				defDict.top.container = 'headerNode';
+			}
+			if(bottom){
+				defDict.bottom = (defDict.bottom || []).concat(bottom);
+			}
+			if(defDict.bottom){
+				defDict.bottom.priority = 5;
+				defDict.bottom.container = 'footerNode';
+			}
+			for(bar in defDict){
+				var def = defDict[bar],
+					nodeName = bar + 'Node',
+					node = t[nodeName] = domConstruct.create('div', {
+						'class': "gridxBar " + def.barClass || '',
+						innerHTML: '<table border="0" cellspacing="0" role="presentation"></table>'
+					});
+				t.grid.vLayout.register(t, nodeName, def.container, def.priority);
+				t._initFocus(bar, def.priority);
+				t.plugins = t.plugins || {};
+				t.plugins[bar] = t._parse(def, node.firstChild);
+			}
+		},
+
+		_parse: function(defs, node){
+			var plugin,
+				plugins = [],
+				tbody = domConstruct.create('tbody'),
+				setAttr = function(n, def, domAttr, attr){
+					if(def[attr]){
+						n.setAttribute(domAttr || attr, def[attr]);
+						delete def[attr];
+					}
+				};
+			for(var i = 0, rowCount = defs.length; i < rowCount; ++i){
+				var pluginRow = [],
+					row = defs[i],
+					tr = domConstruct.create('tr');
+				for(var j = 0, colCount = row.length; j < colCount; ++j){
+					var def = this._normalizePlugin(row[j]),
+						td = domConstruct.create('td');
+					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
+					setAttr(td, def, 'class', 'className');
+					plugin = null;
+					try{
+						if(def.plugin){
+							plugin = registry.byId(def.plugin);
+							td.appendChild(plugin.domNode);
+						}else if(def.pluginClass){
+							var cls = def.pluginClass;
+							delete def.pluginClass;
+							plugin = new cls(def);
+							td.appendChild(plugin.domNode);
+						}else if(def.content){
+							td.innerHTML = def.content;
+						}
+					}catch(e){
+						console.error(e);
+					}
+					if(def.hookPoint && def.hookName){
+						def.hookPoint[def.hookName] = plugin || td;
+					}
+					pluginRow.push(plugin || td);
+					tr.appendChild(td);
+				}
+				plugins.push(pluginRow);
+				tbody.appendChild(tr);
+			}
+			node.appendChild(tbody);
+			return plugins;
+		},
+
+		_normalizePlugin: function(def){
+			if(!def || !lang.isObject(def) || lang.isFunction(def)){
+				//def is a constructor or class name
+				def = {
+					pluginClass: def
+				};
+			}else if(def.domNode){
+				//def is a widget
+				def = {
+					plugin: def
+				};
+			}else{
+				//def is a configuration object.
+				//Shallow copy, so user's input won't be changed.
+				def = lang.mixin({}, def);
+			}
+			if(lang.isString(def.pluginClass)){
+				try{
+					def.pluginClass = require(def.pluginClass);
+				}catch(e){
+					console.error(e);
+				}
+			}
+			if(lang.isFunction(def.pluginClass)){
+				def.grid = this.grid;
+			}else{
+				def.pluginClass = null;
+			}
+			return def;
+		},
+
+		_forEachPlugin: function(callback){
+			function forEach(plugins){
+				if(plugins){
+					for(var i = 0, rowCount = plugins.length; i < rowCount; ++i){
+						var row = plugins[i];
+						for(var j = 0, colCount = row.length; j < colCount; ++j){
+							callback(row[j]);
+						}
+					}
+				}
+			}
+			var plugins = this.plugins;
+			for(var barName in plugins){
+				forEach(plugins[barName]);
+			}
+		},
+
+		//Focus---------------------
+		_initFocus: function(barName, priority){
+			var t = this,
+				f = t.grid.focus,
+				node = t[barName + 'Node'];
+			if(f && node){
+				f.registerArea({
+					name: barName + 'bar',
+					priority: priority,
+					focusNode: node,
+					doFocus: lang.hitch(t, t._doFocus, node),
+					doBlur: lang.hitch(t, t._doBlur, node)
+				});
+			}
+		},
+
+		_doFocus: function(node, evt, step, forced){
+			if(forced){ return; }
+			this.grid.focus.stopEvent(evt);
+			var elems = a11y._getTabNavigable(node),
+				n = elems[step < 0 ? 'last' : 'first'];
+
+			if(n){
+				n.focus();
+			}
+			return !!n;
+		},
+
+		_doBlur: function(node, evt, step){
+			var elems = a11y._getTabNavigable(node),
+				first = elems.first,
+				last = elems.last, result;
+
+			function isChild(child, parent){
+				if(!child || !parent){ return false; }
+				var n = child;
+				while(n && n != parent){
+					n = n.parentNode;
+				}
+				return !!n;
+			}
+
+			if(!evt){
+				return true;
+			}
+			if(step > 0 && !last){
+				return true;
+			}
+			if(step < 0 && !first){
+				return true;
+			}
+
+			result = (evt.target == (step < 0 ? elems.first : elems.last)) || isChild(evt.target, step < 0 ? elems.first : elems.last);
+			return result;
+		}
+	}));
+});

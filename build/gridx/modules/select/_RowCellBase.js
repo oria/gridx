@@ -1,4 +1,51 @@
-//>>built
-define("gridx/modules/select/_RowCellBase",["dojo/_base/declare","dojo/_base/lang","./_Base","../../core/model/extensions/Mark"],function(e,h,f,g){return e(f,{modelExtensions:[g],selectById:function(a,b){var c=this.model,d=this._getMarkType(b),e="row"==this._type?a:[a,b];this.arg("enabled")&&this._isSelectable(e)&&(this.arg("multiple")||c.clearMark(d),c.markById(a,1,d),c.when())},deselectById:function(a,b){var c=this.model,d="row"==this._type?a:[a,b];this.arg("enabled")&&this._isSelectable(d)&&(c.markById(a,
-0,this._getMarkType(b)),c.when())},isSelected:function(a,b){return!0===this.model.getMark(a,this._getMarkType(b))},_init:function(){this.connect(this.model,"onMarkChange","_onMark")}})});
-//@ sourceMappingURL=_RowCellBase.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"./_Base",
+	"../../core/model/extensions/Mark"
+], function(declare, lang, _Base, Mark){
+
+/*=====
+	return declare(_Base, {
+	});
+=====*/
+
+	return declare(_Base, {
+		modelExtensions: [Mark],
+
+		selectById: function(rowId, columnId){
+			var t = this,
+				m = t.model,
+				type = t._getMarkType(columnId),
+				item = t._type == 'row' ? rowId : [rowId, columnId];
+			if(t.arg('enabled') && t._isSelectable(item)){
+				if(!t.arg('multiple')){
+					m.clearMark(type);
+				}
+				m.markById(rowId, 1, type);
+				m.when();
+			}
+		},
+
+		deselectById: function(rowId, columnId){
+			var t = this,
+				m = t.model,
+				item = t._type == 'row' ? rowId : [rowId, columnId];
+			if(t.arg('enabled') && t._isSelectable(item)){
+				m.markById(rowId, 0, t._getMarkType(columnId));
+				m.when();
+			}
+		},
+
+		isSelected: function(rowId, columnId){
+			//Mixed status is not selected
+			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;
+		},
+
+		//Private-----------------------------------------------------------------
+		_init: function(){
+			var t = this, m = t.model;
+			t.connect(m, 'onMarkChange', '_onMark');
+		}
+	});
+});

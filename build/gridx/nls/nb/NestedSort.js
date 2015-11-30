@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/nb/NestedSort",{singleSort:"Enkeltsortering",nestedSort:"Nestet sortering",ascending:"Klikk for \u00e5 sortere stigende",descending:"Klikk for \u00e5 sortere synkende",sortingState:"${0} - ${1}",unsorted:"Ikke sorter denne kolonnen",waiSingleSortLabel:"${0} - er sortert etter ${1}. Velg \u00e5 sortere etter ${2}",waiNestedSortLabel:"${0} - er nestesortert etter ${1}. Velg \u00e5 nestesortere etter ${2}"});
-//@ sourceMappingURL=NestedSort.js.map

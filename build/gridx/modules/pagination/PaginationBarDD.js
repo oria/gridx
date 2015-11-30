@@ -1,4 +1,42 @@
-//>>built
-define("gridx/modules/pagination/PaginationBarDD",["dojo/_base/declare","dojo/dom-class","./_PaginationBarBase","../../support/DropDownPager","../../support/DropDownSizer"],function(f,b,g,d,e){return f(g,{_init:function(a){var c=d.prototype,b=e.prototype;this._add(d,1,a,"stepper",{className:"gridxPagerStepperTD",visibleSteppers:this.arg("visibleSteppers"),stepperClass:this.arg("stepperClass")||c.stepperClass,stepperProps:this.arg("stepperProps")||c.stepperProps});this._add(e,2,a,"sizeSwitch",{className:"gridxPagerSizeSwitchTD",
-sizes:this.arg("sizes"),sizeSeparator:this.arg("sizeSeparator"),sizerClass:this.arg("sizerClass")||b.sizerClass,sizerProps:this.arg("sizerProps")||b.sizerProps})},_refresh:function(a,c){b.toggle(a[1].domNode,"dijitHidden",!this._exist(c,"stepper"));b.toggle(a[2].domNode,"dijitHidden",!this._exist(c,"sizeSwitch"));a[2].sizes=this.arg("sizes")}})});
-//@ sourceMappingURL=PaginationBarDD.js.map
+define([
+	'dojo/_base/declare',
+	'dojo/dom-class',
+	'./_PaginationBarBase',
+	'../../support/DropDownPager',
+	'../../support/DropDownSizer'
+], function(declare, domClass, _PaginationBarBase, DropDownPager, DropDownSizer){
+
+/*=====
+	return declare(_PaginationBarBase, {
+		// summary:
+		//		module name: paginationBar.
+	});
+=====*/
+
+	return declare(_PaginationBarBase, {
+		_init: function(pos){
+			var t = this,
+				pagerProt = DropDownPager.prototype,
+				sizerProt = DropDownSizer.prototype;
+			t._add(DropDownPager, 1, pos, 'stepper', {
+				className: 'gridxPagerStepperTD',
+				visibleSteppers: t.arg('visibleSteppers'),
+				stepperClass: t.arg('stepperClass') || pagerProt.stepperClass,
+				stepperProps: t.arg('stepperProps') || pagerProt.stepperProps
+			});
+			t._add(DropDownSizer, 2, pos, 'sizeSwitch', {
+				className: 'gridxPagerSizeSwitchTD',
+				sizes: t.arg('sizes'),
+				sizeSeparator: t.arg('sizeSeparator'),
+				sizerClass: t.arg('sizerClass') || sizerProt.sizerClass,
+				sizerProps: t.arg('sizerProps') || sizerProt.sizerProps
+			});
+		},
+
+		_refresh: function(bar, pos){
+			domClass.toggle(bar[1].domNode, 'dijitHidden', !this._exist(pos, 'stepper'));
+			domClass.toggle(bar[2].domNode, 'dijitHidden', !this._exist(pos, 'sizeSwitch'));
+			bar[2].sizes = this.arg('sizes');
+		}
+	});
+});

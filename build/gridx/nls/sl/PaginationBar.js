@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/sl/PaginationBar",{pagerWai:"Pozivnik",pageIndex:"${0}",pageIndexTitle:"Stran ${0}",firstPageTitle:"Prva stran",prevPageTitle:"Prej\u0161nja stran",nextPageTitle:"Naslednja stran",lastPageTitle:"Zadnja stran",pageSize:"${0}",pageSizeTitle:"${0} postavk na stran",pageSizeAll:"Vse",pageSizeAllTitle:"Vse postavke",description:"${0}-${1} od ${2} postavk.",descriptionEmpty:"Mre\u017ea je prazna.",summary:"Skupaj: ${0}",summaryWithSelection:"Skupaj: ${0} Izbranih: ${1}",gotoBtnTitle:"Pojdi na specifi\u010dno stran",
-gotoDialogTitle:"Pojdi na stran",gotoDialogMainMsg:"Navedite \u0161tevilko strani:",gotoDialogPageCount:"(${0} strani)",gotoDialogOKBtn:"Pojdi",gotoDialogCancelBtn:"Prekli\u010di",pageLabel:"Stran",pageSizeLabel:"Vrstice"});
-//@ sourceMappingURL=PaginationBar.js.map

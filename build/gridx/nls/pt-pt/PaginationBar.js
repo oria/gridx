@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/pt-pt/PaginationBar",{pagerWai:"Paginador",pageIndex:"${0}",pageIndexTitle:"P\u00e1gina ${0}",firstPageTitle:"Primeira p\u00e1gina",prevPageTitle:"P\u00e1gina anterior",nextPageTitle:"P\u00e1gina seguinte",lastPageTitle:"\u00daltima p\u00e1gina",pageSize:"${0}",pageSizeTitle:"${0} artigos por p\u00e1gina",pageSizeAll:"Tudo",pageSizeAllTitle:"Todos os artigos",description:"${0} - ${1} de ${2} artigos.",descriptionEmpty:"Grelha est\u00e1 vazia.",summary:"Total: ${0}",summaryWithSelection:"Total: ${0} Seleccionados: ${1}",
-gotoBtnTitle:"Avan\u00e7ar para uma p\u00e1gina espec\u00edfica",gotoDialogTitle:"Avan\u00e7ar para a p\u00e1gina",gotoDialogMainMsg:"Especificar o n\u00famero de p\u00e1gina:",gotoDialogPageCount:" (${0} p\u00e1ginas)",gotoDialogOKBtn:"Ir",gotoDialogCancelBtn:"Cancelar",pageLabel:"P\u00e1gina",pageSizeLabel:"Filas"});
-//@ sourceMappingURL=PaginationBar.js.map

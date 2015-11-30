@@ -1,7 +1,184 @@
-//>>built
-define("gridx/modules/HScroller","dojo/_base/declare dojo/dom-style dojo/_base/sniff dojo/_base/Deferred dojo/query dojox/html/metrics ../core/_Module".split(" "),function(p,m,g,t,q,r,s){return p(s,{name:"hScroller",constructor:function(){var a=this.grid,b=this.domNode=a.hScrollerNode;a._initEvents(["H"],["Scroll"]);this.container=b.parentNode;this.stubNode=b.firstChild},preload:function(){var a=this,b=a.grid,c=b.hScrollerNode;b.autoWidth||(b.vLayout.register(a,"container","footerNode",0),c.style.display=
-"block",a.aspect(b.columnWidth,"onUpdate","refresh"),a.connect(c,"onscroll","_onScroll"),b.dod&&a.connect(b.bodyNode,"onscroll",function(){a.domNode.scrollLeft=b.bodyNode.scrollLeft}),g("ie")&&(c.style.height=r.getScrollbar().h+2+"px"))},scroll:function(a){var b=this.domNode;if((g("webkit")||8>g("ie"))&&!this.grid.isLeftToRight())a=b.scrollWidth-b.offsetWidth-a;g("ff")&&(!this.grid.isLeftToRight()&&0<a)&&(a=-a);b.scrollLeft=a},scrollToColumn:function(a,b){var c=this.grid.header.innerNode,l=q(".gridxCell",
-c),h=0,e=0,f=this.grid.isLeftToRight(),d=this.domNode.scrollLeft;if(!f&&(g("webkit")||8>g("ie")))d=this.domNode.scrollWidth-d-c.offsetWidth;if(b&&(this.grid.columnLock&&this.grid.columnLock.count)&&(d=b.scrollLeft,d!=this.domNode.scrollLeft)){this.scroll(d);return}for(var d=Math.abs(d),k=0;k<l.length&&!(h=l[k].offsetLeft,e=h+l[k].offsetWidth,l[k].getAttribute("colid")==a);k++);f&&h<d?this.scroll(h):f&&e>d+c.offsetWidth?this.scroll(e-c.offsetWidth):!f&&e>c.scrollWidth-d?this.scroll(e-c.scrollWidth):
-!f&&h+d<c.scrollWidth-c.offsetWidth&&this.scroll(c.scrollWidth-c.offsetWidth-h)},refresh:function(){var a=this.grid,b=a.isLeftToRight(),c=a.hLayout.lead,g=a.hLayout.tail,h=(a.domNode.clientWidth||m.get(a.domNode,"width"))-c-g,e=a.header.innerNode,f=m.get(e,b?"paddingLeft":"paddingRight")||0,d=this.domNode.style,e=e.firstChild.offsetWidth+f,k=d.display,n=e<=h?"none":"block";d[b?"marginLeft":"marginRight"]=c+f+"px";d[b?"marginRight":"marginLeft"]=g+"px";d.width=(0>h-f?0:h-f)+"px";this.stubNode.style.width=
-(0>e-f?0:e-f)+"px";d.display=n;k!=n&&a.vLayout.reLayout()},_lastLeft:0,_onScroll:function(a){a=this.domNode.scrollLeft;if((g("webkit")||8>g("ie"))&&!this.grid.isLeftToRight())a=this.domNode.scrollWidth-this.domNode.offsetWidth-a;this._lastLeft!=a&&(this._lastLeft=a,this._doScroll())},_doScroll:function(a){a=this.grid;a.bodyNode.scrollLeft=this.domNode.scrollLeft;a.onHScroll(this._lastLeft)}})});
-//@ sourceMappingURL=HScroller.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/dom-style",
+	"dojo/_base/sniff",
+	"dojo/_base/Deferred",
+	"dojo/query",
+	"dojox/html/metrics",
+	"../core/_Module"
+], function(declare, domStyle, has, Deferred, query, metrics, _Module){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: hScroller.
+		//		This module provides basic horizontal scrolling for grid
+
+		scrollToColumn: function(colId){
+			// summary:
+			//	Scroll the grid to make a column fully visible.
+		},
+
+		refresh: function(){
+			// summary:
+			//		Refresh scroller itself to match grid body
+		},
+
+		scroll: function(left){
+			// summary:
+			//		Scroll the grid horizontally
+			// tags:
+			//		private
+			// left: Number
+			//		The scrollLeft value
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'hScroller',
+
+		constructor: function(){
+			var t = this,
+				g = t.grid,
+				n = t.domNode = g.hScrollerNode;
+			g._initEvents(['H'], ['Scroll']);
+			t.container = n.parentNode;
+			t.stubNode = n.firstChild;
+		},
+
+		preload: function(){
+			var t = this,
+				g = t.grid,
+				n = g.hScrollerNode;
+			if(!g.autoWidth){
+				g.vLayout.register(t, 'container', 'footerNode', 0);
+				n.style.display = 'block';
+				t.aspect(g.columnWidth, 'onUpdate', 'refresh');
+				t.connect(n, 'onscroll', '_onScroll');
+				
+				//In dod, tab focus in the dodNode will sometimes
+				//scroll the bodyNode of gridx horizontally,
+				//so need to syn scrollLeft with hscroller
+				if(g.dod){
+					t.connect(g.bodyNode, 'onscroll', function(){
+						t.domNode.scrollLeft = g.bodyNode.scrollLeft;
+					});
+				}
+				//FIX ME: has('ie')is not working under IE 11
+				//use has('trident') here to judget IE 11
+				if(has('ie') || has('trident')){
+					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
+					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
+					n.style.height = (metrics.getScrollbar().h + 2) + 'px';
+				}
+			}
+		},
+		
+		//Public API-----------------------------------------------------------
+		scroll: function(left){
+			var dn = this.domNode;
+			if((has('webkit') || has('ie') < 8) && !this.grid.isLeftToRight()){
+				left = dn.scrollWidth - dn.offsetWidth - left;
+			}
+			if((has('ff')) && !this.grid.isLeftToRight() && left > 0){
+				left = -left;
+			}
+			dn.scrollLeft = left;
+		},
+		
+		scrollToColumn: function(colId, rowDiv){
+			//when rowDiv has value, it's caused by move focus in Body.js
+			//It's used only for column lock module
+			
+			var hNode = this.grid.header.innerNode,
+				cells = query('.gridxCell', hNode),
+				left = 0,
+				right = 0,
+				ltr = this.grid.isLeftToRight(),
+				scrollLeft = this.domNode.scrollLeft;
+			if(!ltr && (has('webkit') || has('ie') < 8)){
+				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
+			}
+
+			if(rowDiv && this.grid.columnLock && this.grid.columnLock.count){
+				//for column lock, row scrolls separately
+				scrollLeft = rowDiv.scrollLeft;
+				if(scrollLeft != this.domNode.scrollLeft){
+					this.scroll(scrollLeft);
+					return;
+				}
+			}
+
+			scrollLeft = Math.abs(scrollLeft);
+			//get cell's left border and right border position
+			for(var i = 0; i < cells.length; i++){
+				left = cells[i].offsetLeft;
+				right = left + cells[i].offsetWidth;
+				if(cells[i].getAttribute('colid') == colId){
+					break;
+				}
+			}
+
+			//if the cell is not visible, scroll to it
+			if(ltr && left < scrollLeft){
+				this.scroll(left);
+			}else if(ltr && right > scrollLeft + hNode.offsetWidth){
+				this.scroll(right - hNode.offsetWidth);
+			}else if(!ltr && right > hNode.scrollWidth - scrollLeft){
+				this.scroll(right - hNode.scrollWidth);
+			}else if(!ltr && left + scrollLeft < hNode.scrollWidth - hNode.offsetWidth){
+				this.scroll(hNode.scrollWidth - hNode.offsetWidth - left);
+			}
+		},
+		
+		refresh: function(){
+			var t = this,
+				g = t.grid,
+				ltr = g.isLeftToRight(),
+				lead = g.hLayout.lead,
+				tail = g.hLayout.tail,
+				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
+				bn = g.header.innerNode,
+				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
+				s = t.domNode.style,
+				sw = bn.firstChild.offsetWidth + pl,
+				oldDisplay = s.display,
+				newDisplay = (sw <= w) ? 'none' : 'block';
+				
+			s[ltr ? 'marginLeft' : 'marginRight'] = lead + pl + 'px';
+			s[ltr ? 'marginRight' : 'marginLeft'] = tail + 'px';
+			//Ensure IE does not throw error...
+			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
+			s.display = newDisplay;
+			if(oldDisplay != newDisplay){
+				g.vLayout.reLayout();
+			}
+		},
+		
+		//Private-----------------------------------------------------------
+		_lastLeft: 0,
+
+		_onScroll: function(e){
+			//	Fired by h-scroller's scrolling event
+			var t = this,
+				s = t.domNode.scrollLeft;
+			if((has('webkit') || has('ie') < 8) && !t.grid.isLeftToRight()){
+				s = t.domNode.scrollWidth - t.domNode.offsetWidth - s;
+			}
+			if(t._lastLeft != s){
+				t._lastLeft = s;
+				t._doScroll();
+			}
+		},
+
+		_doScroll: function(rowNode){
+			//	Sync the grid body with the scroller.
+			var t = this,
+				g = t.grid;
+			g.bodyNode.scrollLeft = t.domNode.scrollLeft;
+			g.onHScroll(t._lastLeft);
+		}
+	});
+});

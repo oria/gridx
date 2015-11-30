@@ -1,14 +1,169 @@
-//>>built
-define("gridx/nls/zh/gridx",{loadingInfo:"\u6b63\u5728\u88c5\u5165...",emptyInfo:"\u6ca1\u6709\u8981\u663e\u793a\u7684\u9879\u76ee",loadFailInfo:"\u672a\u80fd\u88c5\u5165\u6570\u636e\uff01",loadMore:"\u88c5\u5165\u66f4\u591a",loadMoreLoading:"\u6b63\u5728\u88c5\u5165...",loadPrevious:"\u88c5\u5165\u524d\u4e00\u9879",loadPreviousLoading:"\u6b63\u5728\u88c5\u5165...",clearFilterDialogTitle:"\u6e05\u9664\u8fc7\u6ee4\u5668",filterDefDialogTitle:"\u8fc7\u6ee4",defaultRuleTitle:"\u89c4\u5219",ruleTitleTemplate:"\u89c4\u5219 ${ruleNumber}",
-noFilterApplied:"\u672a\u5e94\u7528\u8fc7\u6ee4\u5668\u3002",defineFilter:"\u5b9a\u4e49\u8fc7\u6ee4\u5668",conditionEqual:"\u7b49\u4e8e",conditionNotEqual:"\u4e0d\u7b49\u4e8e",conditionLess:"\u5c0f\u4e8e",conditionLessEqual:"\u5c0f\u4e8e\u6216\u7b49\u4e8e",conditionGreater:"\u5927\u4e8e",conditionGreaterEqual:"\u5927\u4e8e\u6216\u7b49\u4e8e",conditionContain:"\u5305\u542b",conditionIs:"\u4e3a",conditionStartWith:"\u5f00\u59cb\u5185\u5bb9\u4e3a",conditionEndWith:"\u7ed3\u675f\u5185\u5bb9\u4e3a",conditionNotContain:"\u4e0d\u5305\u542b",
-conditionIsNot:"\u4e0d\u662f",conditionNotStartWith:"\u5f00\u59cb\u5185\u5bb9\u4e0d\u4e3a",conditionNotEndWith:"\u7ed3\u675f\u5185\u5bb9\u4e0d\u4e3a",conditionBefore:"\u4e4b\u524d",conditionAfter:"\u4e4b\u540e",conditionRange:"\u8303\u56f4",conditionIsEmpty:"\u4e3a\u7a7a",all:"\u6240\u6709",any:"\u4efb\u4f55",relationAll:"\u6240\u6709\u89c4\u5219",waiRelAll:"\u4e0e\u4ee5\u4e0b\u6240\u6709\u89c4\u5219\u76f8\u5339\u914d\uff1a",relationAny:"\u4efb\u4f55\u89c4\u5219",waiRelAny:"\u4e0e\u4ee5\u4e0b\u4efb\u4f55\u89c4\u5219\u76f8\u5339\u914d\uff1a",
-relationMsgFront:"\u5339\u914d",relationMsgTail:"",and:"\u548c",or:"\u6216\u8005",addRuleButton:"\u6dfb\u52a0\u89c4\u5219",waiAddRuleButton:"\u6dfb\u52a0\u65b0\u89c4\u5219",removeRuleButton:"\u9664\u53bb\u89c4\u5219",waiRemoveRuleButtonTemplate:"\u9664\u53bb\u89c4\u5219 ${0}",addRuleButton:"\u6dfb\u52a0\u8fc7\u6ee4\u89c4\u5219",cancelButton:"\u53d6\u6d88",waiCancelButton:"\u53d6\u6d88\u6b64\u5bf9\u8bdd\u6846",clearButton:"\u6e05\u9664",waiClearButton:"\u6e05\u9664\u8fc7\u6ee4\u5668",filterButton:"\u8fc7\u6ee4",
-waiFilterButton:"\u63d0\u4ea4\u8fc7\u6ee4\u5668",columnSelectLabel:"\u5217\uff1a",waiColumnSelectTemplate:"\u89c4\u5219 ${0} \u7684\u5217",conditionSelectLabel:"\u6761\u4ef6\uff1a",waiConditionSelectTemplate:"\u89c4\u5219 ${0} \u7684\u6761\u4ef6",valueBoxLabel:"\u503c\uff1a",waiValueBoxTemplate:"\u8f93\u5165\u6309\u89c4\u5219 ${0} \u8fdb\u884c\u8fc7\u6ee4\u7684\u503c",rangeTo:"\u5230",rangeTemplate:"\u4ece ${0} \u5230 ${1}",statusTipHeaderColumn:"\u5217",statusTipHeaderCondition:"\u89c4\u5219",statusTipTitle:"\u8fc7\u6ee4\u5668\u680f",
-statusTipMsg:"\u5355\u51fb\u6b64\u5904\u7684\u8fc7\u6ee4\u5668\u680f\u4ee5\u8fc7\u6ee4 ${0} \u4e2d\u7684\u503c\u3002",anycolumn:"\u4efb\u4f55\u5217",statusTipTitleNoFilter:"\u8fc7\u6ee4\u5668\u680f",statusTipTitleHasFilter:"\u8fc7\u6ee4",statusTipRelPre:"\u5339\u914d",statusTipRelPost:"\u89c4\u5219\u3002",statusTipHeaderAll:"\u4e0e\u6240\u6709\u89c4\u5219\u5339\u914d\u3002",statusTipHeaderAny:"\u4e0e\u4efb\u4f55\u89c4\u5219\u5339\u914d\u3002",defaultItemsName:"\u9879",filterBarMsgHasFilterTemplate:"\u5df2\u663e\u793a\u7684 ${1} ${2} \u9879\u4e2d\u7684\u7b2c ${0} \u9879\u3002",
-filterBarMsgNoFilterTemplate:"\u672a\u5e94\u7528\u8fc7\u6ee4\u5668",filterBarDefButton:"\u5b9a\u4e49\u8fc7\u6ee4\u5668",waiFilterBarDefButton:"\u5bf9\u8868\u8fdb\u884c\u8fc7\u6ee4",a11yFilterBarDefButton:"\u8fc7\u6ee4\u5668...",filterBarClearButton:"\u6e05\u9664\u8fc7\u6ee4\u5668",waiFilterBarClearButton:"\u6e05\u9664\u8fc7\u6ee4\u5668",closeFilterBarBtn:"\u5173\u95ed\u8fc7\u6ee4\u5668\u680f",clearFilterMsg:"\u8fd9\u5c06\u9664\u53bb\u8fc7\u6ee4\u5668\u5e76\u663e\u793a\u6240\u6709\u53ef\u7528\u7684\u8bb0\u5f55\u3002",
-anyColumnOption:"\u4efb\u4f55\u5217",trueLabel:"True",falseLabel:"False",radioTrueLabel:"True \u503c",radioFalseLabel:"False \u503c",beginTimeRangeLabel:"\u65f6\u95f4\u8303\u56f4\u5f00\u59cb\u503c",endTimeRangeLabel:"\u65f6\u95f4\u8303\u56f4\u7ed3\u675f\u503c",beginDateRangeLabel:"\u65e5\u671f\u8303\u56f4\u5f00\u59cb\u503c",endDateRangeLabel:"\u65e5\u671f\u8303\u56f4\u7ed3\u675f\u503c",startsWithExpr:"${0}*",singleSort:"\u5355\u4e2a\u6392\u5e8f",nestedSort:"\u5d4c\u5957\u6392\u5e8f",ascending:"\u5355\u51fb\u4ee5\u5347\u5e8f\u6392\u5e8f",
-descending:"\u5355\u51fb\u4ee5\u964d\u5e8f\u6392\u5e8f",sortingState:"${0} - ${1}",unsorted:"\u4e0d\u5bf9\u6b64\u5217\u6392\u5e8f",waiSingleSortLabel:"${0} - \u5df2\u6309 ${1} \u6392\u5e8f\u3002\u9009\u62e9\u6309 ${2} \u6392\u5e8f",waiNestedSortLabel:"${0} - \u5df2\u6309 ${1} \u8fdb\u884c\u5d4c\u5957\u6392\u5e8f\u3002\u9009\u62e9\u6309 ${2} \u8fdb\u884c\u5d4c\u5957\u6392\u5e8f",pagerWai:"\u9875\u9762\u8c03\u5ea6\u7a0b\u5e8f",pageIndex:"${0}",pageIndexTitle:"\u9875 ${0}",firstPageTitle:"\u9996\u9875",
-prevPageTitle:"\u4e0a\u4e00\u9875",nextPageTitle:"\u4e0b\u4e00\u9875",lastPageTitle:"\u672b\u9875",pageSize:"${0}",pageSizeTitle:"\u6bcf\u9875 ${0} \u9879",pageSizeAll:"\u6240\u6709",pageSizeAllTitle:"\u6240\u6709\u9879",description:"${2} \u9879\u4e2d\u7684\u7b2c ${0} \u9879 - \u7b2c ${1} \u9879\u3002",descriptionEmpty:"\u7f51\u683c\u4e3a\u7a7a\u3002",summary:"\u603b\u8ba1\uff1a${0}",summaryWithSelection:"\u603b\u8ba1\uff1a${0} \u5df2\u9009\uff1a${1}",gotoBtnTitle:"\u8f6c\u81f3\u7279\u5b9a\u9875\u9762",
-gotoDialogTitle:"\u8f6c\u81f3\u9875\u9762",gotoDialogMainMsg:"\u6307\u5b9a\u9875\u6570\uff1a",gotoDialogPageCount:"\uff08${0} \u9875\uff09",gotoDialogOKBtn:"\u8f6c\u81f3",gotoDialogCancelBtn:"\u53d6\u6d88",pageLabel:"\u9875\u9762",pageSizeLabel:"\u884c",filterLabel:"\u8fc7\u6ee4",clearButtonTitle:"\u6e05\u9664\u8fc7\u6ee4\u5668",buildFilterMenuLabel:"\u6784\u5efa\u8fc7\u6ee4\u5668\x26hellip;",apply:"\u5e94\u7528\u8fc7\u6ee4\u5668",helpMsg:"${0} - \u5355\u51fb\u4ee5\u6392\u5e8f\uff0c\u6216\u8005\u6309 Ctrl \u952e\u5e76\u5355\u51fb\u4ee5\u6dfb\u52a0\u5230\u6392\u5e8f\u9879",
-singleHelpMsg:"${0} - \u5355\u51fb\u4ee5\u6392\u5e8f",priorityOrder:"\u6392\u5e8f\u4f18\u5148\u7ea7 ${0}",summaryTotal:"\u603b\u8ba1\uff1a${0}",summarySelected:"\u5df2\u9009\uff1a${0}",summaryRange:"\u8303\u56f4\uff1a${0}-${1}",indirectSelectAll:"\u6309\u7a7a\u683c\u952e\u4ee5\u5168\u90e8\u9009\u62e9\u3002",indirectDeselectAll:"\u6309\u7a7a\u683c\u952e\u4ee5\u5168\u90e8\u53d6\u6d88\u9009\u62e9\u3002",treeExpanded:"\u6309 Control + \u5de6\u65b9\u5411\u952e\u4ee5\u6298\u53e0\u6b64\u884c\u3002",treeCollapsed:"\u6309 Control + \u53f3\u65b9\u5411\u952e\u4ee5\u5c55\u5f00\u6b64\u884c\u3002"});
-//@ sourceMappingURL=gridx.js.map
+define({     
+//Body
+	loadingInfo: "正在装入...",
+	emptyInfo: "没有要显示的项目",
+	loadFailInfo: "未能装入数据！",
+	loadMore: "装入更多",
+	loadMoreLoading: "正在装入...",
+	loadPrevious: "装入前一项",
+	loadPreviousLoading: "正在装入...",
+
+//FilterBar
+	"clearFilterDialogTitle": "清除过滤器",
+	"filterDefDialogTitle": "过滤",
+	"defaultRuleTitle": "规则",
+	"ruleTitleTemplate": "规则 ${ruleNumber}",
+	"noFilterApplied": "未应用过滤器。",
+	"defineFilter": "定义过滤器",
+	"defineFilterAriaLabel": "定义过滤器：打开过滤器对话框以配置复杂的过滤规则。每个过滤规则由列、条件和值的组合构成。该对话框打开时，值字段拥有键盘焦点。",
+	"conditionEqual": "等于",
+	"conditionNotEqual": "不等于",
+	"conditionLess": "小于",
+	"conditionLessEqual": "小于或等于",
+	"conditionGreater": "大于",
+	"conditionGreaterEqual": "大于或等于",
+	"conditionContain": "包含",
+	"conditionIs": "为",
+	"conditionStartWith": "开始内容为",
+	"conditionEndWith": "结束内容为",
+	"conditionNotContain": "不包含",
+	"conditionIsNot": "不是",
+	"conditionNotStartWith": "开始内容不为",
+	"conditionNotEndWith": "结束内容不为",
+	"conditionBefore": "之前",
+	"conditionAfter": "之后",
+	"conditionRange": "范围",
+	"conditionIsEmpty": "为空",
+	"conditionIsNotEmpty": "非空",
+	"all": "所有",
+	"any": "任何",
+	"relationAll": "所有规则",
+	"waiRelAll": "与以下所有规则相匹配：",
+	"relationAny": "任何规则",
+	"waiRelAny": "与以下任何规则相匹配：",
+	"relationMsgFront": "匹配",
+	"relationMsgTail": "",
+	"and": "和",
+	"or": "或者",
+	"addRuleButton": "添加规则",
+	"waiAddRuleButton": "添加新规则",
+	"removeRuleButton": "除去规则",
+	"waiRemoveRuleButtonTemplate": "除去规则 ${0}",
+	"addRuleButton": "添加过滤规则",
+	"cancelButton": "取消",
+	"waiCancelButton": "取消此对话框",
+	"clearButton": "清除",
+	"waiClearButton": "清除过滤器",
+	"filterButton": "过滤",
+	"waiFilterButton": "提交过滤器",
+	"columnSelectLabel": "列：",
+	"columnSelectAriaLabel": "列：${1} 的条件部分 ${0}",
+	"waiColumnSelectTemplate": "规则 ${0} 的列",
+
+	"conditionSelectLabel": "条件：",
+	"conditionSelectAriaLabel": "运算符：${1} 的条件部分 ${0}",
+	"waiConditionSelectTemplate": "规则 ${0} 的条件",
+
+	"valueBoxLabel": "值：",
+	"valueBoxAriaLabel": "值：${1} 的条件部分 ${0}",
+	"waiValueBoxTemplate": "输入按规则 ${0} 进行过滤的值",
+	"rangeTo": "到",
+	"rangeTemplate": "从 ${0} 到 ${1}",
+	"statusTipHeaderColumn": "列",
+	"statusTipHeaderCondition": "规则",
+	"statusTipTitle": "过滤器栏",
+	"statusTipMsg": "单击此处的过滤器栏以过滤 ${0} 中的值。",
+	"anycolumn": "任何列",
+	"statusTipTitleNoFilter": "过滤器栏",
+	"statusTipTitleHasFilter": "过滤",
+	"statusTipRelPre": "匹配",
+	"statusTipRelPost": "规则。",
+	"statusTipHeaderAll": "与所有规则匹配。",
+	"statusTipHeaderAny": "与任何规则匹配。",
+	"defaultItemsName": "项",
+	"filterBarMsgHasFilterTemplate": "已显示 ${1} ${2}中的 ${0} ${2}。",
+	"filterBarMsgNoFilterTemplate": "未应用过滤器",
+	"filterBarDefButton": "定义过滤器",
+	"waiFilterBarDefButton": "对表进行过滤",
+	"a11yFilterBarDefButton": "过滤器...",
+	"filterBarClearButton": "清除过滤器",
+	"waiFilterBarClearButton": "清除过滤器",
+	"closeFilterBarBtn": "关闭过滤器栏",
+	"clearFilterMsg": "这将除去过滤器并显示所有可用的记录。",
+	"anyColumnOption": "任何列",
+	"trueLabel": "True",
+	"falseLabel": "False",
+	"radioTrueLabel": "True 值",
+	"radioFalseLabel": "False 值",
+	"beginTimeRangeLabel": "时间范围开始值",
+	"endTimeRangeLabel": "时间范围结束值",
+	"beginDateRangeLabel": "日期范围开始值",
+	"endDateRangeLabel": "日期范围结束值",
+	"startsWithExpr": "${0}*",
+
+//NestedSort
+	singleSort: "单个排序",
+	nestedSort: "嵌套排序",
+	ascending: "单击以升序排序",
+	descending: "单击以降序排序",
+	sortingState: "${0} - ${1}",
+	unsorted: "不对此列排序",
+	waiSingleSortLabel: "${0} - 已按 ${1} 排序。选择按 ${2} 排序",
+	waiNestedSortLabel:"${0} - 已按 ${1} 进行嵌套排序。选择按 ${2} 进行嵌套排序",
+
+//PaginationBar
+	pagerWai: '页面调度程序',
+
+	pageIndex: '${0}',
+	pageIndexTitle: '页 ${0}',
+
+	firstPageTitle: '首页',
+	prevPageTitle: '上一页',
+	nextPageTitle: '下一页',
+	lastPageTitle: '末页',
+
+	pageSize: '${0}',
+	pageSizeTitle: '每页 ${0} 项',
+	pageSizeAll: '所有',
+	pageSizeAllTitle: '所有项',
+
+	description: '${2} 项中的第 ${0} 项 - 第 ${1} 项。',
+	descriptionEmpty: '网格为空。',
+
+	summary: '总计：${0}',
+	summaryWithSelection: '总计：${0} 已选：${1}',
+
+	gotoBtnTitle: '转至特定页面',
+
+	gotoDialogTitle: '转至页面',
+	gotoDialogMainMsg: '指定页数：',
+	gotoDialogPageCount: '（${0} 页）',
+	gotoDialogOKBtn: '转至',
+	gotoDialogCancelBtn: '取消',
+	// for drop down pagination bar
+	pageLabel: '页面',
+	pageSizeLabel: '行',
+
+//QuickFilter
+	filterLabel: '过滤',
+	clearButtonTitle: '清除过滤器',
+	buildFilterMenuLabel: '构建过滤器...',
+	apply: '应用过滤器',
+
+//Sort
+	helpMsg: '${0} - 单击以排序，或者按 Ctrl 键并单击以添加到排序项',
+	singleHelpMsg: '${0} - 单击以排序',
+	priorityOrder: '排序优先级 ${0}',
+
+//SummaryBar
+	summaryTotal: '总计：${0}',
+	summarySelected: '已选：${0}',
+	summaryRange: '范围：${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "按空格键以全部选择。",	//need translation
+	indirectDeselectAll: "按空格键以全部取消选择。",	//need translation
+	treeExpanded: "按 Control + 左方向键以折叠此行。",	//need translation
+	treeCollapsed: "按 Control + 右方向键以展开此行。"	//need translation
+});
+

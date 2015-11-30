@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"_CalendarMonthView.js",
-"lineCount":3,
-"mappings":"A,SAAAA,OAAA,SACA,8CADA,inBAEAC;MAAA,mCAA0C,2JAAA,MAAA,KAA1C,CAQG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,CAAkDC,CAAlD,CAA0EC,CAA1E,CAAoFC,CAApF,CAA2FC,CAA3F,QACKN,EAAA,oCAA4CC,CAA5C,CAA2DC,CAA3D,kBAMUI,CANV,oFAqBMC,QAAAA,GAGXC,eAAA,iCACAA,gBAAA,sCACAC,qBAAA,EAGAC;UAAA,4BAAuCC,YAAvC,CARWJ,CArBN,eAgCSK,QAAAA,CAASC,CAATD,EACVE,CADUF,CACHG,WAAAC,UADGJ,CACqBC,CAAAI,YAAA,EAGnCC,SAAA,iBAA0BJ,CAA1B,CACAL,qBAAA,EALcG,CAhCT,gBAwCUT,CAAAgB,UAAAC,eAxCV,iBA0CWjB,CAAAgB,UAAAV,gBA1CX,SA4CGY,QAAAA,CAASC,CAATD,KAGJjB,CAAAmB,SAAA,CAAkBD,CAAAE,OAAlB,2BAHIH,EAIJI,CAJIJ,CAISC,CAAAE,OAAAC,WACbC,EALIL,CAKII,CAAAE,UALJN,GAK4BI,CAAAA,WAAAG,SAL5BP,KAMJQ,EAAOC,QAAA,SAGXD,EAAAE,SAAA,CAAcL,CAAd,CACAG,EAAAE,SAAA,CAAcL,CAAd,CACAG,EAAAG,QAAA,CAAaC,kBAAb,CACAC,qBAAA,CAAqBL,CAArB,CAA2BH,CAA3B,CAZQL,KAGsDhB,EAAA8B,KAAA,CAAWb,CAAX,CAHtDD,CA5CH,EADL,CARH;",
-"sources":["_CalendarMonthView.js.uncompressed.js"],
-"names":["require","define","declare","_CalendarView","_TemplatedMixin","_CalendarMonthYearView","domClass","event","template","postCreate","cloneClass","_populateMonths","addFx","domNode","_setValueAttr","value","year","header","innerHTML","getFullYear","set","prototype","_getMonthNames","onClick","evt","contains","target","parentNode","month","cellIndex","rowIndex","date","get","setMonth","setYear","displayedYear","onValueSelected","stop"]
-}

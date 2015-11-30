@@ -1,10 +1,425 @@
-//>>built
-define("gridx/core/model/extensions/ClientFilter",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/_base/Deferred","../_Extension"],function(q,h,l,m,r){var n=l.hitch,k=h.forEach,p=h.indexOf;return q(r,{name:"clientFilter",priority:20,constructor:function(a,b){this.pageSize=b.pageSize||100;this._mixinAPI("filter","hasFilter");a.onFilterProgress=function(){};this.aspect(a,"_msg","_receiveMsg");this.aspect(a,"setStore","clear")},clear:function(){this._ids=0;this._indexes={}},filter:function(a){this.model._addCmd({name:"_cmdFilter",
-scope:this,args:arguments,async:1})},hasFilter:function(){return!!this._ids},byIndex:function(a,b){var c=this._ids,d=this.inner,e=c&&c[a];return!this.model.isId(b)&&c?this.model.isId(e)&&d._call("byId",[e]):d._call("byIndex",arguments)},byId:function(a){return this.ids&&void 0===this._indexes[a]?null:this.inner._call("byId",arguments)},indexToId:function(a,b){return!this.model.isId(b)&&this._ids?this._ids[a]:this.inner._call("indexToId",arguments)},idToIndex:function(a){if(this._ids&&""===this.inner._call("parentId",
-arguments)){var b=p(this._ids,a);return 0<=b?b:void 0}return this.inner._call("idToIndex",arguments)},size:function(a){return!this.model.isId(a)&&this._ids?this._ids.length:this.inner._call("size",arguments)},when:function(a,b){var c=this,d=function(){c._ids&&c._mapWhenArgs(a);return c.inner._call("when",[a,b])};if(c._refilter&&(c._refilter=0,c._ids)){var e=new m;c._reFilter().then(function(){d().then(n(e,e.callback),n(e,e.errback))});return e}return d()},_cmdFilter:function(){var a=arguments;return this._filter.apply(this,
-a[a.length-1])},_filter:function(a){var b=this;b.size();b.clear();if(l.isFunction(a)){var c=[];return b.model.scan({start:0,pageSize:b.pageSize,whenScope:b,whenFunc:b.when},function(d,f){var g,h,k,l=f+d.length;for(g=f;g<l;++g)if(h=b.indexToId(g),k=b.byIndex(g))a(k,h)&&(c.push(h),b._indexes[h]=g);else break}).then(function(){c.length==b.size()?b.clear():(b._ids=c,b.model._msg("filter",c))},0,b.model.onFilterProgress)}var d=new m;d.callback();return d},_mapWhenArgs:function(a){var b=this,c=[],d=b._ids.length;
-a.id=h.filter(a.id,function(a){return void 0!==b._indexes[a]});k(a.range,function(a){if(b.model.isId(a.parentId))c.push(a);else{if(!a.count||0>a.count){var f=d-a.start;if(0>=f)return;a.count=f}for(f=0;f<a.count;++f){var g=b._mapIndex(f+a.start);void 0!==g&&c.push({start:g,count:1})}}});a.range=c},_mapMoveArgs:function(a){var b=this;if(3==a.length){for(var c=[],d=a[0],e=a[0]+a[1];d<e;++d)c.push(b._mapIndex(d));a[0]=c;a[1]=b._mapIndex(a[2]);a.pop()}else a[0]=h.map(a[0],function(a){return b._mapIndex(a)}),
-a[1]=b._mapIndex(a[1])},_mapIndex:function(a){return this._indexes[this._ids[a]]},_moveFiltered:function(a,b,c){var d=this._ids.length;if(0<=a&&a<d&&0<b&&Infinity>b&&0<=c&&c<d&&(c<a||c>a+b)){var e=[],d=a;for(a+=b;d<a;++d)e.push(this._mapIndex(d));this.inner._call("moveIndexes",[e,this._mapIndex(c)])}},_reFilter:function(){var a=this;return a.inner._call("when",[{id:a._ids,range:[]},function(){k(a._ids,function(b){var c=a.inner._call("idToIndex",[b]);a._indexes[b]=c});a._ids.sort(function(b,c){return a._indexes[b]-
-a._indexes[c]})}])},_onMoved:function(a){var b=this;k(b._ids,function(c){var d=b._indexes[c];void 0!==a[d]&&(b._indexes[c]=a[d])});b._ids.sort(function(a,d){return b._indexes[a]-b._indexes[d]})},_receiveMsg:function(a,b){this._ids&&("storeChange"==a?this._refilter=1:"moved"==a?this._onMoved(b):"beforeMove"==a&&this._mapMoveArgs(b))},_onNew:function(a){this._ids&&(this._ids.push(a),this._refilter=1);this.onNew.apply(this,arguments)},_onDelete:function(a,b,c){var d=this._indexes,e=this._ids;if(e){var f=
-p(e,a),g=d[a];0<=f&&e.splice(f,1);if(0<=f&&void 0!==g)for(f in b=f,d)d[f]>g&&--d[f];else b=void 0,this._refilter=1}this.onDelete(a,b,c)}})});
-//@ sourceMappingURL=ClientFilter.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/Deferred",
+	'../_Extension'
+], function(declare, array, lang, Deferred, _Extension) {
+/*=====
+	Model.filter = function(){};
+	Model.hasFilter = function(){};
+	Model.onFilterProgress = function(){};
+	
+	return declare(_Extension, {
+		// summary:
+		//		Filtering grid data at client side.
+	});
+=====*/
+
+	var hitch = lang.hitch,
+		forEach = array.forEach,
+		indexOf = array.indexOf;
+
+	return declare(_Extension, {
+		// Not compatible with Map extension!
+		name: 'clientFilter',
+
+		priority: 20,
+
+		constructor: function(model, args){
+			this.pageSize = args.pageSize || 100;
+			this._mixinAPI('filter', 'hasFilter');
+			model.onFilterProgress = function(){};
+			this.aspect(model, '_msg', '_receiveMsg');
+			this.aspect(model, 'setStore', 'clear');
+		},
+
+		_valid: false,		//valid filter means there are truelly rows that are filterred out
+
+		//Public---------------------------------------------------------------------
+
+		//pageSize: 100,
+
+		clear: function(){
+			this._ids = 0;
+			this._indexes = {};
+			
+			this._struct = {};
+			this._struct[''] = [undefined];
+			
+			this._valid = false;
+		},
+
+		filter: function(checker){
+			this.model._addCmd({
+				name: '_cmdFilter',
+				scope: this,
+				args: arguments,
+				async: 1
+			});
+		},
+
+		hasFilter: function(){
+			return !!this._ids;
+		},
+
+		hasChildren: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner;
+
+			if(ids){
+				//FIX me:
+				//In filter mode, we don't want the rows to have tree-relationship with each other,
+				//compulsively return false here to make tree expand/collapse button disappear in each row.
+				return inner._call('hasChildren', arguments) && this._struct[id] && this._struct[id].length > 1;
+			}else{
+				return inner._call('hasChildren', arguments);
+			}
+		},
+
+		children: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner,
+				_struct;
+
+			if(ids){
+				_struct = this._struct[id];
+				return _struct instanceof Array ? _struct.slice(1) : [];
+			}else{
+				return inner._call('children', arguments);
+			}
+		},
+
+		byIndex: function(index, parentId){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner,
+				id = ids && t._struct[parentId? parentId : ''][index + 1];
+
+			return !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
+		},
+
+		byId: function(id){
+			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
+		},
+
+		indexToId: function(index, parentId, skip){
+			if(this._ids && !skip){
+				return this._struct[this.model.isId(parentId)? parentId: ''][index + 1];
+			}else{
+				return this.inner._call('indexToId', arguments);
+			}
+		},
+
+		idToIndex: function(id) {
+			if(!this._ids){
+				return this.inner._call('idToIndex', arguments);
+			}
+
+			var pid = this._struct[id] && this._struct[id][0],
+				//Use indexOf provided by Dojo, since IE8 doesn't have [].indexOf function.
+				index = indexOf(this._struct[pid] || [], id);
+
+			return index > 0 ? index - 1 : -1;
+		},
+
+		size: function(parentId, skip){
+			var _struct;
+
+			if(this._ids && !skip){
+				_struct = this._struct[this.model.isId(parentId)? parentId : ''];
+				return _struct? _struct.length - 1 : -1;
+			}
+
+			return this.inner._call('size', arguments);
+		},
+
+		when: function(args, callback){
+			var t = this,
+				f = function(){
+					if(t._ids){
+						t._mapWhenArgs(args);
+					}
+					return t.inner._call('when', [args, callback]);
+				};
+			if(t._refilter){
+				t._refilter = 0;
+				if(t._ids){
+					var d = new Deferred();
+					t._reFilter().then(function(){
+						f().then(hitch(d, d.callback), hitch(d, d.errback));
+					});
+					return d;
+				}
+			}
+			return f();
+		},
+
+		//Private---------------------------------------------------------------------
+		_cmdFilter: function(){
+			var a = arguments;
+			return this._filter.apply(this, a[a.length - 1]);
+		},
+
+		_filter: function(checker){
+			var t = this,
+				oldSize = t.size(),
+				m = t.model;
+
+			t.clear();
+			if(lang.isFunction(checker)){
+				var ids = [], temp,
+					scanCallback = function(rows/* object|string array */, start, parentId){
+						if(!rows.length){
+							return false;
+						}
+						var i, id, row, len, children, pid,/*parent id*/
+							end = start + rows.length;
+
+						parentId = parentId !== undefined? parentId: '';
+						for(i = start; i < end; ++i){
+							id = t.indexToId(i, parentId);
+							row = t.byIndex(i, parentId);
+							if(row){
+								if(checker(row, id)){
+									//match
+									ids.push(id);
+									t._add(id);
+									t._indexes[id] = i;
+								}else{
+									//not match
+									t._valid = true;
+								}
+								children = m.children(id);
+								if(children.length){
+									pid = m.parentId(children[0]);
+									scanCallback(children, 0, pid);
+								}
+							}else{
+								break;
+							}
+						}
+					};
+
+				return t.model.scan({
+					start: 0,
+					pageSize: t.pageSize,
+					whenScope: t,
+					whenFunc: t.when
+				}, scanCallback).then(function(){
+					if(ids.length == t.size() && !t._valid){
+						//Filtered item size equals cache size, so filter is useless.
+						t.clear();
+					}else{
+						t._ids = ids;
+						t.model._msg('filter', ids);
+					}
+				}, 0, t.model.onFilterProgress);
+			}else{
+				var d = new Deferred();
+				d.callback();
+				t.model._msg('clearFilter', ids);
+				return d;
+			}
+		},
+
+		_add: function(id){
+			if(id === undefined || id === null){return;}
+
+			var t = this,
+				m = t.model,
+				treepath = t.model.treePath(id),
+				treepathLen = treepath.length, temp, i,
+				parentId = t.model.parentId(id);
+
+			if(!t._struct[id]){
+				t._struct[id] = [parentId];
+			}
+			temp = t._struct[id];
+			if(parentId !== undefined && parentId !== null){
+				if(!t._struct.hasOwnProperty(parentId)){
+					t._struct[parentId] = [m.parentId(parentId)];
+				}
+				if(indexOf(t._struct[parentId], id) < 0){
+					t._struct[parentId].push(id);
+				}
+			}
+			// }else{
+			// temp.push(parentId);
+			for(i = treepathLen - 1; i >= 0; i--){
+				t._add(treepath[i]);
+			}
+		},
+
+		_mapWhenArgs: function(args){
+			//Map ids and index ranges to what the store needs.
+			var t = this, ranges = [], size = t._ids.length;
+			args.id = array.filter(args.id, function(id){
+				return t._indexes[id] !== undefined;
+			});
+			forEach(args.range, function(r){
+				if(t.model.isId(r.parentId)){
+					ranges.push(r);
+				}else{
+					if(!r.count || r.count < 0){
+						//For open ranges, must limit the size because we know the filtered size here.
+						var cnt = size - r.start;
+						if(cnt <= 0){
+							return;
+						}
+						r.count = cnt;
+					}
+					for(var i = 0; i < r.count; ++i){
+						var idx = t._mapIndex(i + r.start);
+						if(idx !== undefined){
+							ranges.push({
+								start: idx,
+								count: 1
+							});
+						}
+					}
+				}
+			});
+			args.range = ranges;
+		},
+
+		_mapMoveArgs: function(args){
+			var t = this;
+			if(args.length == 3){
+				var indexes = [];
+				for(var i = args[0], end = args[0] + args[1]; i < end; ++i){
+					indexes.push(t._mapIndex(i));
+				}
+				args[0] = indexes;
+				args[1] = t._mapIndex(args[2]);
+				args.pop();
+			}else{
+				args[0] = array.map(args[0], function(index){
+					return t._mapIndex(index);
+				});
+				args[1] = t._mapIndex(args[1]);
+			}
+		},
+
+		_mapIndex: function(index){
+			return this._indexes[this._ids[index]];
+		},
+
+		_moveFiltered: function(start, count, target){
+			var t = this, size = t._ids.length;
+			if(start >= 0 && start < size && 
+				count > 0 && count < Infinity && 
+				target >= 0 && target < size && 
+				(target < start || target > start + count)){
+
+				var i, len, indexes = [];
+				for(i = start, len = start + count; i < len; ++i){
+					indexes.push(t._mapIndex(i));
+				}
+				t.inner._call('moveIndexes', [indexes, t._mapIndex(target)]);
+			}
+		},
+
+		_reFilter: function(){
+			var t = this;
+			return t.inner._call('when', [{
+				id: t._ids,
+				range: []
+			}, function(){
+				forEach(t._ids, function(id){
+					var idx = t.inner._call('idToIndex', [id]);
+					t._indexes[id] = idx;
+				});
+				t._ids.sort(function(a, b){
+					return t._indexes[a] - t._indexes[b];
+				});
+				// sync client filter local struct order with cache struct order
+				t.syncOrder();
+			}]);
+		},
+
+		syncOrder: function() {
+			var struct = this.model._cache._struct;
+			// handle special root id array
+			for (var id in this._struct) {
+				var idArray = this._struct[id];
+				if (idArray.length > 2) {
+					if (id === '') idArray.shift();
+					this._syncOrder(idArray, struct[id]);
+					if (id === '') idArray.unshift(undefined);
+				}
+			}
+		},
+
+		_syncOrder: function(arrayA, arrayB) {
+			var index = {};
+			arrayA.forEach(function(a) {
+				index[a] = indexOf(arrayB, a);
+			});
+
+			arrayA.sort(function(a, b) {
+				return index[a] - index[b];
+			});
+		},
+
+		_onMoved: function(map){
+			var t = this;
+			forEach(t._ids, function(id){
+				var oldIdx = t._indexes[id];
+				if(map[oldIdx] !== undefined){
+					t._indexes[id] = map[oldIdx];
+				}
+			});
+			t._ids.sort(function(a, b){
+				return t._indexes[a] - t._indexes[b];
+			});
+		},
+
+		_receiveMsg: function(msg, args){
+			var t = this;
+			if(t._ids){
+				if(msg == 'storeChange'){
+					t._refilter = 1;
+				}else if(msg == 'moved'){
+					t._onMoved(args);
+				}else if(msg == 'beforeMove'){
+					t._mapMoveArgs(args);
+				}
+			}
+		},
+
+		_onNew: function(id){
+			var t = this;
+			if(t._ids){
+				t._ids.push(id);
+				t._refilter = 1;
+			}
+			t.onNew.apply(t, arguments);
+		},
+
+		_onDelete: function(id, index, row){
+			var t = this, indexes = t._indexes, ids = t._ids;
+			if(ids){
+				var i = indexOf(ids, id),
+					idx = indexes[id];
+				if(i >= 0){
+					ids.splice(i, 1);
+				}
+				if(i >= 0 && idx !== undefined){
+					index = i;
+					for(i in indexes){
+						if(indexes[i] > idx){
+							--indexes[i];
+						}
+					}
+				}else{
+					index = undefined;
+					t._refilter = 1;
+				}
+			}
+			t.onDelete(id, index, row);
+		}
+	});
+});

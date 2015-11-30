@@ -12,7 +12,8 @@ GridX is consisted of:
 
 GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://dojofoundation.org/about/cla) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
 
-### Current Versions:
+
+### Archive Versions:
 * [1.3 (LTS)](https://github.com/oria/gridx/tree/1.3): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.3.0-Release-Notes)
 * [1.2 (LTS)](https://github.com/oria/gridx/tree/1.2): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.2.0-Release-Notes)
 * [1.1](https://github.com/oria/gridx/tree/1.1): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.1.0-Release-Notes)
@@ -20,17 +21,21 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
 
 ## Installation
 
-1.  [CPM installation](https://github.com/kriszyp/cpm) with the following command:
+1.	[CPM installation](https://github.com/kriszyp/cpm) with the following command:
 
-    ``cpm install gridx``
+	``cpm install gridx``
 
-2.  Manual installation by putting GridX at the same level as Dojo, e.g:
- * dojo 
- * dijit
- * dojox
- * gridx
+2.	[Bower](http://bower.io) install:
 
-GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2/) or higher.
+	``bower install gridx``
+
+3.	Manual installation by putting GridX at the same level as Dojo, e.g:
+	* dojo 
+	* dijit
+	* dojox
+	* gridx
+
+**GridX** works best with [Dojo 1.8.0](http://download.dojotoolkit.org/release-1.8.0/) or higher.
 
 
 ## Quick ways to know GridX
@@ -50,10 +55,16 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 Please also check out [GridX Home Site](http://oria.github.com/gridx) for more details on how GridX can help you.
 
 
+
+##Current Maintainer
+* [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+
 ## GridX Team
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
 * [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
-* [Chen Qi (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+* [Bing Jian Guo (Evans) - IBM, CCLA](mailto:bingjian.guo@gmail.com)
+* [Qi Ruan (Rock) - IBM, CCLA](mailto:)
+* [Xiang Zhou (JayZ) - IBM, CCLA](mailto:)
 * [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)
 
 Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.

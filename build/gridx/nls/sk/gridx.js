@@ -1,14 +1,169 @@
-//>>built
-define("gridx/nls/sk/gridx",{loadingInfo:"Na\u010d\u00edtava sa...",emptyInfo:"\u017diadne polo\u017eky na zobrazenie",loadFailInfo:"Zlyhalo na\u010d\u00edtavanie \u00fadajov!",loadMore:"Na\u010d\u00edta\u0165 viac",loadMoreLoading:"Na\u010d\u00edtava sa...",loadPrevious:"Na\u010d\u00edta\u0165 predo\u0161l\u00e9",loadPreviousLoading:"Na\u010d\u00edtava sa...",clearFilterDialogTitle:"Vymaza\u0165 filter",filterDefDialogTitle:"Filter",defaultRuleTitle:"Pravidlo",ruleTitleTemplate:"Pravidlo ${ruleNumber}",
-noFilterApplied:"Nepou\u017e\u00edva sa \u017eiadny filter.",defineFilter:"Definova\u0165 filter",conditionEqual:"rovn\u00e9",conditionNotEqual:"nerovn\u00e9",conditionLess:"men\u0161ie ako",conditionLessEqual:"men\u0161ie ako alebo rovn\u00e9",conditionGreater:"v\u00e4\u010d\u0161ie ako",conditionGreaterEqual:"v\u00e4\u010d\u0161ie ako alebo rovn\u00e9",conditionContain:"obsahuje",conditionIs:"je",conditionStartWith:"za\u010d\u00edna s",conditionEndWith:"kon\u010d\u00ed s",conditionNotContain:"neobsahuje",
-conditionIsNot:"nie je",conditionNotStartWith:"neza\u010d\u00edna s",conditionNotEndWith:"nekon\u010d\u00ed s",conditionBefore:"pred",conditionAfter:"za",conditionRange:"rozsah",conditionIsEmpty:"je pr\u00e1zdne",all:"v\u0161etko",any:"\u017eiadne",relationAll:"v\u0161etky pravidl\u00e1",waiRelAll:"Vyhovova\u0165 v\u0161etk\u00fdm t\u00fdmto pravidl\u00e1m:",relationAny:"\u013eubovo\u013en\u00e9 pravidlo",waiRelAny:"Vyhovova\u0165 \u013eubovo\u013en\u00fdm z t\u00fdchto pravidiel:",relationMsgFront:"Vyhovie\u0165",
-relationMsgTail:"",and:"a",or:"alebo",addRuleButton:"Prida\u0165 pravidlo",waiAddRuleButton:"Prida\u0165 nov\u00e9 pravidlo",removeRuleButton:"Odstr\u00e1ni\u0165 pravidlo",waiRemoveRuleButtonTemplate:"Odstr\u00e1ni\u0165 pravidlo ${0}",addRuleButton:"Prida\u0165 filtrovacie pravidlo",cancelButton:"Zru\u0161i\u0165",waiCancelButton:"Zru\u0161i\u0165 toto dial\u00f3gov\u00e9 okno",clearButton:"Vymaza\u0165",waiClearButton:"Vymaza\u0165 filter",filterButton:"Filter",waiFilterButton:"Odosla\u0165 filter",
-columnSelectLabel:"St\u013apec:",waiColumnSelectTemplate:"St\u013apec pre pravidlo ${0}",conditionSelectLabel:"Podmienka:",waiConditionSelectTemplate:"Podmienka pre pravidlo ${0}",valueBoxLabel:"Hodnota:",waiValueBoxTemplate:"Zadajte hodnotu na filtrovanie pre pravidlo ${0}",rangeTo:"do",rangeTemplate:"od ${0} do ${1}",statusTipHeaderColumn:"St\u013apec",statusTipHeaderCondition:"Pravidl\u00e1",statusTipTitle:"Li\u0161ta filtra",statusTipMsg:"Kliknite na li\u0161tu filtra, ak chcete filtrova\u0165 pod\u013ea hodn\u00f4t v ${0}.",
-anycolumn:"\u013eubovo\u013en\u00fd st\u013apec",statusTipTitleNoFilter:"Li\u0161ta filtra",statusTipTitleHasFilter:"Filter",statusTipRelPre:"Vyhovie\u0165",statusTipRelPost:"pravidl\u00e1.",statusTipHeaderAll:"Vyhovie\u0165 v\u0161etk\u00fdm pravidl\u00e1m.",statusTipHeaderAny:"Vyhovie\u0165 \u013eubovo\u013en\u00fdm pravidl\u00e1m.",defaultItemsName:"polo\u017eky",filterBarMsgHasFilterTemplate:"Zobrazuje sa ${0} z ${1} ${2}.",filterBarMsgNoFilterTemplate:"Nepou\u017e\u00edva sa \u017eiadny filter",
-filterBarDefButton:"Definova\u0165 filter",waiFilterBarDefButton:"Filtrova\u0165 tabu\u013eku",a11yFilterBarDefButton:"Filtrova\u0165...",filterBarClearButton:"Zru\u0161i\u0165 filter",waiFilterBarClearButton:"Vymaza\u0165 filter",closeFilterBarBtn:"Zatvori\u0165 li\u0161tu filtra",clearFilterMsg:"Toto odstr\u00e1ni filter a zobraz\u00ed v\u0161etky dostupn\u00e9 z\u00e1znamy",anyColumnOption:"\u013dubovo\u013en\u00fd st\u013apec",trueLabel:"\u00c1no",falseLabel:"Nie",radioTrueLabel:"Hodnota pravda",
-radioFalseLabel:"Hodnota nepravda",beginTimeRangeLabel:"Za\u010diato\u010dn\u00e1 hodnota rozsahu \u010dasov",endTimeRangeLabel:"Koncov\u00e1 hodnota rozsahu \u010dasov",beginDateRangeLabel:"Za\u010diato\u010dn\u00e1 hodnota rozsahu d\u00e1tumov",endDateRangeLabel:"Koncov\u00e1 hodnota rozsahu d\u00e1tumov",startsWithExpr:"${0}*",singleSort:"Jednoduch\u00e9 triedenie",nestedSort:"Vnoren\u00e9 triedenie",ascending:"Kliknite pre vzostupn\u00e9 triedenie",descending:"Kliknite pre zostupn\u00e9 triedenie",
-sortingState:"${0} - ${1}",unsorted:"Netriedi\u0165 tento st\u013apec",waiSingleSortLabel:"${0} - je zoraden\u00e9 pod\u013ea ${1}. Vyberte zoradenie pod\u013ea ${2}",waiNestedSortLabel:"${0} - je vnoren\u00e9 pod\u013ea ${1}. Vyberte vnoren\u00e9 zoradenie pod\u013ea ${2}",pagerWai:"Str\u00e1nky",pageIndex:"${0}",pageIndexTitle:"Strana ${0}",firstPageTitle:"Prv\u00e1 strana",prevPageTitle:"Predo\u0161l\u00e1 strana",nextPageTitle:"\u010eal\u0161ia strana",lastPageTitle:"Posledn\u00e1 strana",pageSize:"${0}",
-pageSizeTitle:"${0} polo\u017eiek na strane",pageSizeAll:"V\u0161etky",pageSizeAllTitle:"V\u0161etky polo\u017eky",description:"${0} - ${1} z ${2} polo\u017eiek.",descriptionEmpty:"Mrie\u017eka je pr\u00e1zdna.",summary:"Celkovo: ${0}",summaryWithSelection:"Celkovo: ${0}, vybrat\u00fdch: ${1}",gotoBtnTitle:"Prejs\u0165 na \u0161pecifick\u00fa stranu",gotoDialogTitle:"Prejs\u0165 na stranu",gotoDialogMainMsg:"Zadajte \u010d\u00edslo strany:",gotoDialogPageCount:"(${0} str\u00e1n)",gotoDialogOKBtn:"Prejs\u0165",
-gotoDialogCancelBtn:"Zru\u0161i\u0165",pageLabel:"Str\u00e1nka",pageSizeLabel:"Riadky",filterLabel:"Filter",clearButtonTitle:"Vymaza\u0165 filter",buildFilterMenuLabel:"Vytvori\u0165 filter\x26hellip;",apply:"Pou\u017ei\u0165 filter",helpMsg:"${0} - kliknutie \x3d zoradi\u0165, Ctrl + kliknutie \x3d prida\u0165 do zoradenia",singleHelpMsg:"${0} - Kliknut\u00edm zora\u010fte",priorityOrder:"priorita zoradenia ${0}",summaryTotal:"Celkovo: ${0}",summarySelected:"Vybrat\u00e9: ${0}",summaryRange:"Rozsah: ${0}-${1}",
-indirectSelectAll:"Ak chcete vybra\u0165 v\u0161etko, stla\u010dte medzern\u00edk.",indirectDeselectAll:"Ak chcete zru\u0161i\u0165 cel\u00fd v\u00fdber, stla\u010dte medzern\u00edk.",treeExpanded:"Ak chcete zvin\u00fa\u0165 tento riadok, stla\u010dte Control + \u0161\u00edpka do\u013eava.",treeCollapsed:"Ak chcete rozvin\u00fa\u0165 tento riadok, stla\u010dte Control + \u0161\u00edpka doprava."});
-//@ sourceMappingURL=gridx.js.map
+define({     
+//Body
+	loadingInfo: "Načítava sa...",
+	emptyInfo: "Žiadne položky na zobrazenie",
+	loadFailInfo: "Zlyhalo načítavanie údajov!",
+	loadMore: "Načítať viac",
+	loadMoreLoading: "Načítava sa...",
+	loadPrevious: "Načítať predošlé",
+	loadPreviousLoading: "Načítava sa...",
+
+//FilterBar
+	"clearFilterDialogTitle": "Vymazať filter",
+	"filterDefDialogTitle": "Filter",
+	"defaultRuleTitle": "Pravidlo",
+	"ruleTitleTemplate": "Pravidlo ${ruleNumber}",
+	"noFilterApplied": "Nepoužíva sa žiadny filter.",
+	"defineFilter": "Definovať filter",
+	"defineFilterAriaLabel": "Definovať filter: Otvorí dialógové okno filtra na konfigurovanie komplexných pravidiel filtra. Každé pravidlo filtra je tvorené kombináciou stĺpca, podmienky a hodnoty. Pri otvorení dialógového okna sa zameria pole hodnoty.",
+	"conditionEqual": "rovné",
+	"conditionNotEqual": "nerovné",
+	"conditionLess": "menšie ako",
+	"conditionLessEqual": "menšie ako alebo rovné",
+	"conditionGreater": "väčšie ako",
+	"conditionGreaterEqual": "väčšie ako alebo rovné",
+	"conditionContain": "obsahuje",
+	"conditionIs": "je",
+	"conditionStartWith": "začína s",
+	"conditionEndWith": "končí s",
+	"conditionNotContain": "neobsahuje",
+	"conditionIsNot": "nie je",
+	"conditionNotStartWith": "nezačína s",
+	"conditionNotEndWith": "nekončí s",
+	"conditionBefore": "pred",
+	"conditionAfter": "za",
+	"conditionRange": "rozsah",
+	"conditionIsEmpty": "je prázdne",
+	"conditionIsNotEmpty": "nie je prázdne",
+	"all": "všetko",
+	"any": "žiadne",
+	"relationAll": "všetky pravidlá",
+	"waiRelAll": "Vyhovovať všetkým týmto pravidlám:",
+	"relationAny": "ľubovoľné pravidlo",
+	"waiRelAny": "Vyhovovať ľubovoľným z týchto pravidiel:",
+	"relationMsgFront": "Vyhovieť",
+	"relationMsgTail": "",
+	"and": "a",
+	"or": "alebo",
+	"addRuleButton": "Pridať pravidlo",
+	"waiAddRuleButton": "Pridať nové pravidlo",
+	"removeRuleButton": "Odstrániť pravidlo",
+	"waiRemoveRuleButtonTemplate": "Odstrániť pravidlo ${0}",
+	"addRuleButton": "Pridať filtrovacie pravidlo",
+	"cancelButton": "Zrušiť",
+	"waiCancelButton": "Zrušiť toto dialógové okno",
+	"clearButton": "Vymazať",
+	"waiClearButton": "Vymazať filter",
+	"filterButton": "Filter",
+	"waiFilterButton": "Odoslať filter",
+	"columnSelectLabel": "Stĺpec:",
+	"columnSelectAriaLabel": "Stĺpec: časť podmienky ${0} z ${1}",
+	"waiColumnSelectTemplate": "Stĺpec pre pravidlo ${0}",
+
+	"conditionSelectLabel": "Podmienka:",
+	"conditionSelectAriaLabel": "Operátor: časť podmienky ${0} z ${1}",
+	"waiConditionSelectTemplate": "Podmienka pre pravidlo ${0}",
+
+	"valueBoxLabel": "Hodnota:",
+	"valueBoxAriaLabel": "Hodnota: časť podmienky ${0} z ${1}",
+	"waiValueBoxTemplate": "Zadajte hodnotu na filtrovanie pre pravidlo ${0}",
+	"rangeTo": "do",
+	"rangeTemplate": "od ${0} do ${1}",
+	"statusTipHeaderColumn": "Stĺpec",
+	"statusTipHeaderCondition": "Pravidlá",
+	"statusTipTitle": "Lišta filtra",
+	"statusTipMsg": "Kliknite na lištu filtra, ak chcete filtrovať podľa hodnôt v ${0}.",
+	"anycolumn": "ľubovoľný stĺpec",
+	"statusTipTitleNoFilter": "Lišta filtra",
+	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelPre": "Vyhovieť",
+	"statusTipRelPost": "pravidlá.",
+	"statusTipHeaderAll": "Vyhovieť všetkým pravidlám.",
+	"statusTipHeaderAny": "Vyhovieť ľubovoľným pravidlám.",
+	"defaultItemsName": "položky",
+	"filterBarMsgHasFilterTemplate": "Zobrazuje sa ${0} z ${1} ${2}.",
+	"filterBarMsgNoFilterTemplate": "Nepoužíva sa žiadny filter",
+	"filterBarDefButton": "Definovať filter",
+	"waiFilterBarDefButton": "Filtrovať tabuľku",
+	"a11yFilterBarDefButton": "Filtrovať...",
+	"filterBarClearButton": "Zrušiť filter",
+	"waiFilterBarClearButton": "Vymazať filter",
+	"closeFilterBarBtn": "Zatvoriť lištu filtra",
+	"clearFilterMsg": "Toto odstráni filter a zobrazí všetky dostupné záznamy",
+	"anyColumnOption": "Ľubovoľný stĺpec",
+	"trueLabel": "Áno",
+	"falseLabel": "Nie",
+	"radioTrueLabel": "Hodnota pravda",
+	"radioFalseLabel": "Hodnota nepravda",
+	"beginTimeRangeLabel": "Začiatočná hodnota rozsahu časov",
+	"endTimeRangeLabel": "Koncová hodnota rozsahu časov",
+	"beginDateRangeLabel": "Začiatočná hodnota rozsahu dátumov",
+	"endDateRangeLabel": "Koncová hodnota rozsahu dátumov",
+	"startsWithExpr": "${0}*",
+
+//NestedSort
+	singleSort: "Jednoduché triedenie",
+	nestedSort: "Vnorené triedenie",
+	ascending: "Kliknite pre vzostupné triedenie",
+	descending: "Kliknite pre zostupné triedenie",
+	sortingState: "${0} - ${1}",
+	unsorted: "Netriediť tento stĺpec",
+	waiSingleSortLabel: "${0} - je zoradené podľa ${1}. Vyberte zoradenie podľa ${2}",
+	waiNestedSortLabel:"${0} - je vnorené podľa ${1}. Vyberte vnorené zoradenie podľa ${2}",
+
+//PaginationBar
+	pagerWai: 'Stránky',
+
+	pageIndex: '${0}',
+	pageIndexTitle: 'Strana ${0}',
+
+	firstPageTitle: 'Prvá strana',
+	prevPageTitle: 'Predošlá strana',
+	nextPageTitle: 'Ďalšia strana',
+	lastPageTitle: 'Posledná strana',
+
+	pageSize: '${0}',
+	pageSizeTitle: '${0} položiek na strane',
+	pageSizeAll: 'Všetky',
+	pageSizeAllTitle: 'Všetky položky',
+
+	description: '${0} - ${1} z ${2} položiek.',
+	descriptionEmpty: 'Mriežka je prázdna.',
+
+	summary: 'Celkovo: ${0}',
+	summaryWithSelection: 'Celkovo: ${0}, vybratých: ${1}',
+
+	gotoBtnTitle: 'Prejsť na špecifickú stranu',
+
+	gotoDialogTitle: 'Prejsť na stranu',
+	gotoDialogMainMsg: 'Zadajte číslo strany:',
+	gotoDialogPageCount: '(${0} strán)',
+	gotoDialogOKBtn: 'Prejsť',
+	gotoDialogCancelBtn: 'Zrušiť',
+	// for drop down pagination bar
+	pageLabel: 'Stránka',
+	pageSizeLabel: 'Riadky',
+
+//QuickFilter
+	filterLabel: 'Filter',
+	clearButtonTitle: 'Vymazať filter',
+	buildFilterMenuLabel: 'Vytvoriť filter...',
+	apply: 'Použiť filter',
+
+//Sort
+	helpMsg: '${0} - kliknutie = zoradiť, Ctrl + kliknutie = pridať do zoradenia',
+	singleHelpMsg: '${0} - Kliknutím zoraďte',
+	priorityOrder: 'priorita zoradenia ${0}',
+
+//SummaryBar
+	summaryTotal: 'Celkovo: ${0}',
+	summarySelected: 'Vybraté: ${0}',
+	summaryRange: 'Rozsah: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Ak chcete vybrať všetko, stlačte medzerník.",	//need translation
+	indirectDeselectAll: "Ak chcete zrušiť celý výber, stlačte medzerník.",	//need translation
+	treeExpanded: "Ak chcete zvinúť tento riadok, stlačte Control + šípka doľava.",	//need translation
+	treeCollapsed: "Ak chcete rozvinúť tento riadok, stlačte Control + šípka doprava."	//need translation
+});
+

@@ -1,5 +1,94 @@
-//>>built
-define("gridx/support/GotoPageButton","dojo/_base/declare dojo/_base/lang dojo/string ./_LinkPageBase ./GotoPagePane dijit/Dialog dijit/form/Button dijit/form/NumberTextBox dojo/keys dojo/_base/event".split(" "),function(c,d,e,f,g,h,k,l,m,n){return c(f,{templateString:"\x3cspan class\x3d'gridxPagerGotoBtn' tabindex\x3d'${_tabIndex}' title\x3d'${gotoBtnTitle}' aria-label\x3d'${gotoBtnTitle}' data-dojo-attach-event\x3d'onclick: _showGotoDialog'\x3e\x3cspan class\x3d'gridxPagerA11yInner'\x3e\x26#9650;\x3c/span\x3e\x3c/span\x3e",
-gotoPagePane:g,dialogClass:h,buttonClass:k,numberTextBoxClass:l,refresh:function(){},_showGotoDialog:function(){if(!this._gotoDialog){var a=this.dialogClass,b=d.mixin({title:this.gotoDialogTitle,content:new this.gotoPagePane({pager:this,pagination:this.grid.pagination})},this.dialogProps||{}),a=this._gotoDialog=new a(b);a.content.dialog=a}a=this.grid.pagination.pageCount();b=this._gotoDialog.content;b.pageCountMsgNode.innerHTML=e.substitute(this.gotoDialogPageCount,[a]);b.pageInputBox.constraints=
-{fractional:!1,min:1,max:a};b.pageInputBox.set("value",b.pagination.currentPage()+1);this._gotoDialog.show();b.pageInputBox.focusNode.select()},_onKey:function(a){a.keyCode==m.ENTER&&(this._showGotoDialog(),n.stop(a))},_focusNextBtn:function(){},destroy:function(){this._gotoDialog&&this._gotoDialog.destroy();this.inherited(arguments)}})});
-//@ sourceMappingURL=GotoPageButton.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/string",
+	"./_LinkPageBase",
+	"./GotoPagePane",
+	"dijit/Dialog",
+	"dijit/form/Button",
+	"dijit/form/NumberTextBox",
+	"dojo/keys",
+	"dojo/_base/event"
+], function(declare, lang, string, _LinkPageBase, GotoPagePane, Dialog, Button, NumberTextBox, keys, event){
+
+/*=====
+	return declare(_LinkPageBase, {
+		gotoPagePane: GotoPagePane,
+
+		// dialogClass: [private]
+		dialogClass: Dialog,
+
+		// buttonClass: [private]
+		buttonClass: Button,
+
+		// numberTextBoxClass: [private]
+		numberTextBoxClass: NumberTextBox,
+
+		refresh: function(){
+			// summary:
+			//		TODOC
+		}
+	});
+=====*/
+
+	return declare(_LinkPageBase, {
+		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnTitle}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
+
+		gotoPagePane: GotoPagePane,
+
+		dialogClass: Dialog,
+
+		buttonClass: Button,
+
+		numberTextBoxClass: NumberTextBox,
+
+		refresh: function(){},
+
+		//Private-----------------------------------------
+		_showGotoDialog: function(){
+			var t = this;
+			if(!t._gotoDialog){
+				var cls = t.dialogClass,
+					gppane = t.gotoPagePane,
+					props = lang.mixin({
+						title: t.gotoDialogTitle,
+						content: new gppane({
+							pager: t,
+							pagination: t.grid.pagination
+						})
+					}, t.dialogProps || {});
+				var dlg = t._gotoDialog = new cls(props);
+				dlg.content.dialog = dlg;
+			}
+			var pageCount = t.grid.pagination.pageCount(),
+				pane = t._gotoDialog.content;
+			pane.pageCountMsgNode.innerHTML = string.substitute(t.gotoDialogPageCount, [pageCount]);
+			pane.pageInputBox.constraints = {
+				fractional: false,
+				min: 1,
+				max: pageCount
+			};
+			pane.pageInputBox.set('value', pane.pagination.currentPage() + 1);
+			t._gotoDialog.show();
+			pane.pageInputBox.focusNode.select();
+		},
+
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this._showGotoDialog();
+				event.stop(evt);
+			}
+		},
+
+		_focusNextBtn: function(){
+		},
+		
+		destroy: function(){
+			var t = this;
+			if(t._gotoDialog){
+				t._gotoDialog.destroy();
+			}
+			t.inherited(arguments);
+		}
+	});
+});

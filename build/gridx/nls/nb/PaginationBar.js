@@ -1,4 +1,0 @@
-//>>built
-define("gridx/nls/nb/PaginationBar",{pagerWai:"Sideveksler",pageIndex:"${0}",pageIndexTitle:"Side ${0}",firstPageTitle:"F\u00f8rste side",prevPageTitle:"Forrige side",nextPageTitle:"Neste side",lastPageTitle:"Siste side",pageSize:"${0}",pageSizeTitle:"${0} elementer per side",pageSizeAll:"Alle",pageSizeAllTitle:"Alle elementer",description:"${0} - ${1} av ${2} elementer.",descriptionEmpty:"Rutenettet er tomt.",summary:"Totalt: ${0}",summaryWithSelection:"Totalt: ${0} Valgt: ${1}",gotoBtnTitle:"G\u00e5 til en bestemt side",
-gotoDialogTitle:"G\u00e5 til side",gotoDialogMainMsg:"Oppgi sidetallet:",gotoDialogPageCount:" (${0} sider)",gotoDialogOKBtn:"Utf\u00f8r",gotoDialogCancelBtn:"Avbryt",pageLabel:"Side",pageSizeLabel:"Rader"});
-//@ sourceMappingURL=PaginationBar.js.map

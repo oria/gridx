@@ -1,4 +1,45 @@
-//>>built
-define("gridx/modules/dnd/Avatar",["dojo/_base/declare","dojo/dom-class","dojo/dom-construct","dojo/_base/window","dojo/dnd/Avatar"],function(b,c,d,e,f){return b(f,{construct:function(){this.isA11y=c.contains(e.body(),"dijit_a11y");this.node=d.toDom(["\x3ctable border\x3d'0' cellspacing\x3d'0' class\x3d'gridxDndAvatar' style\x3d'position: absolute; z-index: 1999; margin: 0'\x3e\x3ctbody\x3e\x3ctr style\x3d'opacity: 0.9;'\x3e\x3ctd class\x3d'gridxDnDIcon'\x3e",this.isA11y?"\x3cspan id\x3d'a11yIcon'\x3e"+
-(this.manager.copy?"+":"\x3c")+"\x3c/span\x3e":"","\x3c/td\x3e\x3ctd class\x3d'gridxDnDItemIcon ",this._getIconClass(),"'\x3e\x3c/td\x3e\x3ctd\x3e\x3cspan class\x3d'gridxDnDItemCount'\x3e",this._generateText(),"\x3c/span\x3e\x3c/td\x3e\x3c/tr\x3e\x3c/tbody\x3e\x3c/table\x3e"].join(""))},_getIconClass:function(){var a=this.manager._dndInfo;return["gridxDnDIcon",a.cssName,1===a.count?"Single":"Multi"].join("")},_generateText:function(){return"("+this.manager._dndInfo.count+")"}})});
-//@ sourceMappingURL=Avatar.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/_base/window",
+	"dojo/dnd/Avatar"
+], function(declare, domClass, domConstruct, win, Avatar){
+
+/*=====
+	return declare(Avatar, {
+		// summary:
+		//		Avatar shown beside mouse during dnd. Inheriting dojo/dnd/Avatar.
+		//		This dnd avatar is in a separated file so that it can be (dynamically) overwritten in case of need
+	});
+=====*/
+
+	return declare(Avatar, {
+		construct: function(){
+			var t = this;
+			t.isA11y = domClass.contains(win.body(), "dijit_a11y");
+			
+			t.node = domConstruct.toDom(["<table border='0' cellspacing='0' class='gridxDndAvatar' ",
+				"style='position: absolute; z-index: 1999; margin: 0'>",
+				"<tbody><tr style='opacity: 0.9;'>",
+					"<td class='gridxDnDIcon'>",
+						t.isA11y ? "<span id='a11yIcon'>" + (t.manager.copy ? '+' : '<') + "</span>" : '',
+					"</td>",
+					"<td class='gridxDnDItemIcon ", t._getIconClass(), "'></td>",
+					"<td><span class='gridxDnDItemCount'>", t._generateText(), "</span></td>",
+				"</tr></tbody></table>"
+			].join(''));
+		},
+
+		_getIconClass: function(){
+			var info = this.manager._dndInfo;
+			return ['gridxDnDIcon', info.cssName, info.count === 1 ? 'Single' : 'Multi'].join('');
+		},
+
+		_generateText: function(){
+			// summary:
+			//		generates a proper text to reflect copying or moving of items
+			return "(" + this.manager._dndInfo.count + ")";
+		}
+	});
+});

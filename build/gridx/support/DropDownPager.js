@@ -1,5 +1,113 @@
-//>>built
-define("gridx/support/DropDownPager","dojo/_base/declare dojo/_base/lang dojo/store/Memory dijit/_WidgetBase dijit/_FocusMixin dijit/_TemplatedMixin dijit/form/FilteringSelect".split(" "),function(l,h,m,n,p,q,r){return l([n,p,q],{templateString:'\x3cdiv class\x3d"gridxDropDownPager"\x3e\x3clabel class\x3d"gridxPagerLabel"\x3e${pageLabel}\x3c/label\x3e\x3c/div\x3e',constructor:function(a){h.mixin(this,a.grid.nls)},postCreate:function(){var a=this,b=a.grid,e=b.pagination;a.connect(e,"onSwitchPage",
-"_onSwitchPage");a.connect(e,"onChangePageSize","refresh");a.connect(b.model,"onSizeChange","refresh");b.pagination.loaded.then(function(){a.refresh();a._onSwitchPage(b.pagination.currentPage())})},grid:null,stepperClass:r,stepperProps:null,refresh:function(){var a=[],b,e=this.grid.pagination,k=e.pageCount(),g=e.currentPage(),c=this._pageStepperSelect,f,d;for(f=0;f<k;++f)d=f+1,d={id:d,label:d,value:d},a.push(d),g==f&&(b=d);a=new m({data:a});c?(c.set("store",a),c.set("value",g+1)):(g=this.stepperClass,
-b=h.mixin({store:a,searchAttr:"label",item:b,"class":"gridxPagerStepperWidget",onChange:function(a){e.gotoPage(a-1)}},this.stepperProps||{}),c=this._pageStepperSelect=new g(b),c.placeAt(this.domNode,"last"),c.startup());c.set("disabled",1>=k)},_onSwitchPage:function(a){this._pageStepperSelect.set("value",a+1)}})});
-//@ sourceMappingURL=DropDownPager.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/store/Memory",
+	"dojo/query",
+	"dojo/dom-attr",
+	"dijit/_WidgetBase",
+	"dijit/_FocusMixin",
+	"dijit/_TemplatedMixin",
+	"dijit/form/FilteringSelect"
+], function(declare, lang, Store, query, domAttr, _WidgetBase, _FocusMixin, _TemplatedMixin, FilteringSelect){
+
+/*=====
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
+		// summary:
+		//		This grid bar plugin is to switch pages using select widget.
+
+		// grid: [const] gridx.Grid
+		//		The grid widget this plugin works for.
+		grid: null,
+
+		// stepperClass: Function
+		//		The constructor of the select widget
+		stepperClass: FilteringSelect,
+
+		// stepperProps: Object
+		//		The properties passed to select widget when creating it.
+		stepperProps: null,
+
+		refresh: function(){}
+	});
+=====*/
+
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
+		templateString: '<div class="gridxDropDownPager"><label class="gridxPagerLabel">${pageLabel}</label></div>',
+
+		constructor: function(args){
+			lang.mixin(this, args.grid.nls);
+		},
+
+		postCreate: function(){
+			var t = this,
+				g = t.grid,
+				c = 'connect',
+				p = g.pagination;
+			t[c](p, 'onSwitchPage', '_onSwitchPage');
+			t[c](p, 'onChangePageSize', 'refresh');
+			t[c](g.model, 'onSizeChange', 'refresh');
+			g.pagination.loaded.then(function(){
+				t.refresh();
+				//Set initial page after pagination module is ready.
+				t._onSwitchPage(g.pagination.currentPage());
+			});
+		},
+
+		//Public-----------------------------------------------------------------------------
+		grid: null,
+
+		stepperClass: FilteringSelect,
+
+		stepperProps: null,
+
+		refresh: function(){
+			var t = this, mod = t.module,
+				items = [],
+				selectedItem,
+				p = t.grid.pagination,
+				pageCount = p.pageCount(),
+				currentPage = p.currentPage(),
+				stepper = t._pageStepperSelect,
+				i, v, item;
+			for(i = 0; i < pageCount; ++i){
+				v = i + 1;
+				item = {
+					id: v,
+					label: v,
+					value: v
+				};
+				items.push(item);
+				if(currentPage == i){
+					selectedItem = item;
+				}
+			}
+			var store = new Store({data: items});
+			if(!stepper){
+				var cls = t.stepperClass,
+					props = lang.mixin({
+						store: store,
+						searchAttr: 'label',
+						item: selectedItem,
+						'class': 'gridxPagerStepperWidget',
+						onChange: function(page){
+							p.gotoPage(page - 1);
+						}
+					}, t.stepperProps || {});
+				stepper = t._pageStepperSelect = new cls(props);
+				stepper.placeAt(t.domNode, "last");
+				stepper.startup();
+				
+				domAttr.set(query('.gridxPagerLabel', t.domNode)[0], 'for', stepper.id); 
+			}else{
+				stepper.set('store', store);
+				stepper.set('value', currentPage + 1);
+			}
+			stepper.set('disabled', pageCount <= 1);
+		},
+
+		//Private----------------------------------------------------------------------------
+		_onSwitchPage: function(page){
+			this._pageStepperSelect.set('value', page + 1);
+		}
+	});
+});

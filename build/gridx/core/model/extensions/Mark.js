@@ -1,10 +1,393 @@
-//>>built
-define("gridx/core/model/extensions/Mark",["dojo/_base/declare","dojo/_base/array","../_Extension"],function(s,n,t){return s(t,{name:"mark",priority:5,constructor:function(a){this.mixed="mixed";this.states={"0":!1,1:this.mixed,2:!0};this.clear();this._tree={};this._mixinAPI("getMark","getMarkedIds","markById","markByIndex","clearMark","treeMarkMode","setMarkable");this.aspect(a,"_msg","_receiveMsg");this.aspect(a._cache,"onLoadRow","_onLoadRow");this.aspect(a,"setStore","clear");a.onMarkChange=function(){};
-a._spTypes={}},clear:function(){this._byId={};this._last={};this._lazy={};this._unmarkable={}},setMarkable:function(a,b,c){c=this._initMark(c);var d=this.model._model,e=this._unmarkable;(e[c]=e[c]||{})[a]=!b;b&&(b=d._call("children",[a]),d=b.length?b[0]:d._call("parentId",[a]),a=this._byId[this._initMark(c)][d]||0,this._doMark(d,c,a))},clearMark:function(a){this._byId[this._initMark(a)]={}},getMarkedIds:function(a,b){var c=[],d,e=this._initMark(a);if(e=this._byId[e])for(d in e)(b||2==e[d])&&c.push(d);
-return c},isMarked:function(a,b){b=this._initMark(b);return 2==this._byId[b][a]},isPartialMarked:function(a,b){return 1==this._byId[this._initMark(b)][a]},getMark:function(a,b){var c=this._byId[this._initMark(b)][a]||0;return{"0":!1,1:this.mixed,2:!0}[c]},markById:function(a,b,c){this._cmd(a,b,c,1)},markByIndex:function(a,b,c,d){0<=a&&Infinity>a&&this._cmd(a,b,c,0,d)},treeMarkMode:function(a,b){a=this._initMark(a);var c=this._tree;return void 0===b?c[a]:c[a]=b},_cmdMark:function(){var a=this,b=arguments,
-c=[],d=a.model._model;n.forEach(b,function(a){a[3]||c.push({start:a[0],count:1})});return d._call("when",[{id:[],range:c},function(){n.forEach(b,function(b){var c=b[3]?b[0]:d._call("indexToId",[b[0],b[4]]),f=b[1];b=a._initMark(b[2]);f=f===a.mixed?1:f?2:0;a.model.isId(c)&&a._isMarkable(b,c)&&a._mark(c,f,b)})}])},_onDelete:function(a,b,c){var d,e=this._byId,g=this._last,f=this._lazy;for(d in e)d=this._initMark(d),delete e[d][a],delete g[d][a],delete f[d][a],c&&this._updateParents(c,d);this.onDelete.apply(this,
-arguments)},_initMark:function(a){var b=this._byId,c=this._last,d=this._lazy;a=a||"select";b[a]=b[a]||{};d[a]=d[a]||{};c[a]=c[a]||{};return a},_cmd:function(){this.model._addCmd({name:"_cmdMark",scope:this,args:arguments,async:1})},_receiveMsg:function(a,b){if("filter"==a){var c,d,e=this.model._spTypes;for(c in e)if(e[c])for(d in this._byId[c])0>n.indexOf(b,d)&&this._doMark(d,c,0,0,1)}},_mark:function(a,b,c){c=this._initMark(c);var d=this._byId[c][a]||0;this.model.isId(a)&&d!=b&&this._doMark(a,c,
-b)},_onLoadRow:function(a){var b=this.model,c=b._model,d=this._lazy,e,g,f=c._call("treePath",[a]).pop();if(b.isId(f))for(e in d)b=d[e],g=b[f],"number"==typeof g&&(g=b[f]={toMark:g,count:c._call("size",[f])}),g&&(--g.count,g.count||delete b[f],this._doMark(a,e,g.toMark,1))},_fireEvent:function(a,b,c,d){var e=this.model;c!=d&&(c||delete this._byId[b][a],e.onMarkChange(a,this.states[c||0],this.states[d||0],b))},_updateParents:function(a,b,c){for(var d=this.model._model,e=this._byId[b],g=this._last[b],
-f=a.length-1;0<f;--f){var h=a[f],k=e[h],l=d._call("children",[h]),m=n.filter(l,function(a){return g[a]=e[a]}).length,p=n.filter(l,function(a){return 2==e[a]}).length;0!=p&&p==l.length&&2!=k?e[h]=2:!m&&k?delete e[h]:m&&(p<l.length&&1!=k)&&(e[h]=1);c||this._fireEvent(h,b,e[h],k)}},_doMark:function(a,b,c,d,e){var g,f,h,k=this.model._model,l=this._byId[b],m=this._last[b],p=this._lazy[b],q=l[a]||0,r;this._tree[b]&&(f=k._call("children",[a]),1==c&&n.every(f,function(a){return(m[a]||0)==(m[f[0]]||0)})&&
-(c=2));l[a]=m[a]=c;e||this._fireEvent(a,b,c,q);if(this._tree[b]){for(g=[a];g.length;)h=g.shift(),q=l[h]||0,r=l[h]=1==c?m[h]||0:c,e||this._fireEvent(h,b,r,q),k._call("hasChildren",[h])&&(f=k._call("children",[h]),f.length?g=g.concat(f):p[h]=c);d||(a=k._call("treePath",[a]),this._updateParents(a,b,e))}},_isMarkable:function(a,b){return this._unmarkable[a]?!this._unmarkable[a][b]:!0}})});
-//@ sourceMappingURL=Mark.js.map
+define([
+	'dojo/_base/declare',
+	'dojo/_base/array',
+	/*====='../Model',=====*/
+	'../_Extension'
+], function(declare, array,
+	/*=====Model, =====*/
+	_Extension){
+
+/*=====
+	Model.getMark = function(){};
+	Model.getMarkedIds = function(){};
+	Model.markById = function(){};
+	Model.markByIndex = function(){};
+	Model.clearMark = function(){};
+	Model.treeMarkMode = function(){};
+	Model.onMarkChange = function(){};
+	Model.setMarkable = function(){};
+
+	return declare(_Extension, {
+		// summary:
+		//		Provide a marking system, mainly used by selection.
+	});
+=====*/
+
+	return declare(_Extension, {
+		name: 'mark',
+
+		priority: 5,
+
+		isZOS: false,
+		
+		constructor: function(model){
+			var t = this;
+			t.mixed = 'mixed';
+			t.states = {
+				0: false,
+				1: t.mixed,
+				2: true
+			};
+			t.clear();
+			t._tree = {};
+			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
+			t.aspect(model, '_msg', '_receiveMsg');
+			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
+			t.aspect(model, 'setStore', 'clear');
+			model.onMarkChange = function(){};
+			model._spTypes = {};
+		},
+
+		//Public------------------------------------------------------------------
+		clear: function(){
+			this._byId = {};
+			this._last = {};
+			this._lazy = {};
+			this._unmarkable = {};
+		},
+
+		setMarkable: function(rowId, markable, type){
+			type = this._initMark(type);
+			var t = this,
+				m = t.model,
+				mm = m._model,
+				unmarkable = this._unmarkable,
+				hash = unmarkable[type] = unmarkable[type] || {};
+				
+			hash[rowId] = !markable;
+			
+			if(markable){
+				var children = mm._call('children', [rowId]),
+					mark;
+				if(children.length){	//if has child, let the first child setMark 
+										//to its current mark value to regenerate the mark tree
+					var c = children[0];
+					mark = this._byId[this._initMark(type)][c] || 0;
+
+					this._doMark(c, type, mark);
+				}else{
+					
+					var pid = mm._call('parentId', [rowId]);
+					mark = this._byId[this._initMark(type)][pid] || 0;
+
+					this._doMark(pid, type, mark);
+				}
+			}
+
+		},
+
+		clearMark: function(type){
+			this._byId[this._initMark(type)] = {};
+		},
+
+		getMarkedIds: function(type, includePartial){
+			var t = this,
+				ret = [], id,
+				tp = t._initMark(type),
+				ids = t._byId[tp];
+			if(ids){
+				for(id in ids){
+					if(includePartial || ids[id] == 2){
+						ret.push(id);
+					}
+				}
+			}
+			return ret;
+		},
+
+		isMarked: function(id, type){
+			type = this._initMark(type);
+			var state = this._byId[type][id];
+			return state == 2;
+		},
+
+		isPartialMarked: function(id, type){
+			return this._byId[this._initMark(type)][id] == 1;
+		},
+
+		getMark: function(id, type){
+			var m = this._byId[this._initMark(type)][id] || 0;
+			return {
+				0: false,
+				1: this.mixed,
+				2: true
+			}[m];
+		},
+
+		markById: function(id, toMark, type){
+			this._cmd(id, toMark, type, 1); //Should we make this sync?
+		},
+
+		markByIndex: function(index, toMark, type, parentId){
+			if(index >= 0 && index < Infinity){
+				this._cmd(index, toMark, type, 0, parentId);
+			}
+		},
+
+		treeMarkMode: function(type, toEnable){
+			type = this._initMark(type);
+			var tm = this._tree;
+			return toEnable === undefined ? tm[type] : (tm[type] = toEnable);
+		},
+		
+		//Private----------------------------------------------------------------
+		_cmdMark: function(){
+			var t = this,
+				args = arguments,
+				ranges = [],
+				m = t.model._model;
+			array.forEach(args, function(arg){
+				if(!arg[3]){
+					ranges.push({
+						start: arg[0],
+						count: 1
+					});
+				}
+			});
+			return m._call('when', [{
+				id: [],
+				range: ranges
+			}, function(){
+				array.forEach(args, function(arg){
+					var id = arg[3] ? arg[0] : m._call('indexToId', [arg[0], arg[4]]),
+						toMark = arg[1],
+						type = t._initMark(arg[2]);
+					if(toMark === t.mixed){
+						toMark = 1;
+					}else if(toMark){
+						toMark = 2;
+					}else{
+						toMark = 0;
+					}
+					if(t.model.isId(id) && t._isMarkable(type, id)){
+						t._mark(id, toMark, type);
+					}
+				});
+			}]);
+		},
+
+		_onDelete: function(id, rowIndex, treePath){
+			var t = this,
+				tp,
+				byId = t._byId,
+				last = t._last,
+				lazy = t._lazy;
+			for(tp in byId){
+				tp = t._initMark(tp);
+				delete byId[tp][id];
+				delete last[tp][id];
+				delete lazy[tp][id];
+				if(treePath){
+					t._updateParents(treePath, tp);
+				}
+			}
+			t.onDelete.apply(t, arguments);
+		},
+
+		_initMark: function(type){
+			var t = this,
+				c = t._byId,
+				s = t._last,
+				z = t._lazy,
+				tp = type || 'select';
+			c[tp] = c[tp] || {};
+			z[tp] = z[tp] || {};
+			s[tp] = s[tp] || {};
+			return tp;
+		},
+
+		_cmd: function(){
+			this.model._addCmd({
+				name: "_cmdMark",
+				scope: this,
+				args: arguments,
+				async: 1
+			});
+		},
+
+		_receiveMsg: function(msg, filteredIds){
+			if(msg == 'filter'){
+				var t = this,
+					tp, id,
+					sp = t.model._spTypes;
+				for(tp in sp){
+					if(sp[tp]){
+						for(id in t._byId[tp]){
+							if(array.indexOf(filteredIds, id) < 0){
+								//Do not fire event since now is still during filter.
+								t._doMark(id, tp, 0, 0, 1);
+							}
+						}
+					}
+				}
+			}
+		},
+
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		_mark: function(id, toMark, type){
+			var t = this,
+				tp = t._initMark(type),
+				state = t._byId[tp][id] || 0;
+			if(t.model.isId(id) && state != toMark){
+				t._doMark(id, tp, toMark);
+			}
+		},
+
+		_onLoadRow: function(id){
+			var t = this,
+				m = t.model,
+				mm = m._model,
+				lazy = t._lazy,
+				type, lz, flag,
+				pid = mm._call('treePath', [id]).pop();
+			if(m.isId(pid)){
+				for(type in lazy){
+					lz = lazy[type];
+					flag = lz[pid];
+					if(typeof flag == 'number'){
+						flag = lz[pid] = {
+							toMark: flag,
+							count: mm._call('size', [pid])
+						};
+					}
+					if(flag){
+						--flag.count;
+						if(!flag.count){
+							delete lz[pid];
+						}
+						t._doMark(id, type, flag.toMark, 1);
+					}
+				}
+			}
+		},
+
+		_fireEvent: function(id, type, toMark, oldState){
+			var t = this,
+				m = t.model;
+			// debugger;
+			if(toMark != oldState){
+				if(!toMark){
+					delete t._byId[type][id];
+				}
+				m.onMarkChange(id, t.states[toMark || 0], t.states[oldState || 0], type);
+			}
+		},
+
+		_updateParents: function(treePath, type, noEvent){
+			var t = this,
+				mm = t.model._model,
+				byId = t._byId[type],
+				last = t._last[type];
+			for(var i = treePath.length - 1; i > 0; --i){
+				var pid = treePath[i],
+					oldState = byId[pid],
+					siblings = mm._call('children', [pid]),
+					markCount = array.filter(siblings, function(childId){
+						return last[childId] = byId[childId];
+					}).length,
+					fullCount = array.filter(siblings, function(childId){
+						return byId[childId] == 2;
+					}).length;
+				// if(t._isMarkable(type, pid)){
+				if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
+					byId[pid] = 2; //none|partial -> all
+				}else if(!markCount && oldState){
+					delete byId[pid]; //all|partial -> none
+				}else if(markCount && fullCount < siblings.length && oldState != 1){
+					byId[pid] = 1; //all|none -> partial
+				}
+				if (t.isZOS) {
+					if (fullCount === siblings.length && siblings.length === 1) {
+						byId[pid] = 1;
+					}
+				}
+				if(!noEvent){
+					t._fireEvent(pid, type, byId[pid], oldState);
+				}
+			}
+		},
+
+		_doMark: function(id, tp, toMark, skipParent, noEvent){
+			var i, ids, children, childId, treePath, childrenLen,
+				t = this,
+				m = t.model,
+				mm = m._model,
+				byId = t._byId[tp],
+				last = t._last[tp],
+				lazy = t._lazy[tp],
+				// selectable = t._byId['selectable'],
+				oldState = byId[id] || 0,
+				newState, parent;
+
+			if(t._tree[tp]){
+				children = mm._call('children', [id]);
+				childrenLen = children.length;
+
+				if (toMark === 1) {
+					if (childrenLen > 1) {
+						if(array.every(children, function(childId){
+								return (last[childId] || 0) == (last[children[0]] || 0);
+						})){
+							toMark = 2;
+						}
+						
+					} else if(childrenLen === 1) {
+						toMark = last[children[0]] === 1 ? 1 : 2;
+					} else {		//without children rows
+						toMark = 2;
+					}
+				}
+			}
+
+			byId[id] = last[id] = toMark;
+			if(!noEvent){
+				t._fireEvent(id, tp, toMark, oldState);
+			}
+			if(t._tree[tp]){
+				ids = [id];
+				while(ids.length){
+					childId = ids.shift();
+					oldState = byId[childId] || 0;
+					newState = byId[childId] = toMark == 1 ? last[childId] || undefined : toMark;
+					
+					if (newState === undefined) {
+						parent = mm._call('treePath', [childId]);
+						newState = byId[parent.pop()];
+						newState = newState === 1 ? 0 : newState;
+						byId[childId] = newState;
+					}
+
+					if(!noEvent){
+						t._fireEvent(childId, tp, newState, oldState);
+					}
+					if(mm._call('hasChildren', [childId])){
+						children = mm._call('children', [childId]);
+						if(children.length){
+							ids = ids.concat(children);
+						}else{
+							lazy[childId] = toMark;
+						}
+					}
+				}
+				if(!skipParent){
+					treePath = mm._call('treePath', [id]);
+					t._updateParents(treePath, tp, noEvent);
+				}
+			}
+		},
+
+		_isMarkable: function(tp, id){
+			return this._unmarkable[tp] ? !this._unmarkable[tp][id] : true;
+		}
+	});
+});

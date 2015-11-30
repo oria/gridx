@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/pt-pt/NestedSort",{singleSort:"Ordena\u00e7\u00e3o \u00fanica",nestedSort:"Ordena\u00e7\u00e3o imbricada",ascending:"Fa\u00e7a clique para ordenar Ascendente",descending:"Fa\u00e7a clique para ordenar Descendente",sortingState:"${0} - ${1}",unsorted:"N\u00e3o ordenar esta coluna",waiSingleSortLabel:"${0} - est\u00e1 ordenado por ${1}. Seleccionar ordenar por ${2}",waiNestedSortLabel:"${0} - \u00e9 ordena\u00e7\u00e3o imbricada por ${1}. Seleccionar ordena\u00e7\u00e3o imbricada por ${2}"});
-//@ sourceMappingURL=NestedSort.js.map

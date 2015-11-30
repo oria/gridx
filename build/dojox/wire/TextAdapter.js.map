@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"TextAdapter.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,2FAAmG,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACnGF,CAAAG,QAAA,0BAEAH,EAAAI,QAAA,4BAEAJ,EAAAK,QAAA,0BAAuCH,CAAAI,KAAAC,cAAvC,kDAWcC,QAAAA,CAAoBC,CAApBD,EAYZE,wBAAA,CAAyBC,aAAzB,CACIC,eAbQJ,GAcXI,cAdWJ,KAXd,WA6BYK,QAAAA,CAA0BC,CAA1BD,MAWNC,CAXMD,GAWKF,aAXLE,OAYFC,EAZED,KAeNE,IAfMF,CAgBFG,CAhBEH,KAgBFG,CAhBEH,GAgBGF,cAhBHE,KAiBLI,EAAUN,aAAA,CAAcK,CAAd,CAAAE,SAAA,CAA0BJ,CAA1B,CAjBLD;AAkBTE,EAAOI,gBAAA,CAAiBJ,CAAjB,CAAuBE,CAAvB,CAlBEJ,OAoBHE,EApBGF,CA7BZ,WAoDYO,QAAAA,CAA0BN,CAA1BM,CAA4CC,CAA5CD,OAGAE,MAAJ,qBAAgCC,eAAhC,cAHIH,EApDZ,aA0DcD,QAAAA,CAAmBJ,CAAnBI,CAAmCF,CAAnCE,QAYRF,EAZQE,CAcFJ,CAdEI,CAiBJJ,CAjBII,CAiBGP,cAjBHO,CAiBoBF,CAjBpBE,CAeJF,CAfIE,CAaJJ,CAbII,CA1Dd,EALmG,CAAnG;",
-"sources":["TextAdapter.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","wire","CompositeWire","constructor","args","_initializeChildren","segments","delimiter","_getValue","object","text","i","segment","getValue","_addSegment","_setValue","value","Error","_wireClass"]
-}

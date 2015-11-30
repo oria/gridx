@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"_CalendarYearView.js",
-"lineCount":3,
-"mappings":"A,SAAAA,OAAA,SACA,6CADA,mpBAEAC;MAAA,kCAAyC,oKAAA,MAAA,KAAzC,CASG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,CAAkDC,CAAlD,CAA4DC,CAA5D,CAAsEC,CAAtE,CAA6EC,CAA7E,CAAuFC,CAAvF,QACKP,EAAA,mCAA2CC,CAA3C,CAA0DC,CAA1D,kBAMUI,CANV,6BAUME,QAAAA,GAGXC,eAAA,gCACAA,gBAAA,qCACAC,oBAAA,EACAC,WAAA;AAAsCC,YAAtC,CANWJ,CAVN,eAmBSK,QAAAA,CAASC,CAATD,EACdH,mBAAA,CAAoBI,CAAAC,YAAA,EAApB,CADcF,CAnBT,gBAuBUN,CAAAS,UAAAN,eAvBV,YAyBMO,QAAAA,CAASC,CAATD,CAAeE,CAAfF,QAGJd,EAAAiB,IAAA,CAAaF,CAAb,WAA2BC,CAA3B,CAHIF,CAzBN,SA+BGI,QAAAA,CAASC,CAATD,KAGJjB,CAAAmB,SAAA,CAAkBD,CAAAE,OAAlB,0BAHIH,EAIJI,CAJIJ,CAIGK,MAAA,CAAOJ,CAAAE,OAAAG,UAAP,CAJHN,KAKJH,EAAOU,QAAA,SACXV,EAAAW,QAAA,CAAaJ,CAAb,CACAK,qBAAA,CAAqBZ,CAArB,CAA2BO,CAA3B,CAPQJ,KAGqDhB,EAAA0B,KAAA,CAAWT,CAAX,CAHrDD,CA/BH,EADL,CATH;",
-"sources":["_CalendarYearView.js.uncompressed.js"],
-"names":["require","define","declare","_CalendarView","_TemplatedMixin","dojoDate","domClass","event","template","_CalendarMonthYearView","postCreate","cloneClass","_populateYears","addFx","domNode","_setValueAttr","value","getFullYear","prototype","adjustDate","date","amount","add","onClick","evt","contains","target","year","Number","innerHTML","get","setYear","onValueSelected","stop"]
-}

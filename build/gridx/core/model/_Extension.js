@@ -1,4 +1,84 @@
-//>>built
-define("gridx/core/model/_Extension",["dojo/_base/declare","dojo/_base/lang","dojo/aspect"],function(e,f,g){return e([],{constructor:function(a){var b=this.inner=a._model;this._cnnts=[];this.model=a;a._model=this;b&&(this.aspect(b,"onDelete","_onDelete"),this.aspect(b,"onNew","_onNew"),this.aspect(b,"onSet","_onSet"))},destroy:function(){for(var a=0,b=this._cnnts.length;a<b;++a)this._cnnts[a].remove()},aspect:function(a,b,c,d,h){a=g[h||"after"](a,b,f.hitch(d||this,c),1);this._cnnts.push(a);return a},
-_onNew:function(){this.onNew.apply(this,arguments)},_onSet:function(){this.onSet.apply(this,arguments)},_onDelete:function(){this.onDelete.apply(this,arguments)},onNew:function(){},onDelete:function(){},onSet:function(){},_call:function(a,b){var c=this[a],d=this.inner;return c?c.apply(this,b||[]):d&&d._call(a,b)},_mixinAPI:function(){var a,b=this.model,c=arguments,d=function(a){return function(){return b._model._call(a,arguments)}};for(a=c.length-1;0<=a;--a)b[c[a]]=d(c[a])}})});
-//@ sourceMappingURL=_Extension.js.map
+define([
+	'dojo/_base/declare',
+	"dojo/_base/lang",
+	'dojo/aspect'
+], function(declare, lang, aspect){
+
+/*=====
+	return declare([], {
+		// summary:
+		//		Abstract base class for all model components (including cache)
+
+		onNew: function(){},
+		onDelete: function(){},
+		onSet: function(){}
+	});
+=====*/
+
+	return declare([], {
+		constructor: function(model){
+			var t = this,
+				i = t.inner = model._model;
+			t._cnnts = [];
+			t.model = model;
+			model._model = t;
+			if(i){
+				t.aspect(i, 'onDelete', '_onDelete');
+				t.aspect(i, 'onNew', '_onNew');
+				t.aspect(i, 'onSet', '_onSet');
+			}
+		},
+
+		destroy: function(){
+			for(var i = 0, len = this._cnnts.length; i < len; ++i){
+				this._cnnts[i].remove();
+			}
+		},
+
+		aspect: function(obj, e, method, scope, pos){
+			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
+			this._cnnts.push(cnnt);
+			return cnnt;
+		},
+
+		//Events----------------------------------------------------------------------
+		//Make sure every extension has the oppotunity to decide when to fire an event at its level.
+		_onNew: function(){
+			this.onNew.apply(this, arguments);
+		},
+
+		_onSet: function(){
+			this.onSet.apply(this, arguments);
+		},
+
+		_onDelete: function(){
+			this.onDelete.apply(this, arguments);
+		},
+
+		onNew: function(){},
+		onDelete: function(){},
+		onSet: function(){},
+
+		//Protected-----------------------------------------------------------------
+		_call: function(method, args){
+			var t = this,
+				m = t[method],
+				n = t.inner;
+			return m ? m.apply(t, args || []) : n && n._call(method, args);
+		},
+
+		_mixinAPI: function(){
+			var i,
+				m = this.model,
+				args = arguments,
+				api = function(method){
+					return function(){
+						return m._model._call(method, arguments);
+					};
+				};
+			for(i = args.length - 1; i >= 0; --i){
+				m[args[i]] = api(args[i]);
+			}
+		}
+	});
+});

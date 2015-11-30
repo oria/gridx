@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/hr/NestedSort",{singleSort:"Jedan sort",nestedSort:"Ugnije\u017e\u0111eni sort",ascending:"Klik za sort uzlazno",descending:"Klik za sort silazno",sortingState:"${0} - ${1}",unsorted:"Ne sortiraj ovaj stupac",waiSingleSortLabel:"${0} - sortirano po ${1}. Odaberite sortiranje po ${2}",waiNestedSortLabel:"${0} - ugnije\u017e\u0111eno sortirano po ${1}. Odaberite ugnije\u017e\u0111eno sortiranje po ${2}"});
-//@ sourceMappingURL=NestedSort.js.map

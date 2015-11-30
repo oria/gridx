@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/zh/NestedSort",{singleSort:"\u5355\u5c42\u6392\u5e8f",nestedSort:"\u5d4c\u5957\u6392\u5e8f",ascending:"\u5355\u51fb\u4ee5\u6309\u201c\u5347\u5e8f\u201d\u6392\u5e8f",descending:"\u5355\u51fb\u4ee5\u6309\u201c\u964d\u5e8f\u201d\u6392\u5e8f",sortingState:"${0} - ${1}",unsorted:"\u8bf7\u52ff\u5bf9\u6b64\u5217\u8fdb\u884c\u6392\u5e8f",waiSingleSortLabel:"${0} - \u5df2\u6309 ${1} \u6392\u5e8f\u3002\u8bf7\u9009\u62e9\u6309 ${2} \u6392\u5e8f",waiNestedSortLabel:"${0} - \u5df2\u6309 ${1} \u5d4c\u5957\u6392\u5e8f\u3002\u8bf7\u9009\u62e9\u6309 ${2} \u5d4c\u5957\u6392\u5e8f"});
-//@ sourceMappingURL=NestedSort.js.map

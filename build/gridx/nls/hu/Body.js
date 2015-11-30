@@ -1,3 +1,0 @@
-//>>built
-define("gridx/nls/hu/Body",{loadingInfo:"Bet\u00f6lt\u00e9s...",emptyInfo:"Nincsenek megjelen\u00edthet\u0151 elemek.",loadFailInfo:"Nem siker\u00fclt az adatok bet\u00f6lt\u00e9se!",loadMore:"Tov\u00e1bbiak bet\u00f6lt\u00e9se",loadMoreLoading:"Bet\u00f6lt\u00e9s...",loadPrevious:"El\u0151z\u0151 bet\u00f6lt\u00e9se",loadPreviousLoading:"Bet\u00f6lt\u00e9s..."});
-//@ sourceMappingURL=Body.js.map
