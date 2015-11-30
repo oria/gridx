@@ -279,6 +279,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aaaaaa', end
 	position: absolute;
 	top: 82px;
 	overflow: hidden;
+	z-index:2;
 }
 
 .configPreview {
