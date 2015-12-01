@@ -57,7 +57,7 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 
 
 ##Current Maintainer
-* [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+* [Chen Zhuang Hong (Daniel) - IBM, CCLA](mailto:xiaohongczh@gmail.com)
 
 ## GridX Team
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)

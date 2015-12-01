@@ -678,17 +678,35 @@ define([
 							}else{
 								Deferred.when(cell.setRawData(v), function() {
 									if (g.focus && g.focus.currentArea() === 'navigablecell' && cell) {
-										cell.node().focus && cell.node().focus();
+										// Fix defect 14234
+										// determine current focused node changed or not
+										// then refocus or do nothing
+										var compare = function(parent, node){
+												if(parent == node)
+													return true;
+												else if(parent.childNodes && parent.childNodes.length){
+													var length = parent.childNodes.length;
+													for(var i=0;i<length;i++){
+														if(compare(parent.childNodes[i], node))
+															return true;
+													}
+												}
+												return false;
+											};
 
-										if (g.isIE) {
-											setTimeout(function() {
+										if(compare(cell.node(),document.activeElement)){
+											cell.node().focus && cell.node().focus();
+
+											if (g.isIE) {
+												setTimeout(function() {
+													if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
+														g.focus.focusArea('navigablecell');
+													}
+												}, 0);
+											} else {
 												if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
 													g.focus.focusArea('navigablecell');
 												}
-											}, 0);
-										} else {
-											if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
-												g.focus.focusArea('navigablecell');
 											}
 										}
 									}

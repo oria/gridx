@@ -118,7 +118,6 @@ define([
 		load: function(){
 			var t = this,
 				g = t.grid;
-			t._update();
 			if(has('ff')){
 				//Only in FF, there will be a selection border on the header node when clicking it holding CTRL.
 				dom.setSelectable(g.header.domNode, false);

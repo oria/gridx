@@ -117,6 +117,11 @@ define([
 			t._initFocus();
 		},
 
+		load: function(){
+			this.onRender();
+			this.loaded.callback();
+		},
+
 		destroy: function(){
 			this.inherited(arguments);
 			domConstruct.destroy(this.domNode);
