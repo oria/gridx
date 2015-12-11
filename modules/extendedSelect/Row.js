@@ -271,7 +271,7 @@ define([
 		_init: function(){
 			var t = this,
 				g = t.grid,
-				unselectable = t.arg('unselectable', {});
+				unselectable = t.arg('unselectable', {}),
 				unmarkable = t.arg('unmarkable', {});
 
 			for(var id in unmarkable)
@@ -309,7 +309,7 @@ define([
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
