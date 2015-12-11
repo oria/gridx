@@ -104,6 +104,10 @@ define([
 			return this._subMark('_markByIndex', arguments, false);
 		},
 
+		_isSelectable: function(){
+			return true;
+		},
+
 		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
 			// summary:
 			//		Event: fired when the selection is changed.
@@ -137,7 +141,7 @@ define([
 				g = t.grid,
 				m = g.model;
 			
-			if(!t._selecting && !t._marking && t.arg('enabled')){
+			if(!t._selecting && !t._marking && t.arg('enabled') && t._isSelectable(item.rowId)){
 				dom.setSelectable(t.grid.domNode, false);
 				t._fixFF(1);
 				var isSelected = t._isSelected(item) === true;

@@ -83,7 +83,12 @@ define([
 					this._doMark(pid, type, mark);
 				}
 			}
-
+			//Fix defect 12877 
+			//When set unmarkable, update parent item status
+			else{
+				treePath = t.model._model._call('treePath', [rowId]);
+				t._updateParents(treePath, type);
+			}
 		},
 
 		clearMark: function(type){
@@ -287,17 +292,43 @@ define([
 			var t = this,
 				mm = t.model._model,
 				byId = t._byId[type],
-				last = t._last[type];
+				last = t._last[type],
+				unmarkable = t._unmarkable[type];
+
+			//Fix defect 12877 
+			//Remove ubmarkable items
+			//which does not need toupdate
+			treePath = treePath.filter(function(childId){
+				return !(unmarkable && unmarkable[childId]);
+			});
+
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
 					siblings = mm._call('children', [pid]),
-					markCount = array.filter(siblings, function(childId){
+
+					//Fix defect 12877
+					//if one child item is unmarkable
+					//fecth children of that item
+					getChildren = function(children){
+						var items;
+						for(var i=0; i<children.length;i++){
+							if(unmarkable && unmarkable[children[i]]){
+								items=mm._call('children', [children[i]]);
+								getChildren(items);
+								Array.prototype.push.apply(children,items);
+								children.splice(i,1);
+							}
+						}
+					};
+					getChildren(siblings);
+
+					var markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
-					}).length,
-					fullCount = array.filter(siblings, function(childId){
-						return byId[childId] == 2;
-					}).length;
+						}).length,
+						fullCount = array.filter(siblings, function(childId){
+							return byId[childId] == 2;
+						}).length;
 				// if(t._isMarkable(type, pid)){
 				if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
 					byId[pid] = 2; //none|partial -> all
@@ -358,8 +389,14 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					newState = byId[childId] = toMark == 1 ? last[childId] || undefined : toMark;
 					
+					//Defect 12877 
+					//if unselectable set status unchanged
+					if(t._isMarkable(tp,childId))
+						newState = byId[childId] = toMark == 1 ? last[childId] || undefined : toMark;
+					else
+						newState=oldState;
+
 					if (newState === undefined) {
 						parent = mm._call('treePath', [childId]);
 						newState = byId[parent.pop()];

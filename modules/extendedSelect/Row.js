@@ -162,6 +162,14 @@ define([
 
 			setSelectable: function(selectable){
 				this.grid.select.row.setSelectable(this.id, selectable);
+			},
+
+			isMarkable: function(){
+				return this.grid.select.row._isMarkable(this.id);
+			},
+
+			setMarkable: function(markable){
+				this.grid.select.row.setMarkable(this.id, markable);
 			}
 		},
 
@@ -174,13 +182,26 @@ define([
 				n = t.grid.body.getRowNode({
 					rowId: rowId
 				});
-			m.setMarkable(rowId, selectable);
+			//m.setMarkable(rowId, selectable);
 			t.unselectable[rowId] = !selectable;
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
 				t.onSelectionChange();
 			}
+		},
+
+		setMarkable: function(rowId, markable){
+			var t = this,
+				m = t.model,
+				n = t.grid.body.getRowNode({
+					rowId: rowId
+				});
+			if(n)
+				domClass.toggle(n, 'gridxRowUnmarkable', !markable);
+			t.unmarkable[rowId] = !markable;
+			m.setMarkable(rowId, markable);
+			this.setSelectable(rowId, markable);
 		},
 
 		getSelected: function(){
@@ -229,17 +250,41 @@ define([
 			return ret;
 		},
 
+		_isMarkable: function(rowId){
+			var unmarkable = this.arg('unmarkable'),
+				ret = rowId in unmarkable ? !unmarkable[rowId] : true;
+			return ret;
+		},
+
+		_getUnmarkableRows: function(){
+			var ret = [],
+				t = this,
+				unmarkable = t.arg('unmarkable');
+			for(var id in unmarkable){
+				if(t.unmarkable[id] && t.model.byId(id)){
+					ret.push(id);
+				}
+			}
+			return ret;
+		},
+
 		_init: function(){
 			var t = this,
 				g = t.grid,
-				unselectable = t.arg('unselectable', {});
+				unselectable = t.arg('unselectable', {}),
+				unmarkable = t.arg('unmarkable', {});
+
+			for(var id in unmarkable)
+				unselectable[id] = unmarkable[id];
 
 			//#12078
 			//tri-state selection status is meaningless for grid without tree module
 			t.model.treeMarkMode('', t.arg('treeMode') && g.tree);
-			for(var id in unselectable){
-				t.model.setMarkable(id, !unselectable[id]);
+
+			for(var id in unmarkable){
+				t.model.setMarkable(id, !unmarkable[id]);
 			}
+
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
@@ -264,7 +309,7 @@ define([
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -276,7 +321,7 @@ define([
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -284,7 +329,9 @@ define([
 				}],
 				[g, 'onRowTouchEnd', '_end'],
 				[g.body, 'onAfterRow', function(row){
-					var unselectable = !row.isSelectable();
+					var unmarkable = !row.isMarkable();
+					var unselectable = unmarkable || !row.isSelectable();
+					domClass.toggle(row.node(), 'gridxRowUnmarkable', unmarkable);
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, 'onRowMouseOver', function(e){
@@ -300,11 +347,11 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						event.stop(e);
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}],
-				[g.model, 'setStore', '_syncUnselectable']);
+				[g.model, 'setStore', '_syncUnmarkable']);
 		},
 
 		_markById: function(args, toSelect){
@@ -437,7 +484,7 @@ define([
 				t._refSelectedIds = m.getMarkedIds();
 				for(i = Math.min(start.row, end.row); i <= Math.max(start.row, end.row); ++i){
  					 var rowInfo = view.getRowInfo({visualIndex: i});
-					 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+					 m.markByIndex(rowInfo.rowIndex, t._isSelectable(rowInfo.rowId) && toSelect, '', rowInfo.parentId);
 				}
 				return m.when();
 			}else{
@@ -483,7 +530,7 @@ define([
 						}
 						for(i = mark_start; i <= mark_end; ++i){
 							 var rowInfo = view.getRowInfo({visualIndex: i});
-							 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+							 m.markByIndex(rowInfo.rowIndex, t._isSelectable(rowInfo.rowId) && toSelect, '', rowInfo.parentId);
 						}
 					}).then(function(){
 						m.when(null, function(){
@@ -505,11 +552,19 @@ define([
 			this._doHighlight(target, toHighlight);
 		},
 		
-		_syncUnselectable: function(){
+		// _syncUnselectable: function(){
+		// 	var t = this,
+		// 		unselectable = t.arg('unselectable');
+		// 	for(var id in unselectable){
+		// 		t.model.setMarkable(id, !unselectable[id]);
+		// 	}
+		// }
+
+		_syncUnmarkable: function(){
 			var t = this,
-				unselectable = t.arg('unselectable');
-			for(var id in unselectable){
-				t.model.setMarkable(id, !unselectable[id]);
+				unmarkable = t.arg('unmarkable');
+			for(var id in unmarkable){
+				t.model.setMarkable(id, !unmarkable[id]);
 			}
 		}
 	});
