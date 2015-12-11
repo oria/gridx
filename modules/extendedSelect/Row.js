@@ -321,7 +321,7 @@ define([
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -347,7 +347,7 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						event.stop(e);
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
+						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}],
@@ -530,7 +530,7 @@ define([
 						}
 						for(i = mark_start; i <= mark_end; ++i){
 							 var rowInfo = view.getRowInfo({visualIndex: i});
-							 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+							 m.markByIndex(rowInfo.rowIndex, t._isSelectable(rowInfo.rowId) && toSelect, '', rowInfo.parentId);
 						}
 					}).then(function(){
 						m.when(null, function(){
