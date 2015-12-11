@@ -484,7 +484,7 @@ define([
 				t._refSelectedIds = m.getMarkedIds();
 				for(i = Math.min(start.row, end.row); i <= Math.max(start.row, end.row); ++i){
  					 var rowInfo = view.getRowInfo({visualIndex: i});
-					 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+					 m.markByIndex(rowInfo.rowIndex, t._isSelectable(rowInfo.rowId) && toSelect, '', rowInfo.parentId);
 				}
 				return m.when();
 			}else{
