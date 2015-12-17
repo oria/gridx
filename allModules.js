@@ -48,7 +48,8 @@ define([
 	'./modules/SlantedHeader',
 	'./modules/ExpandableColumn',
 	'./modules/Layer',
-	'./modules/StructureSwitch'
+	'./modules/StructureSwitch',
+	'./modules/HeaderExpand'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, Sort, ColumnLock,
@@ -65,7 +66,7 @@ define([
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
 	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody,
 	HeaderMenu, HeaderRegions, SlantedHeader, ExpandableColumn,
-	Layer, StructureSwitch){
+	Layer, StructureSwitch, HeaderExpand){
 return {
 	Focus: Focus,
 	VScroller: VScroller,
@@ -116,6 +117,7 @@ return {
 	SlantedHeader: SlantedHeader,
 	ExpandableColumn: ExpandableColumn,
 	Layer: Layer,
-	StructureSwitch: StructureSwitch
+	StructureSwitch: StructureSwitch,
+	HeaderExpand: HeaderExpand
 };
 });
