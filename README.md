@@ -1,4 +1,4 @@
-## GridX Overview
+<!-- ## GridX Overview
 
 #### **A fast rendering, well modularized and plugin architecture based Grid.**
 
@@ -67,4 +67,26 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 * [Xiang Zhou (JayZ) - IBM, CCLA](mailto:)
 * [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)
 
-Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
+Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX. -->
+
+
+## GridX experimental branch for more_less feature
+
+### Cause:
+This branch is caused by the feature request 12705. In detail, it is better for the grid to allow users to expand and collapse the contents of certain cells and columns.
+
+### Solution:
+
+Construct a widget "ExpandableArea", and a module "HeaderExpand". Then insert "ExpandableArea" widget into the cell and load module "HeaderExpand".
+
+* ExpandableArea: a common IDX widget, consisting of "ExpandableArea.js" and template file "ExpandableArea.html". It can be used to expand or collapse the content with inside button more or less. 
+* HeaderExpand: a module, which adds more and less buttons inside column header to expand and collapse contents of below cells. It requires modules "HeaderRegions" and "VirtualVScroller".
+
+### Test:
+
+Run "test_grid_more_less.html" to see the result. 
+
+### Resources:
+
+Files related to this feature request are below:
+HeaderExpand.js, ExpandableArea.js, ExpandableArea.html, test_grid_more_less.html, test_grid_more_less.js, MusitData2.js.
