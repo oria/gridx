@@ -278,12 +278,12 @@ define([
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._select(e.rowId, g._isCtrlKey(e));
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
