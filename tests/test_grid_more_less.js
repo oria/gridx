@@ -33,7 +33,7 @@ require([
 			widgetsInCell: true, 
 			decorator: function(){
 				return [
-					'<div data-dojo-type="ExpandableArea" data-dojo-attach-point="area" data-dojo-props="name: \'Perface\', height: \'200px\'"></div>'
+					'<div data-dojo-type="ExpandableArea" data-dojo-attach-point="area" data-dojo-props="name: \'Perface\', height: \'200px\', isExpanded: false"></div>'
 				].join('');
 			},
 			setCellValue: function(data){

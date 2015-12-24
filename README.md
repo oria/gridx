@@ -77,10 +77,13 @@ This branch is caused by the feature request 12705. In detail, it is better for 
 
 ### Solution:
 
-Construct a widget "ExpandableArea", and a module "HeaderExpand". Then insert "ExpandableArea" widget into the cell and load module "HeaderExpand".
+Construct a widget "ExpandableArea", and a module "HeaderExpand". 
 
 * ExpandableArea: a common IDX widget, consisting of "ExpandableArea.js" and template file "ExpandableArea.html". It can be used to expand or collapse the content with inside button more or less. 
 * HeaderExpand: a module, which adds more and less buttons inside column header to expand and collapse contents of below cells. It requires modules "HeaderRegions" and "VirtualVScroller".
+
+1. Load module "HeaderExpand", and required modules "HeaderRegions" and "VirtualVScroller";
+2. Config the layout of gridx: for each column layout, set "isExpandable" to true and attach a name to "expandableName"; insert "ExpandableArea" widget into cell, with functions "decorator" and "setCellValue". Use "data-dojo-props" to cofig the widget, "height" is the default height without more button triggered, "name" is the same as "expandableName", "isExpanded" can determine the initial content status, expanded or collapsed.
 
 ### Test:
 
