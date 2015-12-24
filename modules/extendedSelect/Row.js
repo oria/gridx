@@ -304,7 +304,7 @@ define([
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e)){
+					if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
@@ -316,7 +316,7 @@ define([
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
