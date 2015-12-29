@@ -30,6 +30,7 @@ define([
 					on(more, "click", function(){
 						console.log("Expand More");
 						connect.publish('expandableArea/' + name, true);
+						grid.vScroller._doVirtualScroll(true);
 					});
 
 					return more;
@@ -50,6 +51,7 @@ define([
 					on(less, "click", function(){
 						console.log("Expand Less");
 						connect.publish('expandableArea/' + name, false);
+						grid.vScroller._doVirtualScroll(true);
 					});
 
 					return less;
