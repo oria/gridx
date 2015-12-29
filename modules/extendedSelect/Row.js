@@ -344,7 +344,8 @@ define([
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
-							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))
+							&& (e.rowHeaderCellNode || e.cellNode)){
 						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
