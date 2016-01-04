@@ -317,7 +317,10 @@ define([
 					});
 				}
 			}
-			
+
+			if(t.arg('showHover') === false)
+				t.showHover = false;
+
 			t._initExpandLevel();
 			t._initFocus();
 		},
@@ -356,6 +359,8 @@ define([
 		mergedParentRow: false,
 
 		autoExpandOnFilter: true,
+
+		showHover: true,
 
 		onExpand: function(id){},
 
@@ -589,7 +594,7 @@ define([
 					toggleClass('gridxTreeExpandoCellOpen', isOpen).
 					closest('.gridxCell').
 					attr('aria-expanded', String(isOpen)).
-					attr('title', isOpen ? nls.treeExpanded : nls.treeCollapsed);
+					attr('title', this.showHover? (isOpen ? nls.treeExpanded : nls.treeCollapsed) : "");
 				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
 					node.firstChild.innerHTML = isOpen ? '-' : '+';
 				});
@@ -626,7 +631,7 @@ define([
 				var nls = this.grid.nls;
 				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
 					attr('aria-expanded', String(expanded)).
-					attr('title', expanded ? nls.treeExpanded : nls.treeCollapsed);
+					attr('title', this.showHover? (expanded ? nls.treeExpanded : nls.treeCollapsed) : "");
 			}
 		},
 

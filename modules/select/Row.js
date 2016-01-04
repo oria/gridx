@@ -278,12 +278,12 @@ define([
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._select(e.rowId, g._isCtrlKey(e));
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
@@ -297,7 +297,8 @@ define([
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
-							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))
+							&& (e.rowHeaderCellNode || e.cellNode)){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
 							t._select(e.rowId, g._isCtrlKey(e));
