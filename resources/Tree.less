@@ -35,8 +35,12 @@
 	visibility: hidden;
 	text-align: center;
 
-	.dijit_a11y & {
+	.dijit_a11y .gridxTreeExpandoIcon & {
 		visibility: visible;
+	}
+
+	.dijit_a11y .gridxTreeExpandoIcon.gridxTreeExpandoIconNoChildren & {
+		visibility: hidden;
 	}
 }
 
