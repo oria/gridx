@@ -218,7 +218,7 @@ define([
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
 				dom.setSelectable(t.grid.domNode, false);
-				t._saveSelectStatus(false);
+				t._saveSelectStatus(evt.shiftKey||evt.ctrlKey);
 
 			}
 		},
