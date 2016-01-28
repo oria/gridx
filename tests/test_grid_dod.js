@@ -51,9 +51,9 @@ require([
 	window.useAnimation = true;
 	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
-		setContent(detailNode);
 		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0">Current Time is:</p>';
 		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0;color:blue">' + new Date().toString() +'</p>';
+		setContent(detailNode);
 		window.setTimeout(function(){
 			renderred.callback();
 		}, 2000);
