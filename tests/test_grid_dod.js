@@ -1,7 +1,7 @@
 require([
 	'dojo/dom-construct',
 	'dojo/parser',
-	'dojo/Store/Memory',
+	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
