@@ -51,9 +51,10 @@ require([
 	window.useAnimation = true;
 	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
+		setContent(detailNode);
 		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0">Current Time is:</p>';
 		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0;color:blue">' + new Date().toString() +'</p>';
-		setContent(detailNode);
+		parser.parse(detailNode);
 		window.setTimeout(function(){
 			renderred.callback();
 		}, 2000);
@@ -61,6 +62,7 @@ require([
 	};
 	window.syncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
+		parser.parse(detailNode);
 		renderred.callback();
 		return renderred;
 	};
@@ -116,7 +118,6 @@ require([
 				'	</select></td>',
 				'</tr>',
 			'</table></div>'].join('');
-		parser.parse(node);
 	}
 	function setChartContent(node){
 		var container = domConstruct.create('div', {}, node, 'last'), div = domConstruct.create('div', {}, container, 'last');
