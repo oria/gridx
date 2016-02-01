@@ -252,7 +252,7 @@ define([
 						}else{
 							addClass(cell, 'gridxCellSortedAsc');
 							if(len == 1){
-								singleBtn.title = nls.singleSort + ' - ' + nls.descending;
+								singleBtn.title = nls.singleSort + ': ' + nls.descending;
 								singleBtn.innerHTML = a11yText.dojoxGridAscending + '&nbsp;';
 							}else{
 								nestedBtn.title = nls.nestedSort + ' - ' + nls.descending;
