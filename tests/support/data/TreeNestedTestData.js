@@ -26,9 +26,9 @@ define([], function(){
 	var generateItem = function(parentId, index, level){
 		return {
 			id: parentId + "-" + (index + 1),
-			number: level <= 1 ? randomNumber(10000) : undefined,
-			string: level <= 2 ? randomString() : undefined,
-			date: level <= 3 ? randomDate().toDateString() : undefined,
+			number: level <= 1 ? randomNumber(10000) : null,
+			string: level <= 2 ? randomString() : null,
+			date: level <= 3 ? randomDate().toDateString() : null,
 			time: randomDate().toTimeString().split(' ')[0],
 			bool: randomNumber(10) < 5
 		};

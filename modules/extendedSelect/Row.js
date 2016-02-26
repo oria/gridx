@@ -304,7 +304,7 @@ define([
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e)){
+					if((mouse.isLeft(e) || (t.arg('allowRight')) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
@@ -316,7 +316,7 @@ define([
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(canSelect(e)){
+					if(canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
@@ -344,7 +344,8 @@ define([
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
-							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))
+							&& (e.rowHeaderCellNode || e.cellNode)){
 						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);

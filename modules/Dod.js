@@ -205,7 +205,7 @@ define([
 				});
 			}
 			if(!_row.dodNode){
-				_row.dodNode = domConstruct.create('div', {className: 'gridxDodNode'});
+				_row.dodNode = domConstruct.create('div', {className: 'gridxDodNode', tabindex: 0});
 			}
 			domConstruct.place(_row.dodLoadingNode, node, 'last');
 			domConstruct.place(_row.dodNode, node, 'last');

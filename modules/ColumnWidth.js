@@ -38,7 +38,7 @@ define([
 
 	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
 
-	function calcAutoWidth(autoCols, freeWidth, padBorder){
+	function calcAutoWidth(autoCols, freeWidth, padBorder, firstLoad){
 		autoCols.sort(function(c1, c2){
 			return (c1.minWidth || 0) - (c2.minWidth || 0);
 		});
@@ -65,13 +65,15 @@ define([
 			for(i = 0; i < len; ++i){
 				c = autoCols[i];
 				c.width = (i ? w : ww);
-				var titleNode = dojoDom.byId(c._domId);
-				if(titleNode){
-					var clientWidth = titleNode.clientWidth - padBorder;
-					if(c.width < clientWidth)
-						c.width = clientWidth;
+				if(firstLoad){
+					var titleNode = dojoDom.byId(c._domId);
+					if(titleNode){
+						var clientWidth = titleNode.clientWidth - padBorder;
+						if(c.width < clientWidth)
+							c.width = clientWidth;
+					}
 				}
-				c.width += "px";
+				c.width += "px";				
 			}			
 		}
 	}
@@ -263,7 +265,10 @@ define([
 				if(autoCols.length){
 					var freeWidth = bodyWidth - fixedWidth;
 					if(freeWidth > 0){
-						calcAutoWidth(autoCols, freeWidth, padBorder);
+						//FIXME: this value is to check the very first load or just resize grid 
+						//try to find a better to judge the first loading
+						var firstLoad = !this.grid.vScroller.loaded.isResolved();
+						calcAutoWidth(autoCols, freeWidth, padBorder, firstLoad);
 					}else{
 						var w = t.arg('default');
 						array.forEach(autoCols, function(c, i){

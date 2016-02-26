@@ -477,7 +477,7 @@ define([
 			t.aspect(g.body, 'onAfterRow', function(row){
 				query('.gridxCell', row.node()).forEach(function(node){
 					// var colid = node.getAttribute('colid');
-					if(g._columnsById[node.getAttribute('colid')].editable){
+					if(node && g._columnsById[node.getAttribute('colid')].editable){
 						node.removeAttribute('aria-readonly');
 					}
 				});
