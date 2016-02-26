@@ -63,15 +63,15 @@ define([
 			});
 			t.batchConnect(
 				[g.body, 'onRender', '_onRender'],
-				[doc, 'onmouseup', '_end'],
-				[doc, 'onkeydown', function(e){
+				[g.domNode, 'onmouseup', '_end'],
+				[g.domNode, 'onkeydown', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable((has('ie') > 9  || has('trident') > 5)? doc.body : g.domNode, false);
+						dom.setSelectable(g.domNode, false);
 					}
 				}],
-				[doc, 'onkeyup', function(e){
+				[g.domNode, 'onkeyup', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable((has('ie') > 9  || has('trident') > 5) ? doc.body : g.domNode, true);
+						dom.setSelectable(g.domNode, true);
 					}
 				}]
 			);
