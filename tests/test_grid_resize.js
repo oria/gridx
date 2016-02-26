@@ -36,7 +36,7 @@ require([
 			w: val
 		});
 		dom.byId('container2').style.width = val + 'px';
-		gird2.resize();
+		grid2.resize();
 	};
 
 	onVSliderChange = function(val){
