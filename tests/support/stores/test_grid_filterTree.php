@@ -211,10 +211,19 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 					$array = $data;
 				}else{
 					$array = array();
+					$interval = 25200000;
 					foreach ($data as $item) {
 						$currentItem = $item;
+
+						$currentItem -> {"Last Played"} = strtotime($currentItem->{"Last Played"}." 1 January 2000")*1000 - $interval;
+						$currentItem -> {"Download Date"} = strtotime($currentItem->{"Download Date"})*1000;
+
 						$query = "\$bool = " . $query;
 						eval($query);
+
+						$currentItem -> {"Last Played"} = strftime("%X", ($currentItem->{"Last Played"} + $interval)/1000);
+						$currentItem->{"Download Date"} = strftime("%Y/%m/%d", $currentItem->{"Download Date"}/1000);
+
 						if($bool){
 							$array[] = $item;
 						}
