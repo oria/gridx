@@ -30,14 +30,16 @@ require([
 	layout = [
 		{id: "id", field: "id", name:"Index", width: '50px'},
 		{id: 'Perface', field: "Perface", name:"Perface", dataType:'Text',  isExpandable:true, expandableName:"Perface",
-			widgetsInCell: true, 
+			widgetsInCell: true,
 			decorator: function(){
 				return [
 					'<div data-dojo-type="ExpandableArea" data-dojo-attach-point="area" data-dojo-props="name: \'Perface\', height: \'100px\', isExpanded: false"></div>'
 				].join('');
 			},
-			setCellValue: function(data){
+			setCellValue: function(data, storeData, widget){
 			 	this.area.set("container",data);
+				var info = {"rowId": String(widget.cell.row.id)};
+				this.area.setInfo(info);
 			}
 		},
 		{id: 'Artist', field: "Artist", name:"Button"},

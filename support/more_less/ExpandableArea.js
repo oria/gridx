@@ -19,6 +19,10 @@ define([
             this.container.innerHTML=content;
         },
 
+        setInfo: function(info){
+          this.info = info;
+        },
+
         _expand: function(isExpanded){
             var t = this,
                 btn = t.btn;
@@ -26,9 +30,11 @@ define([
             if(isExpanded){
                 btn.innerHTML="[Less]";
                 domStyle.set(t.container, "height", "100%");
+                connect.publish('expandableArea/' + name, this.info);
             }else{
                 btn.innerHTML="[More]";
                 domStyle.set(t.container, "height", t.height);
+                connect.publish('expandableArea/' + name, this.info);
             };
         },
 
@@ -41,7 +47,7 @@ define([
                 this._expand(this.btn.innerHTML==="[More]");
             }));
 
-            connect.subscribe('expandableArea/' + t.name, lang.hitch(t, function(isExpanded){
+            connect.subscribe('allExpandableArea/' + t.name, lang.hitch(t, function(isExpanded){
                 this.isExpanded = isExpanded;
                 this._expand(isExpanded);
             }));

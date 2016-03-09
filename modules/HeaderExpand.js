@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
 	"dojo/on",
 	"dojo/_base/connect",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"../core/_Module",
 	"./HeaderRegions"
-], function(declare, on, connect, domConstruct, domClass, _Module){
+], function(declare, lang, on, connect, domConstruct, domClass, _Module){
 
 	return declare(_Module, {
 		name: 'headerExpand',
@@ -29,8 +30,9 @@ define([
 
 					on(more, "click", function(){
 						console.log("Expand More");
-						connect.publish('expandableArea/' + name, true);
+						connect.publish('allExpandableArea/' + name, true);
 						grid.vScroller._doVirtualScroll(true);
+						//grid.vScroller._doScroll(0,1,1);
 					});
 
 					return more;
@@ -50,13 +52,25 @@ define([
 
 					on(less, "click", function(){
 						console.log("Expand Less");
-						connect.publish('expandableArea/' + name, false);
+						connect.publish('allExpandableArea/' + name, false);
 						grid.vScroller._doVirtualScroll(true);
+						//grid.vScroller._doScroll(0,1,1);
 					});
 
 					return less;
 				}
 			}, 0, 0);
+
+			connect.subscribe('expandableArea/' + name, lang.hitch(t, function(info){
+				if(info){
+					grid.body.onRowHeightChange(info.rowId);
+					grid.vScroller._doVirtualScroll(true);
+					//grid.vScroller._doScroll(0,1,1);
+				}
+			}));
+
+
+
 		}
 	});
 });
