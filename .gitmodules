@@ -30,3 +30,6 @@
 	path = gridx
 	url = https://github.com/oria/gridx.git
 	branch = 1.3
+[submodule "src/gridx"]
+	path = src/gridx
+	url = https://github.com/oria/gridx.git
