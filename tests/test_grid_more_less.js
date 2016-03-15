@@ -39,7 +39,7 @@ require([
 			setCellValue: function(data, storeData, widget){
 			 	this.area.set("container",data);
 				var info = {"rowId": String(widget.cell.row.id)};
-				this.area.setInfo(info);
+				this.area.init(info);
 			}
 		},
 		{id: 'Artist', field: "Artist", name:"Button"},

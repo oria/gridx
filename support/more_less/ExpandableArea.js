@@ -19,8 +19,9 @@ define([
             this.container.innerHTML=content;
         },
 
-        setInfo: function(info){
+        init: function(info){
           this.info = info;
+          this._expand(this.isExpanded);
         },
 
         _expand: function(isExpanded){
