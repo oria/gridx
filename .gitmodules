@@ -10,10 +10,6 @@
 	path = src/dojox
 	url = https://github.com/dojo/dojox.git
 	branch = 1.10
-[submodule "src/gridx"]
-	path = src/gridx
-	url = https://github.com/oria/gridx.git
-	branch = 1.3
 [submodule "src/util"]
 	path = src/util
 	url = https://github.com/dojo/util.git
