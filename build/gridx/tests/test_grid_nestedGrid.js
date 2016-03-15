@@ -219,5 +219,4 @@ require([
 	};
 	
 	createGrid();
-
 });

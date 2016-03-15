@@ -8,7 +8,7 @@
 
   <style>
 
-    
+
     .button-demo {
       background-color: #008ABF;
 	  background-image: -moz-linear-gradient(top, #008ABF, #085884);
@@ -21,7 +21,7 @@
 	  color: white;
 	  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.35);
     }
-    
+
     .button-demo:hover {
       background-color: #206B93;
 	  background-image: -moz-linear-gradient(top, #1A95C5, #206B93);
@@ -31,8 +31,8 @@
 	  background-image: -ms-linear-gradient(top, #1A95C5 0%, #206B93 100%);
 	  background-image: linear-gradient(top, #1A95C5 0%, #206B93 100%);
     }
-    
-    
+
+
     #gallery-nav {
     	padding: 15px;
     	background-color: #f3f3f3;
@@ -49,11 +49,11 @@
     #gallery-nav .sub-nav li {
    		font-weight: normal
     }
-    
+
     #gallery-nav .sub-nav li a:hover {
     	color: #f90;
     }
-    
+
     #gallery-list-header{
     	padding: 5px;
     }
@@ -82,8 +82,8 @@
     }
     .gallery-item .button {
     }
-    
-    
+
+
     .grid_12 h1 {
       background: #eee;
       color: #45A29B;
@@ -131,11 +131,11 @@
     }
 
   </style>
-  
+
   <style type="text/css">
-	
+
   </style>
-  
+
 </head>
 
 <body>
@@ -143,7 +143,7 @@
   <div class="container_12">
     {{header|safe}}
 
-    <div class="grid_12 demosHead">
+    <!-- <div class="grid_12 demosHead">
         <h1>What's New in v1.3, Oct, 2013</h1>
     </div>
     <div class="grid_6 demoLink newDemo">
@@ -157,7 +157,7 @@
             <img src="images/demo_nested_grid.png"/>
             <h2>Nested Grid in Dod module</h2>
         </a>
-    </div>
+    </div> -->
     <div class="grid_12 demosHead">
         <h1>Overall Demos</h1>
     </div>
@@ -210,7 +210,7 @@
 					    {% endfor %}
     				</ul>
     			</li>
-    			
+
     			<!-- <li>Mobile GridX</li>
     			<li>
     				<ul class="sub-nav">
@@ -219,7 +219,7 @@
 					    {% endfor %}
     				</ul>
     			</li> -->
-    			
+
     		</ul>
     	</div>
     </div>
@@ -238,12 +238,12 @@
     		<div class="clear"></div>
     	</div>
     	{% endfor %}
-    	
+
     </div>
     <div class="clear"></div>
-    
+
     {{footer|safe}}
-    
+
   </div>
   <a href="#top" style="position: fixed; right: 10px; bottom: 10px;" id="linkTop">Go Top</a>
 </body>

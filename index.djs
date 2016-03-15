@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="css/common.css" />
   <meta name="description" content="GridX is the next generation of dojo grid(datagrid). It provides well modularized and plugin architecture." />
   <meta name="keywords" content="dojo,grid,best,dijit,datagrid" />
-  
+
   <style>
 
-   
+
   .button {
     margin-left: 42px;
     font-size: 18px;
@@ -94,7 +94,7 @@
     margin-left: 20px;
     opacity: 0.7;
   }
-	
+
   .news, .features {
     background: #f7f7f7;
     padding: 20px 0;
@@ -139,7 +139,7 @@
 
   <div class="container_12" >
     {{header|safe}}
-    
+
 
     <div class="grid_12 summary mainBanner">
       <img src="images/home1.png"/>
@@ -151,10 +151,10 @@
       <span class="browsers"><span>Supporting</span><img src="images/browsers.png" class="browsers"/></span>
       <div class="clear"></div>
     </div>
-  
+
     <div class="clear"></div>
-    
-    
+
+
     <div class="grid_4 blockLink blockLink2">
       <a href="./gallery.html">
       <h2>Demos &amp; Gallery</h2>
@@ -176,14 +176,13 @@
       <img src="images/new.png"/>
       <h2>What's new</h2>
       <ul>
-      	<li><a href="./news/metrics.html">Metrics for different GridX comparison</a></li>
-        <li><a href="./gallery.html#mobile">Gridx 1.0.1 released!</a></li>
-      	<li><a href="./gallery.html#mobile">Gridx mobile demos added to the gallery!</a></li>
+        <li><a href="./gallery.html">Gridx 1.3 released!</a></li>
+        <li><a href="./news/metrics.html">Metrics for different GridX comparison</a></li>
+        <li><a href="./gallery.html#mobile">Gridx mobile demos added to the gallery!</a></li>
         <li><a href="#">Gridx v1.0 launched!</a></li>
         <li><a href="#">Gridx home site is online</a></li>
-        <li><a href="#">Gridx playground beta is ready</a></li>
       </ul>
-      
+
     </div>
     <div class="grid_6 features">
     <img src="images/star.png"/>
@@ -197,9 +196,9 @@
         <li><a href="#">Enterprise level i18n & a11y compliance</a></li>
       </ul>
     </div>
-    
+
     <div class="clear"></div>
-    
+
     {{footer|safe}}
     <div class="clear"></div>
   </div>
