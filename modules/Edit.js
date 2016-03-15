@@ -9,6 +9,7 @@ define([
 	"dojo/_base/sniff",
 	'dojo/_base/array',
 	"dojo/DeferredList",
+	"dojo/dom", // domAttr.get dom.isDescendant
 	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/dom-geometry",
@@ -24,7 +25,7 @@ define([
 	"dijit/Toolbar",
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, tap, a11y, _Module, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, dom, domClass, domStyle, domGeo, domConstruct, keys, tap, a11y, _Module, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -841,18 +842,12 @@ define([
 		// In alwaysEditing mode, when focus is still in input,
 		// then scroll the grid, the edited cell value will get lost.
 		_onBeforeBodyUnrender: function(id) {
-			var rowId, colId, _ec;
-
-			if (!this._editingCells) return false;
-
-			for (rowId in this._editingCells) {
-				_ec = this._editingCells;
-				for (colId in _ec[rowId]) {
-					if (_ec[rowId] && _ec[rowId][colId]) {
-						this.apply(rowId, colId);
-					}
-				}
+			var row = this.grid.row(id, 1),
+				focusedNode = this.grid._focusManager.curNode;
+			if (row && dom.isDescendant(focusedNode, row.node())) {
+				this.grid._focusManager._onBlurNode(focusedNode);
 			}
+			this._applyAll();
 		},
 
 		_dummyDecorator: function(data, rowId, visualIndex, cell){
