@@ -180,7 +180,6 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
-				changed,
 				cols = [];
 			if(columnLock){
 				lockCount = columnLock.count;
@@ -204,7 +203,6 @@ define([
 					}
 				}
 				if(i < len){
-					changed = 1;
 					t.grid._columnsById[id] = c;
 					// restored column should not appear before locked columns
 					if(index < lockCount){
@@ -216,7 +214,7 @@ define([
 					}
 				}
 			});
-			return t._refresh(changed).then(function(){
+			return t._refresh().then(function(){
 				t.onShow(array.map(cols, function(col){
 					return col.id;
 				}));
@@ -229,8 +227,7 @@ define([
 		clear: function(){
 			var g = this.grid,
 				columnLock = g.columnLock,
-				lockCount = 0,
-				changed;
+				lockCount = 0;
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -238,13 +235,12 @@ define([
 			g._columns = array.map(this._cols, function(col, i){
 				col.index = i;
 				if(col.hidden){
-					changed = 1;
 					delete col.hidden;
 					g._columnsById[col.id] = col;
 				}
 				return col;
 			});
-			return this._refresh(changed).then(function(){
+			return this._refresh().then(function(){
 				if(columnLock && lockCount > 0){
 					columnLock.lock(lockCount);
 				}
@@ -289,18 +285,11 @@ define([
 			}
 		},
 
-		_refresh: function(changed){
+		_refresh: function(){
 			var g = this.grid;
-			if(changed){
-				g.header.refresh();
-				g.columnWidth._adaptWidth();
-				return g.body.refresh();
-			}else{
-				var d = new Deferred();
-				g.header.onRender();
-				d.callback();
-				return d;
-			}
+			g.header.refresh();
+			g.columnWidth._adaptWidth();
+			return g.body.refresh();
 		}
 	});
 });
