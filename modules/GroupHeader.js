@@ -147,7 +147,7 @@ define([
 				columnCount = columns.length,
 				cnt = 0,
 				maxLevel = 0,
-				groups = this.arg('groups', []),
+				groups = lang.clone(this.arg('groups', [])),
 				groupsById = this._groupsById = {},
 				check = function(struct, level, groupId){
 					if(!lang.isArrayLike(struct)){
@@ -203,7 +203,7 @@ define([
 			if(cnt < columnCount){
 				groups.push(columnCount - cnt);
 			}
-			return maxLevel;
+			return {'maxLevel':maxLevel, 'groups':groups};
 		},
 
 		_configMoveColumn: function(){
@@ -239,8 +239,9 @@ define([
 				f = g.focus,
 				columns = g._columns.slice(),
 				currentLevel = 0,
-				level = t._parse(),
-				q = t.groups.slice(),
+				parsedResult = t._parse(),
+				level = parsedResult['maxLevel'],
+				q = parsedResult['groups'].slice(),
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0">'];
 			t._configMoveColumn();
 			function build(){
