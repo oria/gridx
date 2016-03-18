@@ -210,8 +210,13 @@ define([
 				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
 				var h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
 				if(String(h3).toString().indexOf('.') >= 0){		//decimal
-					h2++;
-					h1++;
+					// Defect 14365 check if h2 and h1 are decimal to determine plus by 1 or not
+				    if(String(h2).toString().indexOf('.') >= 0){            //decimal
+                        h2++;
+                    }
+                    if(String(h1).toString().indexOf('.') >= 0){            //decimal
+                        h1++;
+                    }
 				}
 			}
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
