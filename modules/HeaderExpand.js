@@ -11,7 +11,6 @@ define([
 
 	return declare(_Module, {
 		name: 'headerExpand',
-
 		forced: ['headerRegions', 'vScroller'],
 
 		preload: function(){
@@ -30,9 +29,8 @@ define([
 
 					on(more, "click", function(){
 						console.log("Expand More");
-						connect.publish('allExpandableArea/' + name, true);
-						grid.vScroller._doVirtualScroll(true);
-						//grid.vScroller._doScroll(0,1,1);
+						connect.publish('allExpandableArea/', true);
+						updateUI();
 					});
 
 					return more;
@@ -52,25 +50,34 @@ define([
 
 					on(less, "click", function(){
 						console.log("Expand Less");
-						connect.publish('allExpandableArea/' + name, false);
-						grid.vScroller._doVirtualScroll(true);
-						//grid.vScroller._doScroll(0,1,1);
+						connect.publish('allExpandableArea/', false);
+						updateUI();
 					});
 
 					return less;
 				}
 			}, 0, 0);
 
-			connect.subscribe('expandableArea/' + name, lang.hitch(t, function(info){
-				if(info){
-					grid.body.onRowHeightChange(info.rowId);
-					grid.vScroller._doVirtualScroll(true);
-					//grid.vScroller._doScroll(0,1,1);
+			connect.subscribe('expandableArea/', lang.hitch(t, function(info){
+				if(grid.columnLock)
+					grid.columnLock.lock(grid.columnLockCount);
+				else{
+					if(info){
+						grid.body.onRowHeightChange(info.rowId);
+						//grid.vScroller._onBodyChange();
+						grid.vScroller._doVirtualScroll(true);
+						//grid.vScroller._doScroll(0,1,1);
+					}
 				}
 			}));
 
-
-
+			function updateUI(){
+				if(grid.columnLock)
+					grid.columnLock.lock(grid.columnLockCount);
+				else{
+					grid.body.refresh();
+				}
+			};
 		}
 	});
 });

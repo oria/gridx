@@ -6,7 +6,7 @@
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
 		.gridx {
-			width: 1000px;
+			width: 600px;
 			height: 420px;
 		}
 	</style>
@@ -22,6 +22,7 @@
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
+		columnLockCount: 2,
 		selectRowTriggerOnCell: true,
 		modules: [
 			"gridx/modules/Focus",
@@ -34,7 +35,8 @@
 			"gridx/modules/HeaderExpand",
 			"gridx/modules/RowHeader",
 			"gridx/modules/IndirectSelect",
-			"gridx/modules/pagination/PaginationBar"
+			"gridx/modules/pagination/PaginationBar",
+			"gridx/modules/ColumnLock"
 		]
 	'></div>
 </body>
