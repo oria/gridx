@@ -562,6 +562,7 @@ define([
 			if(count > 0){
 				// en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				// en.style.zIndex = '';
+				setTimeout(function(){})
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -743,7 +744,9 @@ define([
 
 			domClass.add(ln, 'gridxLoading');
 			en.innerHTML = g.nls.loadingInfo;
-			en.style.zIndex = 1;
+			//Fix defect 14163
+			//Loading message should not be covered up by locked columns  
+			en.style.zIndex = 2;
 		},
 
 		_hideLoadingMask: function(){
