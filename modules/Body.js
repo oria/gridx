@@ -272,6 +272,8 @@ define([
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
+			domClass.remove(g.emptyNode, ['gridxBodyEmptyLoading', 'gridxBodyEmptyError', 'gridxBodyEmptyNoItem']);
+			domClass.add(g.emptyNode, 'gridxBodyEmptyLoading');
 			g._connectEvents(dn, '_onEvent', t);
 			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
@@ -625,6 +627,8 @@ define([
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 					if(!t._err){
 						en.innerHTML = finalInfo;
+						domClass.remove(en, ['gridxBodyEmptyLoading', 'gridxBodyEmptyError', 'gridxBodyEmptyNoItem']);
+						domClass.add(en, finalInfo ? 'gridxBodyEmptyNoItem' : '');
 					}
 					t._hideLoadingMask();
 					t.onRender(start, count);
@@ -645,6 +649,8 @@ define([
 				//reset renderedIds since all rows in body are destroyed.
 				t.renderedIds = {};
 				en.innerHTML = emptyInfo;
+				domClass.remove(en, ['gridxBodyEmptyLoading', 'gridxBodyEmptyError', 'gridxBodyEmptyNoItem']);
+				domClass.add(en, 'gridxBodyEmptyNoItem');
 				en.style.zIndex = 1;
 				t._hideLoadingMask();
 				t.onEmpty();
@@ -743,6 +749,8 @@ define([
 
 			domClass.add(ln, 'gridxLoading');
 			en.innerHTML = g.nls.loadingInfo;
+			domClass.remove(en, ['gridxBodyEmptyLoading', 'gridxBodyEmptyError', 'gridxBodyEmptyNoItem']);
+			domClass.add(en, 'gridxBodyEmptyLoading');
 			//Fix defect 14163
 			//Loading message should not be covered up by locked columns  
 			en.style.zIndex = 2;
@@ -787,6 +795,8 @@ define([
 			var en = this.grid.emptyNode;
 			en.innerHTML = this.arg('loadFailInfo', this.grid.nls.loadFailInfo);
 			en.style.zIndex = 1;
+			domClass.remove(en, ['gridxBodyEmptyLoading', 'gridxBodyEmptyError', 'gridxBodyEmptyNoItem']);
+			domClass.add(en, 'gridxBodyEmptyError');
 			this.domNode.innerHTML = '';
 			this._err = e;
 			this.onEmpty();
