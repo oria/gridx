@@ -87,27 +87,17 @@ define([
 			dn.scrollLeft = left;
 		},
 		
-		scrollToColumn: function(colId, rowDiv){
-			//when rowDiv has value, it's caused by move focus in Body.js
-			//It's used only for column lock module
+		scrollToColumn: function(colId){
 			
 			var hNode = this.grid.header.innerNode,
 				cells = query('.gridxCell', hNode),
 				left = 0,
 				right = 0,
 				ltr = this.grid.isLeftToRight(),
-				scrollLeft = this.domNode.scrollLeft;
+				scrollLeft = this.domNode.scrollLeft,
+				pl = ltr ? domStyle.get(hNode, 'paddingLeft') : domStyle.get(hNode, 'paddingRight');
 			if(!ltr && (has('webkit') || has('ie') < 8)){
-				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
-			}
-
-			if(rowDiv && this.grid.columnLock && this.grid.columnLock.count){
-				//for column lock, row scrolls separately
-				scrollLeft = rowDiv.scrollLeft;
-				if(scrollLeft != this.domNode.scrollLeft){
-					this.scroll(scrollLeft);
-					return;
-				}
+				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth + pl;//the value relative to col 0
 			}
 
 			scrollLeft = Math.abs(scrollLeft);
@@ -123,10 +113,11 @@ define([
 			//if the cell is not visible, scroll to it
 			if(ltr && left < scrollLeft){
 				this.scroll(left);
-			}else if(ltr && right > scrollLeft + hNode.offsetWidth){
-				this.scroll(right - hNode.offsetWidth);
-			}else if(!ltr && right > hNode.scrollWidth - scrollLeft){
-				this.scroll(right - hNode.scrollWidth);
+			}else if(ltr && right > scrollLeft + hNode.offsetWidth - pl){
+				this.scroll(right - hNode.offsetWidth + pl);
+			}else if(!ltr && right > hNode.scrollWidth -pl - scrollLeft){
+				// this.scroll(right - hNode.scrollWidth + pl);
+				this.scroll(-right + hNode.scrollWidth - pl);
 			}else if(!ltr && left + scrollLeft < hNode.scrollWidth - hNode.offsetWidth){
 				this.scroll(hNode.scrollWidth - hNode.offsetWidth - left);
 			}

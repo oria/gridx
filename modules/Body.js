@@ -1184,7 +1184,7 @@ define([
 				}else{
 					n.focus();
 				}
-				g.hScroller.scrollToColumn(colId, n.parentNode.parentNode.parentNode.parentNode);//this is for columnlock hack
+				g.hScroller.scrollToColumn(colId);
 			}else if(!g.rowCount()){
 				g.emptyNode.focus();
 				return true;

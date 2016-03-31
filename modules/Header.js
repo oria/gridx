@@ -275,7 +275,7 @@ define([
 							t.innerNode.scrollLeft = t._scrollLeft;
 						}
 						if(g.hScroller){
-							g.hScroller.scrollToColumn(fid, t.innerNode);
+							g.hScroller.scrollToColumn(fid);
 						}
 					}, 0);
 
