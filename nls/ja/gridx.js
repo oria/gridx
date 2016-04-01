@@ -98,7 +98,7 @@ define({
 	"statusTipHeaderAll": "すべての規則に一致。",
 	"statusTipHeaderAny": "いずれかの規則に一致。",
 	"defaultItemsName": "項目",
-	"filterBarMsgHasFilterTemplate": "${1} ${2} 中 ${0} が表示されています。",
+	"filterBarMsgHasFilterTemplate": "${1} ${2} 中 ${0} ${2}が表示されています。",
 	"filterBarMsgNoFilterTemplate": "フィルターが適用されていません",
 	"filterBarDefButton": "フィルターの定義",
 	"waiFilterBarDefButton": "表のフィルター",
