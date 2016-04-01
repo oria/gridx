@@ -103,9 +103,10 @@ define([
 			scrollLeft = Math.abs(scrollLeft);
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
-				left = cells[i].offsetLeft;
-				right = left + cells[i].offsetWidth;
+
 				if(cells[i].getAttribute('colid') == colId){
+					left = cells[i].offsetLeft;
+					right = left + cells[i].offsetWidth;
 					break;
 				}
 			}

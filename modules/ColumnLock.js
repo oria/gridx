@@ -185,63 +185,64 @@ define([
 		_lockColumns: function(rowNode){
 			// summary:
 			//	Lock columns for one row
-			if(!this.count || this.count >= this.grid._columns.length){
+			if (!this.count || this.count >= this.grid._columns.length) {
 				return;
 			}
-			
-			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
-			var ltr = this.grid.isLeftToRight();
-			var r = rowNode.firstChild.rows[0], i;
 
-			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h,
-				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
-
-			rowNode.firstChild.style.height = 'auto';	//Remove the height of the last locked state.
-			// debugger;
-			for(i = 0; i < this.count; i++){
-				domStyle.set(r.cells[i], 'height', 'auto');
-			}
-
+			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner'),
+				ltr = this.grid.isLeftToRight(),
+				r = rowNode.firstChild.rows[0],
+				h1, h2, s = {},
+				pn = rowNode.previousElementSibling,
+				lead = isHeader ? this.grid.hLayout.lead : 0,
+				pl = lead,
+				pd = ltr ? 'paddingLeft' : 'paddingRight',
+				lc = r.cells[r.cells.length - 1];
+			h1 = lc.clientHeight - domGeometry.getPadExtents(lc, domStyle.getComputedStyle(lc)).h;
+			h2 = domGeometry.getMarginBox(lc).h;
 			//FIX ME: has('ie')is not working under IE 11
 			//use has('trident') here to judget IE 11
-			if(has('ie') > 8 || has('trident') > 4 ){
+			if (has('ie') > 8 || has('trident') > 4) {
 				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 				//so that the locked cells will have different height with the unlocked ones.
 				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
 				var h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
-				if(String(h3).toString().indexOf('.') >= 0){		//decimal
+				if (String(h3).toString().indexOf('.') >= 0) { //decimal
 					// Defect 14365 check if h2 and h1 are decimal to determine plus by 1 or not
-				    if(String(h2).toString().indexOf('.') >= 0){            //decimal
-                        h2++;
-                    }
-                    if(String(h1).toString().indexOf('.') >= 0){            //decimal
-                        h1++;
-                    }
+					if (String(h2).toString().indexOf('.') >= 0) { //decimal
+						h2++;
+					}
+					if (String(h1).toString().indexOf('.') >= 0) { //decimal
+						h1++;
+					}
 				}
 			}
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
-			
-			var lead = isHeader ? this.grid.hLayout.lead : 0,
-				pl = lead,
-				cols = this.grid._columns;
-			for(i = 0; i < this.count; i++){
+			s.height = h1 + 'px';
+			for (var i = 0; i < this.count; i++) {
 				var cell = r.cells[i],
-					s;
+					p = ltr ? 'left' : 'right';
 				domClass.add(cell, 'gridxLockedCell');
-
-				s = {height: h1 + 'px'};
-				s[ltr ? 'left' : 'right'] = pl + 'px';
+				if (pn && !isHeader) {
+					s[p] = pn.firstChild.rows[0].cells[i].style[p];
+				} else {
+					s[p] = pl + 'px';
+					pl += cell.offsetWidth;
+				}
 				domStyle.set(cell, s);
-				
-				pl += cell.offsetWidth;
 			}
-			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl - lead + 'px';
-			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
-			
-			//This is useful for virtual scrolling.
-			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
 
-			if(domClass.contains(rowNode, 'gridxRow')){
+			if (pn && !isHeader) {
+				rowNode.style[pd] = pn.style[pd];
+				rowNode.style.width = pn.style.width;
+			} else {
+				rowNode.style[pd] = pl - lead + 'px';
+				rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
+			}
+
+			rowNode.scrollLeft = this.grid.hScroller ? (ltr ? this.grid.hScroller._lastLeft : this.grid.hScroller.domNode.scrollLeft) : 0;
+
+			if (domClass.contains(rowNode, 'gridxRow')) {
 				var rowid = rowNode.getAttribute('rowid') + '';
 				this.grid.body.onRowHeightChange(rowid);
 			}
