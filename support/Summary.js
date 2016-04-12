@@ -34,7 +34,7 @@ define([
 			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t.connect(m, 'onSizeChange', 'refresh');
 			t.connect(m, '_onParentSizeChange', 'refresh');
-
+			t.connect(t.grid.select.row, 'onSelectionChange', 'refresh');
 			//Fixed for defect 14232
 			//when items in grid are filtered
 			//the summary can be updated at the same time
