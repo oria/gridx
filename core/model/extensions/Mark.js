@@ -40,7 +40,7 @@ define([
 			};
 			t.clear();
 			t._tree = {};
-			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
+			t._mixinAPI('getMark', 'getMarkedIdsCount', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
 			t.aspect(model, '_msg', '_receiveMsg');
 			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
 			t.aspect(model, 'setStore', 'clear');
@@ -54,6 +54,7 @@ define([
 			this._last = {};
 			this._lazy = {};
 			this._unmarkable = {};
+			this.markedCount = {};
 		},
 
 		setMarkable: function(rowId, markable, type){
@@ -92,7 +93,20 @@ define([
 		},
 
 		clearMark: function(type){
-			this._byId[this._initMark(type)] = {};
+			var tp = this._initMark(type);
+			this._byId[tp] = {};
+			this.markedCount[tp] = {"partialMarked":0, "marked":0};
+		},
+		
+		getMarkedIdsCount: function(type, includePartial){
+			var t = this,
+				tp = t._initMark(type),
+				count = t.markedCount[tp];
+
+			if(includePartial)
+				return (count["marked"] + count["partialMarked"]);
+			else
+				return count["marked"];
 		},
 
 		getMarkedIds: function(type, includePartial){
@@ -204,10 +218,13 @@ define([
 				c = t._byId,
 				s = t._last,
 				z = t._lazy,
-				tp = type || 'select';
+				tp = type || 'select',
+				count = t.markedCount;
+
 			c[tp] = c[tp] || {};
 			z[tp] = z[tp] || {};
 			s[tp] = s[tp] || {};
+			count[tp] = count[tp] || {"partialMarked":0, "marked":0};
 			return tp;
 		},
 
@@ -282,7 +299,17 @@ define([
 			// debugger;
 			if(toMark != oldState){
 				if(!toMark){
+					if(oldState == 2)
+						t.markedCount[type]["marked"]--;
+					else
+						t.markedCount[type]["partialMarked"]--;
 					delete t._byId[type][id];
+				}
+				else{
+					if(toMark == 2)
+						t.markedCount[type]["marked"]++;
+					else
+						t.markedCount[type]["partialMarked"]++;
 				}
 				m.onMarkChange(id, t.states[toMark || 0], t.states[oldState || 0], type);
 			}

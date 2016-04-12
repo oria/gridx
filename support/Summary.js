@@ -55,7 +55,7 @@ define([
 			
 			var finish = function(){
 				var size = g.model.size(),
-					selected = sr ? sr.getSelected().length : 0,
+					selected = g.model ? g.model.getMarkedIdsCount() : 0,
 					tpl = t.message,
 					cp = 0,
 					firstIdx = 0,
