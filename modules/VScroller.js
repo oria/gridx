@@ -69,6 +69,11 @@ define([
 			}else{
 				domClass.add(g.domNode, 'gridxMac');
 			}
+			//fix defect 14181
+			//when height less than 34px
+			//scroll bar disappears in firefox
+			if(has('ff'))
+				dn.style.minHeight = '34px';
 		},
 
 		preload: function(args){
