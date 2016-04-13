@@ -167,6 +167,14 @@ define([
 				this.inherited(arguments);
 				this._deferStartup.callback();
 			}
+			//fix defect 14181
+			//when height less than 34px
+			//scroll bar disappears in firefox
+			if(has('ff')){
+				var headerHeight = this.headerNode.offsetHeight || 0;
+				var footerHeight = this.footerNode.offsetHeight || 0;
+				this.domNode.style.minHeight = (34 + Number(headerHeight) + Number(footerHeight)) + "px";
+			}
 		},
 	
 		destroy: function(){
