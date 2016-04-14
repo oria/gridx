@@ -210,6 +210,10 @@ define([
 		getSelected: function(){
 			return this.model.getMarkedIds();
 		},
+		
+		getSelectedCount: function(){
+			return this.model.getMarkedIdsCount();
+		},
 
 		isSelected: function(){
 			return array.every(arguments, function(id){
