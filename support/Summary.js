@@ -21,7 +21,7 @@ define([
 =====*/
 
 	return declare([_WidgetBase, _TemplatedMixin], {
-		templateString: '<div class="gridxSummary"></div>',
+		templateString: '<div class="gridxSummary" role="status"></div>',
 
 		grid: null,
 
@@ -31,7 +31,6 @@ define([
 			var t = this,
 				m = t.grid.model;
 
-			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t.connect(m, 'onSizeChange', 'refresh');
 			t.connect(m, '_onParentSizeChange', 'refresh');
 			if(t.grid.select && t.grid.select.row)
