@@ -135,8 +135,10 @@ define([
 				}
 			}else{
 				g.filter.setFilter(v === '' ? 0 : F.or.apply(0, array.map(cols, function(col){
-					return col.encode === true? F.contain(F.column(col.id, null, null, null, cs), F.value(entities.encode(v), null, null, cs), cs)
-							: F.contain(F.column(col.id, null, null, null, cs), F.value(v, null, null, cs), cs);
+					var converter = col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
+						col.dataTypeArgs.converter : null;
+					return col.encode === true? F.contain(F.column(col.id, null, converter, null, cs), F.value(entities.encode(v), null, null, cs), cs)
+							: F.contain(F.column(col.id, null, converter, null, cs), F.value(v, null, null, cs), cs);
 				})));
 			}
 		},

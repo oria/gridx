@@ -147,7 +147,11 @@ define([
 		var d = new Deferred();
 		loadStyleFiles(args.styleSrc).then(function(styleSrc){
 			exportToTable(grid, args).then(function(str){
-				d.callback(wrap(grid, args, styleSrc, str));
+				if(args.raw){
+					d.callback(str);
+				} else {
+					d.callback(wrap(grid, args, styleSrc, str));
+				}				
 			}, hitch(d, d.errback), hitch(d, d.progress));
 		});
 		return d;

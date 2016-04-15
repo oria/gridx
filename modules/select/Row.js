@@ -193,6 +193,10 @@ define([
 		getSelected: function(){
 			return this.model.getMarkedIds();
 		},
+		
+		getSelectedCount: function(){
+			return this.model.getMarkedIdsCount();
+		},
 
 		clear: function(notClearId){
 			if(this.arg('enabled')){

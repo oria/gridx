@@ -139,6 +139,9 @@ define([
 
 		allowRight: false,		//allow mouse right click to trigger select
 
+		contextmenuHandle: null, //for chrome in operation system except win32
+								 //when allowRight set true
+								 //use custom contextmenu to replace default browser menu
 		unselectable: {},
 
 		rowMixin: {
@@ -206,6 +209,10 @@ define([
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
+		},
+		
+		getSelectedCount: function(){
+			return this.model.getMarkedIdsCount();
 		},
 
 		isSelected: function(){
@@ -312,6 +319,16 @@ define([
 						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
+						}
+					}
+				}],
+				//fix for defect14348
+				[g.domNode, 'oncontextmenu', function(e){
+					if(t.arg('allowRight') && navigator.platform != 'Win32' && dojo.isChrome){
+						e.preventDefault();
+						var handle = t.arg('contextmenuHandle');
+						if(handle && handle instanceof Function){
+							handle.call(t,e);
 						}
 					}
 				}],

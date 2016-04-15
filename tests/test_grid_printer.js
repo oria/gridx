@@ -41,6 +41,7 @@ require([
 	];
 
 	function showResult(result){
+		console.info(result);
 		var win = window.open();
 		win.document.write(result);
 		win.document.close();
@@ -141,6 +142,12 @@ require([
 
 	printPreview = function(){
 		printer.toHTML(grid, getArgs()).then(showResult, onError, onProgress);
+	};
+
+	printRawString = function(){
+		var args = getArgs();
+		args.raw = true;
+		printer.toHTML(grid, args).then(showResult, onError, onProgress);
 	};
 
 	//Test
@@ -287,6 +294,7 @@ require([
 		tests.push([
 			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printPreview">Print Preview</div><br />',
 			'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printGrid">Print</div><br />',
+			'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printRawString">PrintRawSting</div><br />',
 			'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
 				'minimum: 0, maximum: 1',
 			'"></div>'
