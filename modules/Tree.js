@@ -277,6 +277,11 @@ define([
 			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	}
 
+	//return whether a cellNode has children
+	function isExpandable(cellNode) {
+		return isExpando(cellNode) && !domClass.contains(cellNode.firstChild.firstChild, 'gridxTreeExpandoIconNoChildren');
+	}
+
 	return declare(_Module, {
 		name: "tree",
 
@@ -587,14 +592,16 @@ define([
 		_endLoading: function(id){
 			var rowNode = this.grid.body.getRowNode({rowId: id}),
 				isOpen = this.isExpanded(id);
-			if(rowNode){
-				var nls = this.grid.nls;
-				query('.gridxTreeExpandoCell', rowNode).
+			if(rowNode){	
+				var nls = this.grid.nls;			
+				var cn = query('.gridxTreeExpandoCell', rowNode).
 					removeClass('gridxTreeExpandoLoading').
 					toggleClass('gridxTreeExpandoCellOpen', isOpen).
-					closest('.gridxCell').
-					attr('aria-expanded', String(isOpen)).
-					attr('title', this.showHover? (isOpen ? nls.treeExpanded : nls.treeCollapsed) : "");
+					closest('.gridxCell');
+				cn.attr('aria-expanded', String(isOpen));
+				if(domClass.contains(cn&&cn[0], 'gridxCellFocus')){
+					cn.attr('title', this.showHover? (isOpen ? nls.treeExpanded : nls.treeCollapsed) : "");
+				}
 				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
 					node.firstChild.innerHTML = isOpen ? '-' : '+';
 				});
@@ -628,16 +635,29 @@ define([
 					expanded = this.isExpanded();
 				rowNode.setAttribute('aria-expanded', expanded);
 				//This is only to make JAWS readk
-				var nls = this.grid.nls;
 				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
-					attr('aria-expanded', String(expanded)).
-					attr('title', this.showHover? (expanded ? nls.treeExpanded : nls.treeCollapsed) : "");
+					attr('aria-expanded', String(expanded));
 			}
 		},
 
 		//Focus------------------------------------------------------------------
 		_initFocus: function(){
 			this.connect(this.grid, 'onCellKeyDown', '_onKey'); 
+			this.aspect(this.grid.body,'_focusCell','_focusCell');
+			this.aspect(this.grid.body,'_blurCell','_blurCell',this,'before');
+		},
+
+		_focusCell:function(evt, rowVisIdx, colIdx){
+			var n = query('.gridxCellFocus', this.domNode).closest('.gridxCell');
+			if(isExpandable(n&&n[0])){
+				var nls = this.grid.nls;
+				var isOpen = this.isExpanded(this.grid.body._focusCellRow);
+				n.attr('title', this.showHover? (isOpen ? nls.treeExpanded : nls.treeCollapsed) : "");
+			}
+		},
+
+		_blurCell:function(){
+			query('.gridxCellFocus', this.domNode).closest('.gridxCell').attr('title', '');
 		},
 
 		_onKey: function(e){

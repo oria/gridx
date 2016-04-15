@@ -187,10 +187,12 @@ require([
 		// modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.Edit,
-		modules.IndirectSelectColumn,
+		// modules.IndirectSelectColumn,
 		modules.SingleSort,
 		// modules.NestedSort,
-		modules.VirtualVScroller
+		modules.VirtualVScroller,
+		modules.MoveRow,
+		modules.DndRow
 	];
 
 	mods1 = [
