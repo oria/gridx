@@ -195,6 +195,8 @@ define([
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			setTimeout(function() {
+				//Defect 14406 Reset row height to 'auto' before calculating rowheader height
+				bodyNode.style.height = bodyNode.firstChild.style.height = "auto";
 				h = getHeight();
 				if ((h + '').indexOf('.') >= 0) {
 					if (isIE === 9) {
