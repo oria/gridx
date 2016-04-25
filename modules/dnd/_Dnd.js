@@ -139,7 +139,7 @@ define([
 			}
 		},
 
-		_disableSelectSwept(){
+		_disableSelectSwept: function(){
 			var name, selector, selectors = this.grid.select;
 			if(selectors){
 				for(name in selectors){
