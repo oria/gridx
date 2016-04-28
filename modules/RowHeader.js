@@ -196,13 +196,23 @@ define([
 			}
 			setTimeout(function() {
 				//Defect 14406 Reset row height to 'auto' before calculating rowheader height
-				bodyNode.style.height = bodyNode.firstChild.style.height = "auto";
+				bodyNode.style.height =  "auto";
+				if(bodyNode.firstChild)
+					bodyNode.firstChild.style.height = "auto";
 				h = getHeight();
 				if ((h + '').indexOf('.') >= 0) {
 					if (isIE === 9) {
-						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
-					} else {
-						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.firstChild.style.height = bodyNode.firstChild.clientHeight + 1 + 'px';
+						bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
+						if(rowHeaderNode && rowHeaderNode.firstChild)
+							rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height;
+					} else {						
+						if(bodyNode.firstChild){
+							var ht = bodyNode.firstChild.clientHeight + 1 + 'px';
+							bodyNode.firstChild.style.height = ht;
+							if(rowHeaderNode && rowHeaderNode.firstChild){
+								rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = ht;
+							}
+						}
 					}
 					//For IE,setting fixed height on row will break DOD.
 					// bodyNode.style.height = '';
