@@ -471,6 +471,13 @@ define([
 				infos = arguments[0][0], target = arguments[0][1],
 				rowIds = [], rowCats = {};
 				
+			infos.sort(function(info1, info2){
+				if(info1.parentId == info2.parentId){
+					return info1.rowIndex - info2.rowIndex;
+				}
+				return 0;
+			});	
+			
 			infos.forEach(function(info){
 				rowIds.push(info.rowId);
 				var parentId = info.parentId;

@@ -203,6 +203,8 @@ define([
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
 				dom.setSelectable(t.grid.domNode, false);
+				if(has('ff'))
+					domStyle.set(t.grid.body.domNode, 'MozUserSelect', 'none');
 			}
 		},
 
@@ -225,6 +227,8 @@ define([
 				t._dnding = t._extDnding = 0;	//0 as false
 				t._destroyUI();
 				dom.setSelectable(t.grid.domNode, true);
+				if(has('ff'))
+					domStyle.set(t.grid.body.domNode, 'MozUserSelect', '');
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 				t.profile._onEndDnd();
 				t._source.notSelectText = 0;
