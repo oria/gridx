@@ -109,16 +109,41 @@ define([
 				}
 			}
 		},
-	
+		
+		_isTree: function(){
+			var store = this.model.store;
+			return store.getChildren && store.hasChildren;
+		},
+
 		//Package-----------------------------------------------------------------------------------
 		_checkDndReady: function(evt){
-			var t = this, m = t.model;
+			var t = this, m = t.model, selectedIds;
+			t._selectedRowIds = [];
 			if(!m.getMark || m.getMark(evt.rowId)){
 				t.grid.dnd._dnd.profile = t;
-				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
-				return true;
+				selectedIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
+				if(t._isTree()){
+					selectedIds.forEach(function(id){
+						if(!checkExist(t._selectedRowIds, id)){
+							t._selectedRowIds.push(id);
+						}
+					});
+				}
+				else
+					t._selectedRowIds = selectedIds;
+				return true;				
 			}
 			return false;
+			
+			function checkExist(list, rowId){
+				var id = t.grid.view.getRowInfo({rowId:rowId}).parentId;
+				while(id!=""){
+					if(list.indexOf(id)!=-1 || selectedIds.indexOf(id)!=-1)
+						return true;
+					id = t.grid.view.getRowInfo({rowId:id}).parentId;
+				}
+				return false;
+			}
 		},
 
 		//Private-----------------------------------------------------------------------------
@@ -253,15 +278,30 @@ define([
 				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
 					flag = false;
 				}
+				if(t._isTree()){
+					var _targetInfo = t.grid.view.getRowInfo({visualIndex: t._target});
+					if(!_targetInfo.parentId)
+						flag = false;
+				}
 				t.model.when({id: t._selectedRowIds}, function(){
 					var indexes = array.map(t._selectedRowIds, function(rowId){
 						return t.model.idToIndex(rowId);
 					});
+					var ids = t._selectedRowIds;
 					if (t.grid.rowLock) {
 						if (array.some(indexes, function(index) {
 							return index < t.grid.rowLock.count;
 						})) {						
 							console.warn('can not move locked rows');
+							flag = false;
+						}
+					}
+					if(t._isTree()){
+						if(array.some(ids, function(id){
+							var info = t.grid.view.getRowInfo({rowId: id});
+							return !info.parentId;
+						})){
+							console.warn('can not move root rows');
 							flag = false;
 						}
 					}
@@ -274,28 +314,52 @@ define([
 
 
 		_onDropInternal: function(nodes, copy){
-			var t = this, g = t.grid;
+			var t = this, g = t.grid, m = t.model;
 			if(t._target >= 0){
 
 				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
 					return false;
 				}
 				t.model.when({id: t._selectedRowIds}, function(){
-					var indexes = array.map(t._selectedRowIds, function(rowId){
-						return t.model.idToIndex(rowId);
-					});
-					if (t.grid.rowLock) {
-						if (array.some(indexes, function(index) {
-							return index < t.grid.rowLock.count;
-						})) {						
-							console.warn('can not move locked rows');
+					
+					if(t._isTree()){
+						var infos = array.map(t._selectedRowIds, function(rowId){
+							return g.view.getRowInfo({rowId: rowId})
+						});
+						if (t.grid.rowLock) {
+							if (array.some(infos, function(info) {
+								return info.rowIndex < t.grid.rowLock.count;
+							})) {						
+								console.warn('can not move locked rows');
+								return false;
+							}
+						}
+						if(array.some(infos, function(info){
+							return !info.parentId;
+						})){
+							console.warn('can not move root rows');
 							return false;
 						}
+						g.move.row.treeMove(infos, g.view.getRowInfo({
+							visualIndex: t._target
+						}));
 					}
-					g.move.row.move(indexes, g.view.getRowInfo({
-						visualIndex: t._target
-					}).rowIndex);
-
+					else{	
+						var indexes = array.map(t._selectedRowIds, function(rowId){
+							return t.model.idToIndex(rowId);
+						});
+						if (t.grid.rowLock) {
+							if (array.some(indexes, function(index) {
+								return index < t.grid.rowLock.count;
+							})) {						
+								console.warn('can not move locked rows');
+								return false;
+							}
+						}
+						g.move.row.move(indexes, g.view.getRowInfo({
+							visualIndex: t._target
+						}).rowIndex);
+					} 
 				});
 			}
 		},

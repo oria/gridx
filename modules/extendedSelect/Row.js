@@ -317,6 +317,10 @@ define([
 							g.body._focusCellCol = e.columnIndex;
 						}
 						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
+						// Fix for defect 12056
+						if((has("ie") || has("trident")) && g.rowHeader){
+							g.rowHeader._onScroll();
+						}						
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}

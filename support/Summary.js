@@ -29,7 +29,8 @@ define([
 
 		postCreate: function(){
 			var t = this,
-				m = t.grid.model;
+				m = t.grid.model,
+				count = 0;
 
 			t.connect(m, 'onSizeChange', 'refresh');
 			t.connect(m, '_onParentSizeChange', 'refresh');
@@ -39,8 +40,13 @@ define([
 			//when items in grid are filtered
 			//the summary can be updated at the same time
 			t.connect(t.grid.view, 'updateVisualCount', t.refresh);
-
-			t.connect(m, 'onMarkChange', 'refresh');
+			t.connect(m, 'onMarkChange', function(){
+				count++;
+				if(count == m._markedTotal){
+					t.refresh();
+					count = 0;
+				}
+			});
 			if(t.grid.pagination){
 				t.connect(t.grid.pagination, 'onSwitchPage', 'refresh');
 				t.connect(t.grid.pagination, 'onChangePageSize', 'refresh');

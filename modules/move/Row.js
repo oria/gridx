@@ -98,6 +98,14 @@ define([
 			}
 		},
 		
+		treeMove: function(rowInfos, target, skipUpdateBody){
+			var m = this.model;
+			m.moveInfos(rowInfos, target);
+			if(!skipUpdateBody){
+				m.when();
+			}
+		},
+		
 		moveRange: function(start, count, target, skipUpdateBody){
 			var m = this.model;
 			m.move(start, count, target);
@@ -111,6 +119,19 @@ define([
 		
 		//Private-----------------------------------------------------------------
 		_onMoved: function(){
+			if(arguments.length == 1){
+				var moveInfo = arguments[0];
+				var view = this.grid.view;
+				view._openInfo[moveInfo.parentId].count += moveInfo.moves.length;
+				var rowCats = moveInfo.rowCats;
+				
+				for(var pId in rowCats){
+					if(rowCats.hasOwnProperty(pId)){
+						var rowCat = rowCats[pId];
+						view._openInfo[pId].count -= rowCat.length;
+					}
+				}
+			}
 			this.grid.body.refresh();
 			this.onMoved();
 		},

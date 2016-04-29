@@ -270,7 +270,7 @@ define([
 							var index = model.idToIndex(id);
 							return index >= start && index < start + count;
 						});
-						allSelected = count - unselectableRoots.length == indexes.length;
+						allSelected = indexes.length && (count - unselectableRoots.length == indexes.length);
 						d.callback();
 					});
 				}
