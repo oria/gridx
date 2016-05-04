@@ -504,6 +504,6 @@ define([
 			var moveInfo ={parentId: target.parentId, moves: infos, rowCats: rowCats};
 			m._cache.clear();
 			m.onMoved(moveInfo);			
-		},
+		}
 	});
 });
