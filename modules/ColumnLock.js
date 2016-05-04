@@ -183,7 +183,7 @@ define([
 			//In IE8+, when changing the visibility of a scrollable item by toggling 'display:none' for its parent element 
 			//will cause the scrollTop/scrollLeft to reset to zero.
 			//In this case, this will cause the inconsistence of '_lastLeft' and scrollLeft of hScroller
-			if ((has('ie') >= 8 || has('trident')) && this.grid.hScroller && !this.grid.hScrollerNode.scrollLeft) {
+			if ((has('ie') >= 8 || has('trident')) && this.grid.hScroller && this.grid.hScrollerNode.scrollLeft === 0) {
 				this.grid.hScroller._lastLeft = 0;
 			}
 			this.grid.hScroller && this.grid.hScroller._doScroll();
