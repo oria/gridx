@@ -9,11 +9,13 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/_base/window",
 	"dojo/mouse",
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Row, =====*/declare, array, event, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, event, query, lang, Deferred, has, domClass, domStyle, win, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Row.select = function(){
@@ -311,7 +313,7 @@ define([
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if((mouse.isLeft(e) || (t.arg('allowRight')) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode)){
+					if((mouse.isLeft(e) || (t.arg('allowRight')) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode) && domStyle.get(win.body(), "cursor")!="move"){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
