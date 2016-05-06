@@ -86,7 +86,6 @@ define([
 				t._fixFF(t._source, n);
 			}
 			t._source.grid = t.grid;
-			t._saveSelectStatus();
 			t.loaded.callback();
 		},
 		
@@ -139,33 +138,6 @@ define([
 			}
 		},
 
-		_saveSelectStatus: function(enabled){
-			var name, selector, selectors = this.grid.select;
-			if(selectors){
-				for(name in selectors){
-					selector = selectors[name];
-					if(selector && lang.isObject(selector)){
-						this._selectStatus[name] = selector.arg('enabled');
-						if(enabled !== undefined){
-							selector.enabled = enabled;
-						}
-					}
-				}
-			}
-		},
-
-		_loadSelectStatus: function(){
-			var name, selector, selectors = this.grid.select;
-			if(selectors){
-				for(name in selectors){
-					selector = selectors[name];
-					if(selector && lang.isObject(selector)){
-						selector.enabled = this._selectStatus[name];
-					}
-				}
-			}
-		},
-
 		_checkDndReady: function(evt){
 			var t = this, name, p;
 			if(!t._dndReady && !t._dnding && !t._extDnding){
@@ -173,7 +145,6 @@ define([
 					p = t._profiles[name];
 					if(p.arg('enabled') && p._checkDndReady(evt)){
 						t.profile = p;
-						// t._saveSelectStatus(false);
 						domClass.add(win.body(), 'gridxDnDReadyCursor');
 						t._source.notSelectText = 1;
 						t._dndReady = 1;
@@ -185,7 +156,6 @@ define([
 		
 		_dismissDndReady: function(){
 			if(this._dndReady && !this._dndBegun){
-				this._loadSelectStatus();
 				this._dndReady = 0;	//0 as false
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 			}
@@ -218,8 +188,8 @@ define([
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
 				dom.setSelectable(t.grid.domNode, false);
-				t._saveSelectStatus(evt.shiftKey||evt.ctrlKey);
-
+				if(has('ff'))
+					domStyle.set(t.grid.body.domNode, 'MozUserSelect', 'none');
 			}
 		},
 
@@ -242,10 +212,11 @@ define([
 				t._dnding = t._extDnding = 0;	//0 as false
 				t._destroyUI();
 				dom.setSelectable(t.grid.domNode, true);
+				if(has('ff'))
+					domStyle.set(t.grid.body.domNode, 'MozUserSelect', '');
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 				t.profile._onEndDnd();
 				t._source.notSelectText = 0;
-				t._loadSelectStatus();
 			}
 		},
 		

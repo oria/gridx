@@ -112,7 +112,7 @@ define([
 
 		constructor: function(model, args){
 			var t = this, options = model._cache.options = model._cache.options || {};
-			t._mixinAPI('move', 'moveIndexes', 'insert');
+			t._mixinAPI('move', 'moveIndexes', 'moveInfos', 'insert');
 			model.onMoved = function(){};
 			//User can customize how to deal with moved rows by providing his own updateStore method.
 			if(args.updateStore){
@@ -158,6 +158,15 @@ define([
 				name: '_cmdMove',
 				scope: this,
 				args: [indexes, target],
+				async: 1
+			});
+		},
+		
+		moveInfos: function(infos, target){
+			this.model._addCmd({
+				name: '_cmdTreeMove',
+				scope: this,
+				args: [infos, target],
 				async: 1
 			});
 		},
@@ -424,6 +433,77 @@ define([
 				m.onMoved(moves, map);
 			});
 			return d;
+		},
+		
+		_cmdTreeMove: function(){
+			function addChildren(parentItem, fromArray, targetRowId){
+				var toArray = parentItem.children, index=0, item = toArray[index];
+				var newChildren = [];
+
+				while(index<toArray.length){
+					if(item.id == targetRowId){
+						for(var i=0;i<rowIds.length;i++){
+							newChildren.push(t.inner._call('byId', [fromArray[i]]).item);
+						}
+					}
+					newChildren.push(item);
+					item = toArray[++index];				
+				}
+				parentItem.children = newChildren;
+			};
+			
+			function removeChildren(parentItem, rowIndexes){
+				var toArray = parentItem.children, toIndex=0, item = toArray[toIndex],
+				    index = 0, rowIndex = rowIndexes[index],
+					newChildren = [];
+
+				while(toIndex<toArray.length){
+					if(toIndex == rowIndex)
+						rowIndex = rowIndexes[++index]
+					else
+						newChildren.push(item);						
+					item = toArray[++toIndex];				
+				}
+				parentItem.children = newChildren;
+			};
+			
+			var t = this, m = t.model,
+				infos = arguments[0][0], target = arguments[0][1],
+				rowIds = [], rowCats = {};
+				
+			infos.sort(function(info1, info2){
+				if(info1.parentId == info2.parentId){
+					return info1.rowIndex - info2.rowIndex;
+				}
+				return 0;
+			});	
+			
+			infos.forEach(function(info){
+				rowIds.push(info.rowId);
+				var parentId = info.parentId;
+				if(parentId != ""){
+					if(!rowCats[parentId])
+						rowCats[parentId] = [];
+					rowCats[parentId].push(info.rowIndex);
+				}
+			});
+			
+			var targetParent = t.inner._call('byId', [target.parentId]);
+		
+			// remove items from original parent item
+			for(var parentId in rowCats){
+				if(rowCats.hasOwnProperty(parentId)){
+					var fromParent = t.inner._call('byId', [parentId]);
+					var rowCat = rowCats[parentId];
+					removeChildren(fromParent.item, rowCat);
+				}
+			}
+			// insert to position before target
+			addChildren(targetParent.item, rowIds, target.rowId);
+			
+			var moveInfo ={parentId: target.parentId, moves: infos, rowCats: rowCats};
+			m._cache.clear();
+			m.onMoved(moveInfo);			
 		}
 	});
 });

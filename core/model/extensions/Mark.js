@@ -165,6 +165,7 @@ define([
 				args = arguments,
 				ranges = [],
 				m = t.model._model;
+			t.model._markedTotal = args.length;
 			array.forEach(args, function(arg){
 				if(!arg[3]){
 					ranges.push({
