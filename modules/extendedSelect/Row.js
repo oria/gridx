@@ -327,14 +327,15 @@ define([
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseUp', function(e){
-					if(t._rowId == e.rowId){
+					if(t._rowId == e.rowId && t._columnId == e.columnId){
 						if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
 							selectRow(e);
 					}
 				}],
 				[g, 'onRowMouseDown', function(e){
 					t._rowId = e.rowId;
-					if(((mouse.isLeft(e) || t.arg('allowRight')) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
+					t._columnId = e.columnId;
+					if(((mouse.isLeft(e) || t.arg('allowRight')) && !g.select.column.isSelected(e.columnId) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
 						selectRow(e);
 				}],
 				//fix for defect14348
