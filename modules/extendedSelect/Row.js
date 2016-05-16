@@ -309,24 +309,34 @@ define([
 					return col.rowSelectable;
 				}
 				return !e.columnId;
-			}
+			};
+			function selectRow(e){
+				t._isOnCell = e.columnId;
+				if(t._isOnCell){
+					g.body._focusCellCol = e.columnIndex;
+				}
+				t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
+				// Fix for defect 12056
+				if((has("ie") || has("trident")) && g.rowHeader){
+					g.rowHeader._onScroll();
+				}						
+				if(!e.shiftKey && !t.arg('canSwept')){
+					t._end();
+				}
+			};
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
-				[g, 'onRowMouseDown', function(e){
-					if((mouse.isLeft(e) || (t.arg('allowRight')) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode) && domStyle.get(win.body(), "cursor")!="move"){
-						t._isOnCell = e.columnId;
-						if(t._isOnCell){
-							g.body._focusCellCol = e.columnIndex;
-						}
-						t._start({row: e.visualIndex, rowId: e.rowId }, g._isCtrlKey(e), e.shiftKey);
-						// Fix for defect 12056
-						if((has("ie") || has("trident")) && g.rowHeader){
-							g.rowHeader._onScroll();
-						}						
-						if(!e.shiftKey && !t.arg('canSwept')){
-							t._end();
-						}
+				[g, 'onRowMouseUp', function(e){
+					if(t._rowId == e.rowId && t._columnId == e.columnId){
+						if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
+							selectRow(e);
 					}
+				}],
+				[g, 'onRowMouseDown', function(e){
+					t._rowId = e.rowId;
+					t._columnId = e.columnId;
+					if(((mouse.isLeft(e) || t.arg('allowRight')) && (!g.select.column || (g.select.column && !g.select.column.isSelected(e.columnId))) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
+						selectRow(e);
 				}],
 				//fix for defect14348
 				[g.domNode, 'oncontextmenu', function(e){
@@ -361,7 +371,7 @@ define([
 					if(t._selecting && t.arg('triggerOnCell') && e.columnId){
 						g.body._focusCellCol = e.columnIndex;
 					}
-					t._highlight({row: e.visualIndex});
+					t._highlight({row: e.visualIndex, rowId: e.rowId });
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
@@ -491,7 +501,7 @@ define([
 		_focus: function(target){
 			var g = this.grid, focus = g.focus;
 			if(focus){
-				g.body._focusCellRow = target.row;
+				g.body._focusCellRow = target.rowId;
 				focus.focusArea(this._isOnCell ? 'body' : 'rowHeader', true);
 			}
 		},

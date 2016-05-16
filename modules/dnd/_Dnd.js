@@ -86,7 +86,6 @@ define([
 				t._fixFF(t._source, n);
 			}
 			t._source.grid = t.grid;
-			t._disableSelectSwept();
 			t.loaded.callback();
 		},
 		
@@ -136,20 +135,6 @@ define([
 				t._markTargetAnchor(evt);
 				if(this.profile._onMouseMove)
 					this.profile._onMouseMove();
-			}
-		},
-
-		_disableSelectSwept: function(){
-			var name, selector, selectors = this.grid.select;
-			if(selectors){
-				for(name in selectors){
-					selector = selectors[name];
-					if(selector && lang.isObject(selector)){
-						if(selector.canSwept !== undefined){
-							selector.canSwept = false;
-						}
-					}
-				}
 			}
 		},
 
