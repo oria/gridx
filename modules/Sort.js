@@ -328,10 +328,10 @@ define([
 						onFocus: this._onFocus,
 //                        doBlur: hitch(this, this._doBlur),
 //                        onBlur: hitch(this, this._onBlur),
-						connects: [this.connect(g, 'onHeaderCellKeyDown', '_onKeyDown')]
+						connects: [this.connect(g, 'onHeaderCellKeyUp', '_onKeyUp')]
 					});
 				}else{
-					this.connect(g, 'onHeaderCellKeyDown', function(evt){
+					this.connect(g, 'onHeaderCellKeyUp', function(evt){
 						if(evt.keyCode == keys.ENTER){
 							this._sort(evt.columnId, false, g._isCtrlKey(evt));
 						}
@@ -359,7 +359,7 @@ define([
 //            return true;
 //        },
 
-		_onKeyDown: function(e){
+		_onKeyUp: function(e){
 			switch(e.keyCode){
 				case keys.RIGHT_ARROW:
 				case keys.LEFT_ARROW:
