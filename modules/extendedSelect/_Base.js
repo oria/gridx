@@ -192,7 +192,7 @@ define([
 							start = g.body.renderStart, 
 							end = start + g.body.renderCount;
 						for(; from != to; from += dir){
-							if (from < start || from > end) continue;
+							if ((from < start || from > end) && type != "column") continue;
 							var item = {};
 							item[type] = from;
 							t._highlightSingle(item, toHL);
