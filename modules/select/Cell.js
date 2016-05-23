@@ -220,7 +220,7 @@ define([
 			var t = this, model = t.model, end = start + count, i, j, rowId, colId,
 				columns = t.grid._columns; 
 			for(i = start; i < end; ++i){
-				rowId = model.indexToId(i);
+				rowId = t.grid.visualIndexToId(i);
 				for(j = columns.length - 1; j >= 0; --j){
 					colId = columns[j].id;
 					if(model.getMark(rowId, t._getMarkType(colId))){

@@ -353,7 +353,7 @@ define([
 								i, j, p, q, rids = {};
 							if(!toHL){
 								for(j = from.r, p = to.r + rowDir; j != p; j += rowDir){
-									rids[j] = t.model.indexToId(j);
+									rids[j] = t.grid.view.visualIndexToId(j);
 								}
 							}
 							for(i = from.c, q = to.c + colDir; i != q; i += colDir){
@@ -506,7 +506,7 @@ define([
 								var cid = t.grid._columns[j].id,
 									type = t._getMarkType(cid);
 								for(k = pack.rowStart; k <= pack.rowEnd; ++k){
-									model.markById(model.indexToId(k), false, type);
+									model.markById(view.visualIndexToId(k), false, type);
 								}
 							}
 						}else{

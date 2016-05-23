@@ -887,7 +887,7 @@ define([
 					'</td>');
 			}else{
 				var g = t.grid,
-					isFocusedRow = g.focus.currentArea() == 'body' && t.model.idToIndex(t._focusCellRow) === visualIndex,
+					isFocusedRow = g.focus.currentArea() == 'body' && g.view.idToVisualIndex(t._focusCellRow) === visualIndex,
 					rowData = t.model.byId(rowId).data,
 					columns = g._columns,
 					cellCls = t._cellCls[rowId] || {};
@@ -1127,14 +1127,14 @@ define([
 				}
 			});
 			t.aspect(g, 'onCellClick', function(evt){
-				t._focusCellRow = t.model.indexToId(evt.visualIndex);
+				t._focusCellRow = g.view.visualIndexToId(evt.visualIndex);
 				t._focusCellCol = evt.columnIndex;
 			});
 			t.aspect(t, 'onRender', function(start, count){
 				var currentArea = focus.currentArea();
 				if(focus.arg('enabled')){
 					if(currentArea == 'body'){
-						var rowIdx = t.model.idToIndex(t._focusCellRow);						
+						var rowIdx = g.view.idToVisualIndex(t._focusCellRow);												
 						if(rowIdx >= start &&
 							rowIdx < start + count){
 							t._focusCell();
@@ -1158,7 +1158,7 @@ define([
 				g = t.grid;
 			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
-			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t.model.idToIndex(t._focusCellRow);
+			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : g.view.idToVisualIndex(t._focusCellRow);
 			var colId = g._columns[colIdx] ? g._columns[colIdx].id : undefined,
 				n = t.getCellNode({
 					visualIndex: rowVisIdx,
@@ -1170,7 +1170,7 @@ define([
 			if(n){
 				t._blurCell();
 				domClass.add(n, 'gridxCellFocus');
-				t._focusCellRow = t.model.indexToId(rowVisIdx);
+				t._focusCellRow = g.view.visualIndexToId(rowVisIdx);
 				t._focusCellCol = colIdx;
 				g.header._focusHeaderId = colId;
 				
@@ -1202,7 +1202,7 @@ define([
 					//IE8 will destroy this event object after setTimeout
 					e = has('ie') < 9 ? lang.mixin({}, evt) : evt;
 				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
-				r = t.model.idToIndex(t._focusCellRow) + rowStep;
+				r = g.view.idToVisualIndex(t._focusCellRow) + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
 				c = t._focusCellCol + colStep;
 				c = c < 0 ? 0 : (c >= columnCount ? columnCount - 1 : c);

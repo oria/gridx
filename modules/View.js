@@ -242,6 +242,14 @@ define([
 			args.rowId = m.isId(id) ? id : m.indexToId(args.rowIndex, args.parentId);
 			return args;
 		},
+		
+		idToVisualIndex: function(rowId){
+			return this.getRowInfo({rowId:rowId}).visualIndex;
+		},
+		
+		visualIndexToId: function(visualIndex){
+			return this.getRowInfo({visualIndex:visualIndex}).rowId;
+		},
 
 		//Package------------------------------------------------------------------------------
 		logicExpand: function(id){

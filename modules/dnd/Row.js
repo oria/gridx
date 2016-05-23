@@ -43,8 +43,7 @@ define([
 				rowIds = sg.dnd.row._selectedRowIds;
 			sg.model.when({id: rowIds}, function(){
 				forEach(rowIds, function(id){
-					var idx = sg.model.idToIndex(id),
-						row = sg.model.byId(id);
+					var row = sg.model.byId(id);
 					if(row){
 						dataArr.push(lang.clone(row.rawData));
 					}
@@ -285,7 +284,7 @@ define([
 				}
 				t.model.when({id: t._selectedRowIds}, function(){
 					var indexes = array.map(t._selectedRowIds, function(rowId){
-						return t.model.idToIndex(rowId);
+						return t.grid.view.idToVisualIndex(rowId);
 					});
 					var ids = t._selectedRowIds;
 					if (t.grid.rowLock) {
@@ -346,7 +345,7 @@ define([
 					}
 					else{	
 						var indexes = array.map(t._selectedRowIds, function(rowId){
-							return t.model.idToIndex(rowId);
+							return t.grid.view.idToVisualIndex(rowId);
 						});
 						if (t.grid.rowLock) {
 							if (array.some(indexes, function(index) {
