@@ -102,7 +102,7 @@ define([
 		},
 
 		byId: function(id){
-			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
+			return (this._ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
 		indexToId: function(index, parentId, skip){
@@ -170,6 +170,7 @@ define([
 
 			t.clear();
 			if(lang.isFunction(checker)){
+				this._checker = checker;
 				var ids = [], temp,
 					scanCallback = function(rows/* object|string array */, start, parentId){
 						if(!rows.length){
@@ -250,6 +251,27 @@ define([
 			// temp.push(parentId);
 			for(i = treepathLen - 1; i >= 0; i--){
 				t._add(treepath[i]);
+			}
+		},
+
+		_remove: function(id){
+			if(id === undefined || id === null){return;}
+
+			var t = this,
+				m = t.model,
+				treepath = t.model.treePath(id),
+				treepathLen = treepath.length, i, parentId;
+
+			if(t._struct[id]){
+				parentId = t._struct[id][0];
+				delete t._struct[id];
+			}
+			if(parentId !== undefined && parentId !== null){
+				var idx = indexOf(t._struct[parentId], id);
+				t._struct[parentId].splice(idx, 1);
+			}
+			for(i = treepathLen - 1; i >= 0; i--){
+				t._remove(treepath[i]);
 			}
 		},
 
@@ -393,9 +415,9 @@ define([
 		_onNew: function(id){
 			var t = this;
 			if(t._ids){
-				t._ids.push(id);
-				t._refilter = 1;
+				t._filter(t._checker);
 			}
+			
 			t.onNew.apply(t, arguments);
 		},
 
@@ -406,12 +428,15 @@ define([
 					idx = indexes[id];
 				if(i >= 0){
 					ids.splice(i, 1);
+					t._remove(id);
+					delete indexes[id];
 				}
+				
 				if(i >= 0 && idx !== undefined){
 					index = i;
-					for(i in indexes){
-						if(indexes[i] > idx){
-							--indexes[i];
+					for(var k in indexes){
+						if(indexes[k] > idx){
+							--indexes[k];
 						}
 					}
 				}else{

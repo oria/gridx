@@ -236,7 +236,26 @@ define([
 			return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"").replace(/\'/g, "\\\'");
 		},
 
-		_encodeHTML: function(id){
+		_encodeHTML: function(id) {
+			if (!string.escape) {
+				string.escape = function(str) {
+					var ESCAPE_REGEXP = /[&<>'"\/]/g;
+					var ESCAPE_MAP = {
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						'"': '&quot;',
+						"'": '&#x27;',
+						'/': '&#x2F;'
+					};
+					if (!str) {
+						return "";
+					}
+					return str.replace(ESCAPE_REGEXP, function(c) {
+						return ESCAPE_MAP[c];
+					});
+				}
+			}
 			return string.escape(String(id));
 		},
 
