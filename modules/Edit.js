@@ -682,22 +682,9 @@ define([
 										// Fix defect 14234
 										// determine current focused node changed or not
 										// then refocus or do nothing
-										var compare = function(parent, node){
-												if(parent == node)
-													return true;
-												else if(parent.childNodes && parent.childNodes.length){
-													var length = parent.childNodes.length;
-													for(var i=0;i<length;i++){
-														if(compare(parent.childNodes[i], node))
-															return true;
-													}
-												}
-												return false;
-											};
-
-										if(compare(cell.node(),document.activeElement)){
+										// Fix for defect 13994
+										if (cell.row.index() === g.body._focusCellRow && cell.column.index() === g.body._focusCellCol) {
 											cell.node().focus && cell.node().focus();
-
 											if (g.isIE) {
 												setTimeout(function() {
 													if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
