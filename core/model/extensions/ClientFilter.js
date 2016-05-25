@@ -101,8 +101,8 @@ define([
 			return !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
-		byId: function(id) {
-			return (this._ids && indexOf(this._ids, id) >= 0 && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
+		byId: function(id){
+			return (this._ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
 		indexToId: function(index, parentId, skip){
