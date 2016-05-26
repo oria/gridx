@@ -120,9 +120,12 @@ function column($field){
 	return $obj->$field;
 }
 
-function contain($a, $b){
+function contain($a, $b, $c){
 	$a = boolToStr($a);
-	return stripos($a, $b) !== FALSE;
+	if($c == false)
+		return stripos($a, $b) !== FALSE;
+	else 
+		return strpos($a, $b) !== FALSE;
 }
 
 function logicand(){
@@ -175,17 +178,23 @@ function lessEqual($a, $b){
 	return $a <= $b;
 }
 
-function startWith($a, $b){
+function startWith($a, $b, $c){
 	$a = boolToStr($a);
-	return stripos($a, $b) === 0;
+	if($c == false)
+		return stripos($a, $b) === 0;
+	else 
+		return strpos($a, $b) === 0;
 }
 
-function endWith($a, $b){
+function endWith($a, $b, $c){
 	// if(preg_match($a, $b)){
 		//echo 'match is:' . $a . '<br>';
 	// }
 	$a = boolToStr($a);
-	return preg_match("/{$b}$/", $a);
+	if($c == false)
+		return preg_match("/{$b}$/i", $a);
+	else 
+		return preg_match("/{$b}$/", $a);
 }
 
 function output($data, $isFilter = false){

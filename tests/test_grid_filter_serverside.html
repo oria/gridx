@@ -50,6 +50,9 @@
 					if(expr.op == "or"){
 						op = "logicor";
 					}
+					if(expr.op == "contain" || expr.op == "startWith" || expr.op == "endWith"){
+						exprs.push(grid1.filter.caseSensitive);
+					}
 					return op + "(" + exprs.join(",") + ")";
 				}
 			};
