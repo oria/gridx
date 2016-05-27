@@ -452,14 +452,16 @@ define([
 				parentItem.children = newChildren;
 			};
 			
-			function removeChildren(parentItem, rowIndexes){
+			function removeChildren(parentItem, rows){
 				var toArray = parentItem.children, toIndex=0, item = toArray[toIndex],
-				    index = 0, rowIndex = rowIndexes[index],
+				    index = 0, rowIndex = rows[index].rowIndex,
 					newChildren = [];
 
 				while(toIndex<toArray.length){
-					if(toIndex == rowIndex)
-						rowIndex = rowIndexes[++index]
+					if(toIndex == rowIndex){
+						if(index < rows.length-1)
+							rowIndex = rows[++index].rowIndex;
+					}
 					else
 						newChildren.push(item);						
 					item = toArray[++toIndex];				
@@ -484,7 +486,7 @@ define([
 				if(parentId != ""){
 					if(!rowCats[parentId])
 						rowCats[parentId] = [];
-					rowCats[parentId].push(info.rowIndex);
+					rowCats[parentId].push({rowIndex:info.rowIndex,rowId:info.rowId});
 				}
 			});
 			

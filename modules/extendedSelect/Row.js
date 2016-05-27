@@ -539,7 +539,7 @@ define([
 						rowEnd: rowEnd
 					}, function(){
 						for(i = rowStart; i <= rowEnd; ++i){
-							m.markById(m.indexToId(i), false); 
+							m.markById(view.visualIndexToId(i), false); 
 						}
 					}).then(function(){
 						m.when(null, function(){
@@ -560,7 +560,7 @@ define([
 						mark_end : mark_end
 					}, function(){
 						for(i = ummark_start; i <= ummark_end; ++i){
-							m.markById(m.indexToId(i), false); 
+							m.markById(view.visualIndexToId(i), false); 
 						}
 						for(i = mark_start; i <= mark_end; ++i){
 							 var rowInfo = view.getRowInfo({visualIndex: i});

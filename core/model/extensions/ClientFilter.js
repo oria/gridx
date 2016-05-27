@@ -102,7 +102,7 @@ define([
 		},
 
 		byId: function(id){
-			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
+			return (this._ids && indexOf(this._ids, id) >= 0 && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
 		indexToId: function(index, parentId, skip){
@@ -167,9 +167,9 @@ define([
 			var t = this,
 				oldSize = t.size(),
 				m = t.model;
-
+			t._checker = checker;
 			t.clear();
-			if(lang.isFunction(checker)){
+			if(lang.isFunction(checker)){				
 				var ids = [], temp,
 					scanCallback = function(rows/* object|string array */, start, parentId){
 						if(!rows.length){
@@ -393,9 +393,9 @@ define([
 		_onNew: function(id){
 			var t = this;
 			if(t._ids){
-				t._ids.push(id);
-				t._refilter = 1;
+				t._filter(t._checker);
 			}
+			
 			t.onNew.apply(t, arguments);
 		},
 
@@ -404,20 +404,15 @@ define([
 			if(ids){
 				var i = indexOf(ids, id),
 					idx = indexes[id];
-				if(i >= 0){
-					ids.splice(i, 1);
-				}
+				
 				if(i >= 0 && idx !== undefined){
 					index = i;
-					for(i in indexes){
-						if(indexes[i] > idx){
-							--indexes[i];
-						}
-					}
 				}else{
 					index = undefined;
 					t._refilter = 1;
 				}
+
+				t._filter(t._checker);
 			}
 			t.onDelete(id, index, row);
 		}

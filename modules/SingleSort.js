@@ -115,7 +115,7 @@ define([
 				};
 			t.connect(t.grid.header, 'onRender', refresh);
 			t.connect(g, 'onHeaderCellClick', '_onClick');
-			t.connect(g, 'onHeaderCellKeyDown', '_onKey');
+			t.connect(g, 'onHeaderCellKeyUp', '_onKey');
 			//persistence support
 			if(g.persist){
 				sort = g.persist.registerAndLoad('sort', function(){

@@ -120,18 +120,60 @@ define([
 		//Private-----------------------------------------------------------------
 		_onMoved: function(){
 			if(arguments.length == 1){
-				var moveInfo = arguments[0];
-				var view = this.grid.view;
-				view._openInfo[moveInfo.parentId].count += moveInfo.moves.length;
-				var rowCats = moveInfo.rowCats;
+				var moveInfo = arguments[0],
+					g = this.grid,
+					view = g.view,
+					openInfo = view._openInfo;
+					model = g.model;
+	
+				var parentId = moveInfo.parentId,
+					rowCats = moveInfo.rowCats,
+					rowIds = moveInfo.rowIds;
 				
 				for(var pId in rowCats){
 					if(rowCats.hasOwnProperty(pId)){
-						var rowCat = rowCats[pId];
-						view._openInfo[pId].count -= rowCat.length;
-					}
-				}
-			}
+						var rowCat = rowCats[pId],
+							rowNum = rowCat.length;
+						
+						rowCat.forEach(function(row){
+							var rowId = row.rowId;
+							if(g.tree.isExpanded(rowId)){								 
+								rowNum += openInfo[rowId].count;
+								var fromOpenned = openInfo[pId].openned,
+									toOpenned = openInfo[parentId].openned;
+								
+								fromOpenned.splice(fromOpenned.indexOf(rowId),1);
+								toOpenned.push(rowId);
+								
+								openInfo[rowId].parentId = parentId;
+								
+								var newPath = openInfo[parentId].path.slice();
+								newPath.push(rowId);				
+								openInfo[rowId].path = newPath;
+							}
+						});	
+						var fromPath = openInfo[pId].path.slice(),
+							toPath = openInfo[parentId].path.slice(),
+							size = fromPath.length-1;
+						
+						if(fromPath.length > toPath.length){
+							for(size=fromPath.length-1;size>=toPath.length;size--){
+								openInfo[fromPath[size]].count -= rowNum;
+							}
+						}else if(fromPath.length < toPath.length){
+							for(size=toPath.length-1;size>=fromPath.length;size--){
+								openInfo[toPath[size]].count += rowNum;
+							}
+						}
+						for(var k=size;k>=0;k--){
+							if(fromPath[k] == toPath[k]){
+								break;	
+							}									
+							else{
+								fromInfo = openInfo[fromPath[k]].count -= rowNum;								
+								toInfo = openInfo[toPath[k]].count += rowNum;
+							}}}}}
+			this.model.clearCache();
 			this.grid.body.refresh();
 			this.onMoved();
 		},
@@ -163,12 +205,12 @@ define([
 					var selected = selector.getSelected();
 					g.model.when({id: selected}, function(){
 						var rowIdxes = array.map(selected, function(id){
-							return g.model.idToIndex(id);
+							return g.view.idToVisualIndex(id);
 						});
 						doMove(rowIdxes);
 					});
 				}else{
-					doMove([g.model.idToIndex(e.rowId)]);
+					doMove([g.view.idToVisualIndex(e.rowId)]);
 				}
 			}
 		}

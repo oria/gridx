@@ -150,7 +150,7 @@ define([
 				t.connect(btn, 'onmousedown', function(){
 					t._sort(col, btn, isSingle);
 				});
-				t.connect(btn, 'onkeydown', function(e){
+				t.connect(btn, 'onkeyup', function(e){
 					if(e.keyCode == keys.ENTER){
 						event.stop(e);
 						t._sort(col, btn, isSingle);

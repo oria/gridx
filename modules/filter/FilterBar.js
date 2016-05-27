@@ -251,6 +251,7 @@ define([
 				this.filterData = null;
 				this._buildFilterState();
 			});
+			this.aspect(this.grid.model, '_msg', '_receiveMsg');
 			this.loaded.callback();
 		},
 		onDomClick: function(e){
@@ -273,7 +274,12 @@ define([
 			//Make sure to not hide tooltip when mouse moves to tooltip itself.
 			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
 		},
-		
+		_receiveMsg: function(msg, args){
+			var t = this;
+			if (msg == 'filter' || msg == 'clearFilter') {
+				t.updateState();
+			}
+		},
 		_createFilterExpr: function(filterData){
 			var F = Filter, exps = [];
 			array.forEach(filterData.conditions, function(data){
@@ -295,22 +301,26 @@ define([
 		},
 
 		applyFilter: function(filterData){
-			var _this = this,
-				g = this.grid,
-				filter = this._createFilterExpr(filterData);
+			var t = this,
+				g = t.grid,
+				filter = t._createFilterExpr(filterData);
 
-			this.filterData = filterData;
-			this.grid.filter.setFilter(filter);
-			this.model.when({}).then(function(){
-				// _this._currentSize = _this.model.size();
-				// _this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
-				_this._currentSize = g.tree? _this.model._sizeAll() : _this.model.size();
-				_this._totalSize = g.tree? _this.model._sizeAll('', true) :
-										(_this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size());
-				_this._buildFilterState();
-			});
+			t.filterData = filterData;
+			t.grid.filter.setFilter(filter);
+			t.model.when({}).then(function(){
+				t.updateState();
+			});			
 		},
-		
+
+		updateState: function() {
+			var t = this,
+				g = this.grid;
+			t._currentSize = g.tree ? t.model._sizeAll() : t.model.size();
+			t._totalSize = g.tree ? t.model._sizeAll('', true) :
+				(t.model._cache.totalSize >= 0 ? t.model._cache.totalSize : t.model._cache.size());
+			t._buildFilterState();
+		},
+
 		confirmToExecute: function(callback, scope){
 			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
@@ -372,9 +382,7 @@ define([
 		refresh: function(){
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
-			this._currentSize = this.model.size();
-			this._totalSize = this.model._cache.totalSize >= 0 ? this.model._cache.totalSize : this.model._cache.size();
-			this._buildFilterState();
+			this.updateState();
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';
