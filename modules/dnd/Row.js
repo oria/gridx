@@ -8,8 +8,9 @@ define([
 	"dojo/_base/sniff",
 	"dojo/dnd/Manager",
 	"./_Base",
+	'../../support/query',
 	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, _Module){
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, query, _Module){
 
 /*=====
 	return declare(_Base, {
@@ -278,8 +279,8 @@ define([
 					flag = false;
 				}
 				if(t._isTree()){
-					var _targetInfo = t.grid.view.getRowInfo({visualIndex: t._target});
-					if(!_targetInfo.parentId)
+					var overedRowNode = query('> .gridxRowOver', t.grid.body.domNode)[0];		
+					if(overedRowNode && !overedRowNode.getAttribute('parentId'))
 						flag = false;
 				}
 				t.model.when({id: t._selectedRowIds}, function(){
@@ -338,10 +339,16 @@ define([
 						})){
 							console.warn('can not move root rows');
 							return false;
+						}						
+						var isEnd = false;
+						var _targetInfo = t.grid.view.getRowInfo({visualIndex: t._target});
+						if(!_targetInfo.parentId){
+							t._target --;
+							isEnd = true;
 						}
 						g.move.row.treeMove(infos, g.view.getRowInfo({
 							visualIndex: t._target
-						}));
+						}), isEnd);
 					}
 					else{	
 						var indexes = array.map(t._selectedRowIds, function(rowId){

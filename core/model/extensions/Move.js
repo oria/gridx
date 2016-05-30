@@ -162,11 +162,11 @@ define([
 			});
 		},
 		
-		moveInfos: function(infos, target){
+		moveInfos: function(infos, target, isEnd){
 			this.model._addCmd({
 				name: '_cmdTreeMove',
 				scope: this,
-				args: [infos, target],
+				args: [infos, target, isEnd],
 				async: 1
 			});
 		},
@@ -436,20 +436,26 @@ define([
 		},
 		
 		_cmdTreeMove: function(){
-			function addChildren(parentItem, fromArray, targetRowId){
+			function addChildren(parentItem, fromArray, targetRowId, isEnd){
 				var toArray = parentItem.children, index=0, item = toArray[index];
 				var newChildren = [];
-
-				while(index<toArray.length){
-					if(item.id == targetRowId){
-						for(var i=0;i<rowIds.length;i++){
-							newChildren.push(t.inner._call('byId', [fromArray[i]]).item);
+				
+				if(isEnd){
+					rowIds.forEach(function(id,index){
+						parentItem.children.push(t.inner._call('byId', [fromArray[index]]).item);
+					});
+				}else{
+					while(index<toArray.length){
+						if(item.id == targetRowId){
+							rowIds.forEach(function(id,index){
+								newChildren.push(t.inner._call('byId', [fromArray[index]]).item);
+							});
 						}
+						newChildren.push(item);
+						item = toArray[++index];				
 					}
-					newChildren.push(item);
-					item = toArray[++index];				
+					parentItem.children = newChildren;
 				}
-				parentItem.children = newChildren;
 			};
 			
 			function removeChildren(parentItem, rows){
@@ -470,7 +476,7 @@ define([
 			};
 			
 			var t = this, m = t.model,
-				infos = arguments[0][0], target = arguments[0][1],
+				infos = arguments[0][0], target = arguments[0][1], isEnd = arguments[0][2],
 				rowIds = [], rowCats = {};
 				
 			infos.sort(function(info1, info2){
@@ -501,7 +507,7 @@ define([
 				}
 			}
 			// insert to position before target
-			addChildren(targetParent.item, rowIds, target.rowId);
+			addChildren(targetParent.item, rowIds, target.rowId, isEnd);
 			
 			var moveInfo ={parentId: target.parentId, moves: infos, rowCats: rowCats};
 			m._cache.clear();
