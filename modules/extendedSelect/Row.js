@@ -335,7 +335,9 @@ define([
 				[g, 'onRowMouseDown', function(e){
 					t._rowId = e.rowId;
 					t._columnId = e.columnId;
-					if(((mouse.isLeft(e) || t.arg('allowRight')) && (!g.select.column || (g.select.column && !g.select.column.isSelected(e.columnId))) && !g.select.row.isSelected(e.rowId)) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
+					if(((mouse.isLeft(e) || t.arg('allowRight')) 
+						&& (!(g.dnd && g.dnd.row) || (!g.select.column || (g.select.column && !g.select.column.isSelected(e.columnId))) && !g.select.row.isSelected(e.rowId))) 
+						&& canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
 						selectRow(e);
 				}],
 				//fix for defect14348
