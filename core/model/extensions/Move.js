@@ -441,14 +441,14 @@ define([
 				var newChildren = [];
 				
 				if(isEnd){
-					rowIds.forEach(function(id,index){
-						parentItem.children.push(t.inner._call('byId', [fromArray[index]]).item);
+					rowIds.forEach(function(id){
+						parentItem.children.push(t.inner._call('byId', [id]).item);
 					});
 				}else{
 					while(index<toArray.length){
 						if(item.id == targetRowId){
-							rowIds.forEach(function(id,index){
-								newChildren.push(t.inner._call('byId', [fromArray[index]]).item);
+							rowIds.forEach(function(id){
+								newChildren.push(t.inner._call('byId', [id]).item);
 							});
 						}
 						newChildren.push(item);
