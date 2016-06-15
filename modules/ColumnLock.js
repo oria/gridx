@@ -192,7 +192,7 @@ define([
 		_lockColumns: function(rowNode){
 			// summary:
 			//	Lock columns for one row
-			if (!this.count || this.count >= this.grid._columns.length) {
+			if (!this.count || this.count >= this.grid._columns.length || !rowNode.firstChild.rows) {
 				return;
 			}
 
@@ -230,7 +230,7 @@ define([
 				var cell = r.cells[i],
 					p = ltr ? 'left' : 'right';
 				domClass.add(cell, 'gridxLockedCell');
-				if (pn && !isHeader) {
+				if (pn && pn.firstChild.rows && !isHeader) {
 					s[p] = pn.firstChild.rows[0].cells[i].style[p];
 				} else {
 					s[p] = pl + 'px';
@@ -239,7 +239,7 @@ define([
 				domStyle.set(cell, s);
 			}
 
-			if (pn && !isHeader) {
+			if (pn && pn.firstChild.rows && !isHeader) {
 				rowNode.style[pd] = pn.style[pd];
 				rowNode.style.width = pn.style.width;
 			} else {
