@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
+	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojo/query",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, has, Deferred, query, metrics, _Module){
+], function(declare, domClass, domStyle, has, Deferred, query, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -105,6 +106,11 @@ define([
 			for(var i = 0; i < cells.length; i++){
 
 				if(cells[i].getAttribute('colid') == colId){
+					//Fix for defect 14470
+					//To be compatible with column lock
+					if (domClass.contains(cells[i], 'gridxLockedCell')) {
+						return;
+					}
 					left = cells[i].offsetLeft;
 					right = left + cells[i].offsetWidth;
 					break;

@@ -8,8 +8,9 @@ define([
 	"dojo/_base/sniff",
 	"dojo/dnd/Manager",
 	"./_Base",
+	'../../support/query',
 	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, _Module){
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, query, _Module){
 
 /*=====
 	return declare(_Base, {
@@ -120,29 +121,10 @@ define([
 			t._selectedRowIds = [];
 			if(!m.getMark || m.getMark(evt.rowId)){
 				t.grid.dnd._dnd.profile = t;
-				selectedIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
-				if(t._isTree()){
-					selectedIds.forEach(function(id){
-						if(!checkExist(t._selectedRowIds, id)){
-							t._selectedRowIds.push(id);
-						}
-					});
-				}
-				else
-					t._selectedRowIds = selectedIds;
+				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
 				return true;				
 			}
 			return false;
-			
-			function checkExist(list, rowId){
-				var id = t.grid.view.getRowInfo({rowId:rowId}).parentId;
-				while(id!=""){
-					if(list.indexOf(id)!=-1 || selectedIds.indexOf(id)!=-1)
-						return true;
-					id = t.grid.view.getRowInfo({rowId:id}).parentId;
-				}
-				return false;
-			}
 		},
 
 		//Private-----------------------------------------------------------------------------
@@ -278,8 +260,8 @@ define([
 					flag = false;
 				}
 				if(t._isTree()){
-					var _targetInfo = t.grid.view.getRowInfo({visualIndex: t._target});
-					if(!_targetInfo.parentId)
+					var overedRowNode = query('> .gridxRowOver', t.grid.body.domNode)[0];		
+					if(overedRowNode && !overedRowNode.getAttribute('parentId'))
 						flag = false;
 				}
 				t.model.when({id: t._selectedRowIds}, function(){
@@ -321,13 +303,40 @@ define([
 				}
 				t.model.when({id: t._selectedRowIds}, function(){
 					
-					if(t._isTree()){
-						var infos = array.map(t._selectedRowIds, function(rowId){
+					if(t._isTree()){	
+						var _selectedRowIds = t._selectedRowIds;
+						var _targetInfo = t.grid.view.getRowInfo({visualIndex: t._target});						
+						// dragged rows cannot be droped to the same rows
+						var overedRowNode = query('> .gridxRowOver', t.grid.body.domNode)[0];
+						if(array.some(_selectedRowIds, function(rowId){
+							return rowId == overedRowNode.getAttribute('rowId') || rowId == _targetInfo.rowId;
+						})){
+							console.warn('can not be drapped to the same place');
+							return false;
+						}	
+								
+						var _filteredSelectedRowIds = [];
+						_selectedRowIds.forEach(function(id){
+							if(!checkExist(_filteredSelectedRowIds, _selectedRowIds, id)){
+								_filteredSelectedRowIds.push(id);
+							}
+						});
+						function checkExist(filteredSelectedRowIds, selectedRowIds, rowId){
+							var id = t.grid.view.getRowInfo({rowId:rowId}).parentId;
+							while(id!=""){
+								if(filteredSelectedRowIds.indexOf(id)!=-1 || selectedRowIds.indexOf(id)!=-1)
+									return true;
+								id = t.grid.view.getRowInfo({rowId:id}).parentId;
+							}
+							return false;
+						}
+						
+						var infos = array.map(_filteredSelectedRowIds, function(rowId){
 							return g.view.getRowInfo({rowId: rowId})
 						});
 						if (t.grid.rowLock) {
 							if (array.some(infos, function(info) {
-								return info.rowIndex < t.grid.rowLock.count;
+								return info.visualIndex < t.grid.rowLock.count;
 							})) {						
 								console.warn('can not move locked rows');
 								return false;
@@ -338,10 +347,15 @@ define([
 						})){
 							console.warn('can not move root rows');
 							return false;
+						}						
+						var isEnd = false;
+						if(!_targetInfo.parentId){
+							t._target --;
+							isEnd = true;
 						}
 						g.move.row.treeMove(infos, g.view.getRowInfo({
 							visualIndex: t._target
-						}));
+						}), isEnd);
 					}
 					else{	
 						var indexes = array.map(t._selectedRowIds, function(rowId){

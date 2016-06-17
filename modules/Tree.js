@@ -313,9 +313,8 @@ define([
 					}
 				}
 			});
-
 			//disable expand recursive onfilter when on server side mode
-			if(!t.grid.arg || !t.grid.filter.arg("serverMode")){
+			if(t.grid.filter && t.grid.filter.arg && !t.grid.filter.arg("serverMode")){
 				if(t.arg('autoExpandOnFilter') === true && g.filter){
 					t.aspect(g.filter, 'onFilter', function(msg){
 						t.expandRecursive();

@@ -98,9 +98,9 @@ define([
 			}
 		},
 		
-		treeMove: function(rowInfos, target, skipUpdateBody){
+		treeMove: function(rowInfos, target, isEnd, skipUpdateBody){
 			var m = this.model;
-			m.moveInfos(rowInfos, target);
+			m.moveInfos(rowInfos, target, isEnd);
 			if(!skipUpdateBody){
 				m.when();
 			}
