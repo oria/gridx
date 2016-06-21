@@ -176,7 +176,7 @@ define([
 			if(g.touch){
 				t.aspect(g, 'onCellTouchStart', onDrillDown);
 			}
-			t.aspect(g, 'onCellMouseDown', onDrillDown);
+			t.aspect(g, 'onCellClick', onDrillDown);
 		},
 
 		preload: function(){
