@@ -460,8 +460,9 @@ define([
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
-					r = body._focusCellRow + step;
-				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+					r = g.view.idToVisualIndex(body._focusCellRow) + step;
+				r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				body._focusCellRow = g.view.visualIndexToId(r);
 				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
