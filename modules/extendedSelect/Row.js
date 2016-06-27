@@ -326,19 +326,14 @@ define([
 			};
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
-				[g, 'onRowMouseUp', function(e){
-					if(t._rowId == e.rowId && t._columnId == e.columnId){
-						if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
-							selectRow(e);
-					}
-				}],
-				[g, 'onRowMouseDown', function(e){
-					t._rowId = e.rowId;
-					t._columnId = e.columnId;
-					if(((mouse.isLeft(e) || t.arg('allowRight')) 
-						&& (!(g.dnd && g.dnd.row) || (!g.select.column || (g.select.column && !g.select.column.isSelected(e.columnId))) && !g.select.row.isSelected(e.rowId))) 
-						&& canSelect(e) && (e.rowHeaderCellNode || e.cellNode))
+				[g, 'onRowMouseDown', function(e) {
+					if ((mouse.isLeft(e) || (t.arg('allowRight') && !g.select.row.isSelected(e.rowId))) &&
+						canSelect(e) &&
+						(e.rowHeaderCellNode || e.cellNode) &&
+						(!(g.dnd && g.dnd.row) || !g.select.row.isSelected(e.rowId)) &&
+						(!(g.dnd && g.dnd.column) || !g.select.column.isSelected(e.columnId))) {
 						selectRow(e);
+					}
 				}],
 				//fix for defect14348
 				[g.domNode, 'oncontextmenu', function(e){
@@ -503,6 +498,9 @@ define([
 		_focus: function(target){
 			var g = this.grid, focus = g.focus;
 			if(focus){
+				if(target.rowId==undefined){
+					target.rowId=g.view.visualIndexToId(target.row);
+				}
 				g.body._focusCellRow = target.rowId;
 				focus.focusArea(this._isOnCell ? 'body' : 'rowHeader', true);
 			}
