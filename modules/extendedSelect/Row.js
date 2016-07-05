@@ -330,7 +330,7 @@ define([
 					if ((mouse.isLeft(e) || (t.arg('allowRight') && !g.select.row.isSelected(e.rowId))) &&
 						canSelect(e) &&
 						(e.rowHeaderCellNode || e.cellNode) &&
-						(!(g.dnd && g.dnd.row) || !g.select.row.isSelected(e.rowId)) &&
+						(!(g.dnd && g.dnd.row) || !g.select.row.isSelected(e.rowId) || e.rowHeaderCellNode) &&
 						(!(g.dnd && g.dnd.column) || !g.select.column.isSelected(e.columnId))) {
 						selectRow(e);
 					}
