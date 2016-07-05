@@ -414,7 +414,8 @@ define([
 		},
 
 		_doFocus: function(evt){
-			if(this._focusRow(this.grid.body._focusCellRow)){
+			var visualIndex = this.grid.view.idToVisualIndex(this.grid.body._focusCellRow);
+			if(this._focusRow(visualIndex)){
 				this.grid.focus.stopEvent(evt);
 				return true;
 			}
@@ -425,7 +426,8 @@ define([
 				node = evt.target;
 			while(node != t.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
-					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
+					var r = parseInt(node.getAttribute('visualindex'), 10);
+					t.grid.body._focusCellRow = t.grid.view.visualIndexToId(r);
 					t._focusRow(r);
 					t._onScroll();
 					return true;
