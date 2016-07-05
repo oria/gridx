@@ -457,8 +457,11 @@ define([
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
-					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
+			//Fix for defect 14498
+			//The 'if' statement should return false when moving rows using keyboard
+			if (!t._busy && g.focus.currentArea() == 'rowHeader' &&
+				(evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW) &&
+				(g.dnd && g.dnd.row ? !evt.ctrlKey : true)) {
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
