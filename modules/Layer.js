@@ -415,7 +415,7 @@ define([
 					domClass.add(bn, 'gridxSlideRefresh');
 					domClass.add(tmpBn, 'gridxSlideRefresh');
 					if(g.vScroller._scrollable){
-						g.vScroller._scrollable.scrollTo({x: 0});
+						g.vScroller._scrollable.scrollTo({x: 0, y: 0});
 					}
 					callback();
 					t._contextNode.style.postion = 'absolute';
