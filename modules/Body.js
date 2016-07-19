@@ -1114,7 +1114,7 @@ define([
 						t._focusCellCol = g._columns.length - 1;
 						t._focusCell();
 						focus.stopEvent(evt);
-					} else if (!(g.dnd && g.dnd.row && ctrlKey && (evt.keyCode == dk.UP_ARROW || evt.keyCode == dk.DOWN_ARROW))) {						
+					} else if (!(((g.dnd && g.dnd.row) || g.tree) && ctrlKey)) {						
 						focus._noBlur = 1; //1 as true
 						var arr = {}, dir = g.isLeftToRight() ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];
