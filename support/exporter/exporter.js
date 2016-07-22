@@ -159,7 +159,7 @@ define([
 		return !writer[method] || false !== writer[method](context || args, args);
 	}
 
-	function prepareReqs(args, rowIndexes, size){
+	function prepareReqs(args, rowIds, size){
 		var reqs = [],
 			i, start = 0, end = 0,
 			ps = args.progressStep;
@@ -170,15 +170,12 @@ define([
 			end = start + args.count;
 		}
 		end = end || size;
-		if(rowIndexes){
-			rowIndexes = array.filter(rowIndexes, function(idx){
-				return idx >= start && idx < end;
-			});
-			if(rowIndexes.length && (!ps || rowIndexes.length <= ps)){
-				reqs.push(rowIndexes);
+		if(rowIds){
+			if(rowIds.length && (!ps || rowIds.length <= ps)){
+				reqs.push(rowIds);
 			}else{
-				for(i = 0; i < rowIndexes.length; i += ps){
-					reqs.push(rowIndexes.slice(i, i + ps));
+				for(i = 0; i < rowIds.length; i += ps){
+					reqs.push(rowIds.slice(i, i + ps));
 				}
 			}
 		}else{
@@ -203,22 +200,22 @@ define([
 		return reqs;
 	}
 
-	function first(req, grid, parentId){
+	function first(req, grid){
 		return lang.isArray(req) ? {
 			p: 0,
-			row: grid.row(req[0], 0, parentId)
+			row: grid.row(req[0], 1)
 		} : {
 			p: req.start,
-			row: grid.row(req.start, 0, parentId)
+			row: grid.row(req.start, 0)
 		};
 	}
 
-	function next(req, grid, prevRow, parentId){
+	function next(req, grid, prevRow){
 		var p = prevRow.p + 1,
 			isArray = lang.isArray(req);
 		return p < (isArray ? req.length : req.start + req.count) ? {
 			p: p,
-			row: grid.row(isArray ? req[p] : p, 0, parentId)
+			row: grid.row(isArray ? req[p] : p, isArray ? 1:0)
 		} : null;
 	}
 
@@ -243,40 +240,40 @@ define([
 
 			func = function(){
 				defer.progress(reqs.p / reqs.length);
-				grid.when(req, function(){
-					var rowid,
-						fetchChildren = function(id){
-							//only support Sync cache currently
-							var m = grid.model,
-								size = m.size(id), i, childRowid;
-
-							m.when({start: 0, parentId: id}).then(function(){
-								for(i = 0; i < size; i++){
-									childRowid = m.indexToId(i, id);
-									writerCallback({row:grid.row(i, 0, id)});
-									fetchChildren(childRowid);
-								}
+				grid.when(req, function() {
+					var m = grid.model;
+					for (var r = first(req, grid); r && r.row; r = next(req, grid, r)) {
+						m.when({start: 0, parentId: r.row.id}).then(lang.partial(function(_r){
+							writerCallback(_r);
+							fetchChildren(_r.row.id);
+						}, r));
+					}
+					function fetchChildren (id){
+						//only support Sync cache currently						
+						var size = m.size(id), i, childRowid;
+						for (i = 0; i < size; i++) {
+							childRowid = m.indexToId(i, id);
+							writerCallback({
+								row: grid.row(childRowid, 1)
 							});
-						},
-
-						writerCallback = function(r){
-							context.row = r.row;
-
-							if((!f || f(r.row)) && check(writer, 'beforeRow', context, args)){
-								for(var i = 0; i < cols.length; ++i){
-									var col = grid.column(cols[i], 1),	//1 as true
-										cell = context.cell = grid.cell(r.row, col);
-									// if(!cell) continue;
-									context.column = col;
-									context.data = format(args, cell);
-									check(writer, 'handleCell', context, args);
-								}
-								check(writer, 'afterRow', context, args);
+							fetchChildren(childRowid);
+						}
+					}
+					function writerCallback (r){
+						context.row = r.row;
+						if((!f || f(r.row)) && check(writer, 'beforeRow', context, args)){
+							for(var i = 0; i < cols.length; ++i){
+								var col = grid.column(cols[i], 1),	//1 as true
+									cell = context.cell = grid.cell(r.row, col);
+								// if(!cell) continue;
+								context.column = col;
+								context.data = format(args, cell);
+								check(writer, 'handleCell', context, args);
 							}
-						};
-
-					fetchChildren(parentId);
-				}).then(function(){
+							check(writer, 'afterRow', context, args);
+						}
+					}
+				}).then(function() {
 					fetchRows(grid, defer, writer, context, args, d, reqs);
 				}, fail);
 			};
@@ -347,19 +344,10 @@ define([
 					}, fail);
 				}
 				Deferred.when(waitForRows, function(){
-					var rowIdxes,
-						waitForRowIndex = rowIds && model.when({id: rowIds}, function(){
-							rowIdxes = array.map(rowIds, function(id){
-								return model.idToIndex(id);
-							});
-							rowIdxes.sort(function(a, b){
-								return a - b;
-							});
-						}, fail);
-					Deferred.when(waitForRowIndex, function(){
+					Deferred.when(model.when({id: rowIds}, function(){}, fail), function(){
 						var dd = new Deferred(),
 							rowCount = model.size();
-						fetchRows(grid, d, writer, context, args, dd, prepareReqs(args, rowIdxes, rowCount));
+						fetchRows(grid, d, writer, context, args, dd, prepareReqs(args, rowIds, rowCount));
 						dd.then(success, fail);
 					}, fail);
 				}, fail);

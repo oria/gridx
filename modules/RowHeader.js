@@ -414,7 +414,8 @@ define([
 		},
 
 		_doFocus: function(evt){
-			if(this._focusRow(this.grid.body._focusCellRow)){
+			var visualIndex = this.grid.view.idToVisualIndex(this.grid.body._focusCellRow);
+			if(this._focusRow(visualIndex)){
 				this.grid.focus.stopEvent(evt);
 				return true;
 			}
@@ -425,7 +426,8 @@ define([
 				node = evt.target;
 			while(node != t.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
-					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
+					var r = parseInt(node.getAttribute('visualindex'), 10);
+					t.grid.body._focusCellRow = t.grid.view.visualIndexToId(r);
 					t._focusRow(r);
 					t._onScroll();
 					return true;
@@ -455,13 +457,17 @@ define([
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
-					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
+			//Fix for defect 14498
+			//The 'if' statement should return false when moving rows using keyboard
+			if (!t._busy && g.focus.currentArea() == 'rowHeader' &&
+				(evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW) &&
+				(g.dnd && g.dnd.row ? !evt.ctrlKey : true)) {
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
-					r = body._focusCellRow + step;
-				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+					r = g.view.idToVisualIndex(body._focusCellRow) + step;
+				r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				body._focusCellRow = g.view.visualIndexToId(r);
 				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);

@@ -169,7 +169,7 @@ declare(_Module, {
 		return n;
 	},
 
-	_focusRegion: function(region, isByArrowkey){
+	_focusRegion: function(region, isByArrowkey, dir){
 		var t = this,
 			g = t.grid;
 		if(region && !t._lock){
@@ -188,13 +188,20 @@ declare(_Module, {
 				query('.gridxHeaderRegionFocus', header).removeClass('gridxHeaderRegionFocus');
 				domClass.add(headerCell, 'gridxHeaderRegionFocus');
 				domClass.add(header, 'gridxHeaderFocus');
-				//make it asnyc so that IE will not lose focus
-				//firefox and ie will lose focus when region is invisible, focus it again.
-				region.focus();
-				if(g.hScroller){
-					g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
-				}
-				t._lock = 0;
+				//Fix for defect 14491
+				//check whether the region node is still visible after adding focusing style		
+				if (isByArrowkey&&domStyle.get(region, 'display') == 'none') {
+					t._lock = 0;
+					t._moveFocus(dir);
+				}else{
+					//make it asnyc so that IE will not lose focus
+					//firefox and ie will lose focus when region is invisible, focus it again.
+					region.focus();
+					if (g.hScroller) {
+						g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
+					}
+					t._lock = 0;
+				}				
 			}, 0);
 		}
 	},
@@ -222,7 +229,7 @@ declare(_Module, {
 			i += dir;
 		}
 		if(regionNodes[i]){
-			t._focusRegion(regionNodes[i], true);
+			t._focusRegion(regionNodes[i], true, dir);
 		}
 	}
 }));
