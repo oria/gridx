@@ -417,7 +417,8 @@ define([
 		refresh: function(start){
 			var t = this,
 				loadingNode = t.grid.loadingNode,
-				d = new Deferred();
+				d = new Deferred(),
+				g = t.grid;
 			delete t._err;
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
@@ -440,45 +441,58 @@ define([
 							rc = vc;
 						}
 					}
-					if(typeof start == 'number' && start >= 0){
+					if (typeof start == 'number' && start >= 0) {
 						start = rs > start ? rs : start;
 						var count = rs + rc - start,
 							n = query('> [visualindex="' + start + '"]', t.domNode)[0],
 							uncachedRows = [],
 							renderedRows = [];
-						if(n){
-							var rows = t._buildRows(start, count, uncachedRows, renderedRows);
-							if(rows){
-								domConstruct.place(rows, n, 'before');
+
+						uncachedRows = t._getUncachedRows(start, count);
+						t.model.when(uncachedRows, function() {
+							try {
+								renderedRows = [];
+								uncachedRows = [];
+								if (n) {
+									var rows = t._buildRows(start, count, uncachedRows, renderedRows);
+									if (rows) {
+										domConstruct.place(rows, n, 'before');
+									}
+								}
+								var rowIds = {};
+								array.forEach(renderedRows, function(row) {
+									rowIds[row.id] = 1;
+								});
+								while (n) {
+									var tmp = n.nextSibling,
+										id = n.getAttribute('rowid');
+									if (!rowIds[id]) {
+										//Unrender this row only when it is not being rendered now.
+										//Set a special flag so that RowHeader won't destroy its nodes.
+										//FIXME: this is ugly...
+										t.onBeforeUnrender(id);
+										t.onUnrender(id, 'refresh');
+										t.renderedIds[id] = undefined;
+									}
+									domConstruct.destroy(n);
+									// t.renderedIds[id] = undefined;
+									n = tmp;
+								}
+								array.forEach(renderedRows, t.onAfterRow, t);
+							} catch (e) {
+								t._loadFail(e);
 							}
-						}
-						var rowIds = {};
-						array.forEach(renderedRows, function(row){
-							rowIds[row.id] = 1;
-						});
-						while(n){
-							var tmp = n.nextSibling,
-								id = n.getAttribute('rowid');
-							if(!rowIds[id]){
-								//Unrender this row only when it is not being rendered now.
-								//Set a special flag so that RowHeader won't destroy its nodes.
-								//FIXME: this is ugly...
-								t.onBeforeUnrender(id);
-								t.onUnrender(id, 'refresh');
-								t.renderedIds[id] = undefined;
+						}).then(null, function(e) {
+							t._loadFail(e);
+						}).then(
+							function() {
+								t.onRender(start, count);
+								t.onForcedScroll();
+								// domClass.remove(loadingNode, 'gridxLoading');
+								t._hideLoadingMask();
+								d.callback();
 							}
-							domConstruct.destroy(n);
-							// t.renderedIds[id] = undefined;
-							n = tmp;
-						}
-						array.forEach(renderedRows, t.onAfterRow, t);
-						Deferred.when(t._buildUncachedRows(uncachedRows), function(){
-							t.onRender(start, count);
-							t.onForcedScroll();
-							// domClass.remove(loadingNode, 'gridxLoading');
-							t._hideLoadingMask();
-							d.callback();
-						});
+						);
 					}else{
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
@@ -801,6 +815,24 @@ define([
 			this._err = e;
 			this.onEmpty();
 			this.onLoadFail(e);
+		},
+
+		_getUncachedRows: function(start, count) {
+			var t = this,
+				g = t.grid,
+				uncachedRows = [];
+			for (i = start; i < start + count; ++i) {
+				var rowInfo = g.view.getRowInfo({
+						visualIndex: i
+					}),
+					row = g.row(rowInfo.rowId, 1);
+				if (!row) {
+					rowInfo.start = rowInfo.rowIndex;
+					rowInfo.count = 1;
+					uncachedRows.push(rowInfo);
+				}
+			}
+			return uncachedRows;
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
