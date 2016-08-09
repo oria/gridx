@@ -161,7 +161,12 @@ define([
 			this._sortData = sortData || [];
 			this.model.sort(sortData);
 			this._updateHeader();
-			return this.grid.body.refresh();
+			var g = this.grid;
+			return g.body.refresh().then(function(){
+				if(g.view._openInfo[""].openned.length>0){
+					g.body.refresh();				
+				}
+			});
 		},
 
 		isSorted: function(colId){

@@ -276,7 +276,7 @@ define([
 				openInfo = t._openInfo,
 				info = openInfo[id];
 			if(info){
-				var parentId = t.model.parentId(id),
+				var parentId = info.parentId,
 					parentOpenInfo = t._parentOpenInfo[parentId],
 					childCount = info.count;
 				parentOpenInfo.splice(array.indexOf(parentOpenInfo, id), 1);
