@@ -199,11 +199,7 @@ define([
 				d = this._sortData;
 			this._updateUI();
 			g.model.sort(d.length ? d : null);
-			g.body.refresh().then(function(){
-				if(g.view._openInfo[""].openned.length>0){
-					g.body.refresh();				
-				}
-			});
+			g.body.refresh();
 		},
 
 		_updateUI: function(){
