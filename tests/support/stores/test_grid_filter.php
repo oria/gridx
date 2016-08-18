@@ -298,9 +298,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 		}
 
 		//sort
-		preg_match('/sort\((\+|-)(\w*)\)$/', $_SERVER['QUERY_STRING'], $matches);
-		$sortDirection = $matches[1];
-		$sortField = $matches[2];
 		function cmpAsc($a, $b){
 			if ($a->$GLOBALS['sortField'] == $b->$GLOBALS['sortField']) {
 				return 0;
@@ -314,10 +311,15 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 			}
 			return ($a->$GLOBALS['sortField'] > $b->$GLOBALS['sortField']) ? -1 : 1;
 		}
-		if($sortDirection == '+'){
-			usort($array, 'cmpAsc');
-		}else{
-			usort($array, 'cmpDesc');
+		preg_match('/sort\((\+|-)(.*)\)$/', $_SERVER['QUERY_STRING'], $matches);
+		if(!empty($matches)){
+			$sortDirection = $matches[1];
+			$sortField = urldecode($matches[2]);
+			if($sortDirection == '+'){
+				usort($array, 'cmpAsc');
+			}else{
+				usort($array, 'cmpDesc');
+			}			
 		}
 		// echo json_encode($array);
 		output($array);
