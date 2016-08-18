@@ -213,7 +213,6 @@ function output($data, $isFilter = false){
 
 function slice($data){
 	$range = $_SERVER['HTTP_RANGE'];
-	// var_dump($range);
 	$range = substr($range, 6);
 	$pairs = explode('-', $range);
 	$start = intval($pairs[0]);
@@ -257,13 +256,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				}else{
 					$array = array();
 					$interval = 25200000;
+					$query = "\$bool = " . $query;
 					foreach ($data as $item) {
 						$currentItem = $item;
 
 						$currentItem -> {"Last Played"} = strtotime($currentItem->{"Last Played"}." 1 January 2000")*1000 - $interval;
 						$currentItem -> {"Download Date"} = strtotime($currentItem->{"Download Date"})*1000;
-
-						$query = "\$bool = " . $query;
 						eval($query);
 
 						$currentItem -> {"Last Played"} = strftime("%X", ($currentItem->{"Last Played"} + $interval)/1000);
@@ -275,16 +273,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 					}
 				}
 				// echo json_encode($array);
-				output($array, 1);
 			
 		}else{		//search
-			preg_match('/^(\w*)=\*?(\w*)\*&sort\((\+|-)(\w*)\)$/', $query, $matches);
+			preg_match('/^(\w*)=\*?(\w*)\*/', $query, $matches);
 			if(!empty($matches)){
-				
 				$field = $matches[1];
 				$key = $matches[2];
-				$sort = $matches[3];
-				$sortField = $matches[4];
 				$array = array();
 				
 				if(!empty($key)){
@@ -297,34 +291,37 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 					}
 				}else{
 					$array = $data;
-				}
-				
-				if(!empty($sortField)){
-				}
-				
-				function cmpAsc($a, $b){
-					if ($a->$GLOBALS['field'] == $b->$GLOBALS['field']) {
-						return 0;
-					}
-					return ($a->$GLOBALS['field'] < $b->$GLOBALS['field']) ? -1 : 1;
-				}
-				
-				function cmpDesc($a, $b){
-					if ($a->$GLOBALS['field'] == $b->$GLOBALS['field']) {
-						return 0;
-					}
-					return ($a->$GLOBALS['field'] > $b->$GLOBALS['field']) ? -1 : 1;
-				}
-				if($sort == '+'){
-					usort($array, 'cmpAsc');
-				}else{
-					usort($array, 'cmpDesc');
-				}
-				// echo json_encode($array);
-				output($array);
-				
+				}				
+			}else{
+				$array = $data;
 			}
 		}
+
+		//sort
+		preg_match('/sort\((\+|-)(\w*)\)$/', $_SERVER['QUERY_STRING'], $matches);
+		$sortDirection = $matches[1];
+		$sortField = $matches[2];
+		function cmpAsc($a, $b){
+			if ($a->$GLOBALS['sortField'] == $b->$GLOBALS['sortField']) {
+				return 0;
+			}
+			return ($a->$GLOBALS['sortField'] < $b-> $GLOBALS['sortField']) ? -1 : 1;
+		}
+				
+		function cmpDesc($a, $b){
+			if ($a->$GLOBALS['sortField'] == $b->$GLOBALS['sortField']) {
+				return 0;
+			}
+			return ($a->$GLOBALS['sortField'] > $b->$GLOBALS['sortField']) ? -1 : 1;
+		}
+		if($sortDirection == '+'){
+			usort($array, 'cmpAsc');
+		}else{
+			usort($array, 'cmpDesc');
+		}
+		// echo json_encode($array);
+		output($array);
+
 	}else{
 		// echo json_encode($data);
 		output($data);
