@@ -276,7 +276,7 @@ define([
 				openInfo = t._openInfo,
 				info = openInfo[id];
 			if(info){
-				var parentId = t.model.parentId(id),
+				var parentId = info.parentId,
 					parentOpenInfo = t._parentOpenInfo[parentId],
 					childCount = info.count;
 				parentOpenInfo.splice(array.indexOf(parentOpenInfo, id), 1);
@@ -446,7 +446,7 @@ define([
 			var m = this.model,
 				d = new Deferred(),
 				id, levels = [];
-			if(this.grid.arg && !this.grid.arg("serverMode")){
+			if(this.grid.arg == undefined || (this.grid.arg && !this.grid.arg("serverMode"))){
 				for(id in openInfo){
 					if(m.isId(id)){
 						var i, path = openInfo[id].path;
