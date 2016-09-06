@@ -933,7 +933,10 @@ define([
 		_hideButtons: function(){
 			if (!this.arg('buttons')) return;
 			query('.gridxEditFocus', this.grid.bodyNode).removeClass('gridxEditFocus');
-			this.grid.body.onRender();
+			// Fix for defect 14527
+			if(domStyle.get(this.grid.domNode, 'display') !== 'none') {
+				this.grid.body.onRender();				
+			}
 		},
 
 		_getDecorator: function(colId){
