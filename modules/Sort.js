@@ -332,8 +332,11 @@ define([
 					});
 				}else{
 					this.connect(g, 'onHeaderCellKeyUp', function(evt){
-						if(evt.keyCode == keys.ENTER){
-							this._sort(evt.columnId, false, g._isCtrlKey(evt));
+						if(evt.keyCode == keys.ENTER || evt.keyCode == keys.SPACE) {
+							event.stop(evt);
+							if(evt.keyCode == keys.ENTER){
+								this._sort(evt.columnId, false, g._isCtrlKey(evt));
+							}
 						}
 					});
 				}

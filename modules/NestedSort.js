@@ -151,9 +151,11 @@ define([
 					t._sort(col, btn, isSingle);
 				});
 				t.connect(btn, 'onkeyup', function(e){
-					if(e.keyCode == keys.ENTER){
+					if (e.keyCode == keys.ENTER || e.keyCode == keys.SPACE) {
 						event.stop(e);
-						t._sort(col, btn, isSingle);
+						if (e.keyCode == keys.ENTER) {
+							t._sort(col, btn, isSingle);
+						}
 					}
 				});
 				return btn;
