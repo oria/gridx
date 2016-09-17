@@ -227,7 +227,8 @@ define([
 		}else if(args.useStoreData){
 			return cell.rawData() || '';
 		}
-		return cell.data() || '';
+		var data = cell.data();
+		return data == null ? '' : data;
 	}
 
 	function fetchRows(grid, defer, writer, context, args, d, reqs){
