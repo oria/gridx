@@ -225,7 +225,6 @@ define([
 		if(fs && lang.isFunction(fs[cid])){
 			return fs[cid](cell);
 		}else if(args.useStoreData){
-			return cell.rawData() || '';
 		}
 		return cell.data() || '';
 	}
