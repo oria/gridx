@@ -222,12 +222,17 @@ define([
 	function format(args, cell){
 		var fs = args.formatters,
 			cid = cell.column.id;
+
+		function validateValue (value){
+			return (value !== null && value != undefined) ? value : '';
+		}
+
 		if(fs && lang.isFunction(fs[cid])){
 			return fs[cid](cell);
 		}else if(args.useStoreData){
-			return cell.rawData() || '';
+			return validateValue(cell.rawData());
 		}
-		return cell.data() || '';
+		return validateValue(cell.data());
 	}
 
 	function fetchRows(grid, defer, writer, context, args, d, reqs){

@@ -4,9 +4,10 @@ define([
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/keys",
+	"dojo/_base/event",
 	"../core/model/extensions/Sort",
 	"../core/_Module"
-], function(/*=====Column, =====*/declare, lang, domClass, keys, Sort, _Module){
+], function(/*=====Column, =====*/declare, lang, domClass, keys, event, Sort, _Module){
 
 /*=====
 	Column.sort = function(isDescending, skipUpdateBody){
@@ -266,8 +267,11 @@ define([
 		},
 
 		_onKey: function(e){
-			if(e.keyCode == keys.ENTER){
-				this._onClick(e);
+			if (e.keyCode == keys.ENTER || e.keyCode == keys.SPACE) {
+				event.stop(e);
+				if(e.keyCode == keys.ENTER){
+					this._onClick(e);
+				}
 			}
 		}
 	});
