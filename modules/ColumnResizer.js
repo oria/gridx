@@ -214,6 +214,8 @@ define([
 				}, g.domNode, 'last');
 				t.connect(resizer, 'mouseup', '_mouseup');
 			}
+			//fix for defect 14566
+			resizer.setCapture && resizer.setCapture();
 			var rs = resizer.style;
 			rs.top = headerTop + 'px';
 			rs.height = h + 'px';
@@ -245,6 +247,8 @@ define([
 			t._ismousedown = 0;
 			if(t._resizing){
 				//end resize
+				//fix for defect 14566
+				t._resizer.releaseCapture && t._resizer.releaseCapture();
 				t._resizing = t._readyToResize = 0;
 				domClass.remove(win.body(), 'gridxColumnResizing');
 				dom.setSelectable(t.grid.domNode, true);
