@@ -5,8 +5,9 @@ define([
 	"dojo/dom",
 	"dojo/dom-construct",
 	"dojo/touch",
+	"dojo/has",
 	"../core/_Module"
-], function(declare, win, event, dom, domConstruct, touch, _Module){
+], function(declare, win, event, dom, domConstruct, touch, has, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -51,8 +52,7 @@ define([
 				vScrollerNode = g.vScrollerNode,
 				hScrollerNode = g.hScrollerNode;
 			//Start touch scroll only on mobile devices where the scroll bar can not be shown
-			if((vScrollerNode.style.display != 'none' && vScrollerNode.offsetWidth == 1) ||
-				(hScrollerNode.style.display != 'none' && hScrollerNode.offsetHeight == 1)){
+			if(has('touch')) {
 				var vns = t.vInner.style,
 					hns = t.hInner.style,
 					bn = g.bodyNode,

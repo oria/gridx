@@ -308,7 +308,7 @@ define([
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
 					bn = this.grid.dod ? brn : brn.firstChild;
-					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
+					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.clientHeight + 'px';
 					n.style.height = n.firstChild.style.height = h;
 			}
 
