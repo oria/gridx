@@ -180,7 +180,7 @@ define([
 				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
 			//Defect 14406 Reset row height to 'auto' before calculating rowheader height
 			bn.style.height = "auto";
-			bn.firstChild && bn.firstChild.style.height = "auto";
+			bn.firstChild && (bn.firstChild.style.height = "auto");
 			t._syncRowHeight(n, bn);
 		},
 
