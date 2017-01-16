@@ -36,7 +36,7 @@ define([
 		},
 
 		// headerProvider: Function
-		//		A functionn that returns an HTML string to fill the header cell of row headers.
+		//		A function that returns an HTML string to fill the header cell of row headers.
 		headerProvider: null,
 
 		// cellProvider: Function
