@@ -143,7 +143,6 @@ define([
 			
 			if(!t._selecting && !t._marking && t.arg('enabled') && t._isSelectable(item.rowId)){
 				dom.setSelectable(t.grid.domNode, false);
-				t._fixFF(1);
 				var isSelected = t._isSelected(item) === true;
 				isRange = isRange || t.arg('holdingShift');
 				if(isRange && t._lastStartItem){
@@ -222,7 +221,6 @@ define([
 		_end: function(){
 			var t = this, g = t.grid;
 			if(t._selecting){
-				t._fixFF();
 				t._endAutoScroll();
 				t._selecting = 0;	//0 as false
 				t._marking = 1;	//1 as true
@@ -253,12 +251,7 @@ define([
 
 		_inRange: function(value, start, end, isClose){
 			return ((value >= start && value <= end) || (value >= end && value <= start)) && (isClose || value != end);
-		},
-
-		_fixFF: function(isStart){
-			if(has('ff')){
-				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
-			}
 		}
+
 	});
 });
