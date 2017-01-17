@@ -184,18 +184,26 @@ define([
 				var type = t._type,
 					start = t._startItem,
 					current = t._currentItem,
-					highlight = function(from, to, toHL){
+					highlight = function(from, to, toHL, forceDeselect){
 						from = from[type];
 						to = to[type];
 						var dir = from < to ? 1 : -1,
 							start = g.body.renderStart, 
 							end = start + g.body.renderCount;
+							currentIndex = from;
 						for(; from != to; from += dir){
 							if ((from < start || from > end) && type != "column") continue;
 							var item = {};
 							item[type] = from;
 							t._highlightSingle(item, toHL);
 						}
+						if(forceDeselect){
+		    					if(dir==1){
+		    						t.deselectByIndex([currentIndex, from - dir]);
+		    					} else {
+	    							t.deselectByIndex([from - dir, currentIndex]);
+				    			}
+	    					}
 					};
 				if(current === null){
 					//First time select.
@@ -207,7 +215,7 @@ define([
 					}else{
 						if(t._inRange(start[type], target[type], current[type])){
 							//selection has jumped to different direction, all should be deselected.
-							highlight(current, start, 0);	//0 as false
+							highlight(current, start, 0, 1);	//0 as false, 1 as true
 							current = start;
 						}
 						highlight(target, current, 1);	//1 as true
