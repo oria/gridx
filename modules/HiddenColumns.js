@@ -274,10 +274,10 @@ define([
 			//Sort the cached columns to have the same order as g._columns.
 			for(; i < columns.length && j < cols.length; ++i, ++j){
 				//j must not overflow here because t._cols and g._columns are synced up.
-				for(c = cols[j]; c.hidden; c = cols[j]){
+				for(c = cols[j]; c && c.hidden; c = cols[j]){
 					++j;
 				}
-				if(columns[i] != c){
+				if(c && columns[i] != c){
 					k = array.indexOf(cols, columns[i]);
 					cols[j] = cols[k];
 					cols[k] = c;
