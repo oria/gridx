@@ -89,12 +89,15 @@ define([
 			setTimeout(function(){
 				domClass.toggle(dn, 'gridxQuickFilterActive', tb.get('value'));
 			}, 0);
-			if(t.autoApply && key != keys.TAB){
+			if ((t.autoApply && key != keys.TAB) || (key == keys.ENTER)) {
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();
 				}, key == keys.ENTER ? 0 : t.delay);
 			}
+			if (key == keys.ENTER) {
+				evt.preventDefault();
+			}			
 		},
 
 		_onKey: function(evt){
