@@ -178,6 +178,9 @@ define([
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
+			//Defect 14406 Reset row height to 'auto' before calculating rowheader height
+			bn.style.height = "auto";
+			bn.firstChild && bn.firstChild.style.height = "auto";
 			t._syncRowHeight(n, bn);
 		},
 
@@ -195,10 +198,6 @@ define([
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			setTimeout(function() {
-				//Defect 14406 Reset row height to 'auto' before calculating rowheader height
-				bodyNode.style.height =  "auto";
-				if(bodyNode.firstChild)
-					bodyNode.firstChild.style.height = "auto";
 				h = getHeight();
 				if ((h + '').indexOf('.') >= 0) {
 					if (isIE === 9) {
