@@ -43,7 +43,7 @@ define([
 		},
 
 		handleHeaderCell: function(context){
-			this._cells.push(context.column.name());
+			this._cells.push(this.protect(context.column.name()));
 		},
 
 		afterHeader: function(){
@@ -55,11 +55,7 @@ define([
 		},
 
 		handleCell: function(context){
-			var data = String(context.data).replace(/"/g, '""');
-			if(data.indexOf(this._s) >= 0 || data.search(/[" \t\r\n]/) >= 0){
-				data = '"' + data + '"';
-			}
-			this._cells.push(data);
+			this._cells.push(this.protect(context.data));
 		},
 
 		afterRow: function(){
@@ -68,6 +64,14 @@ define([
 
 		getResult: function(){
 			return this._lines.join(this._n);
+		},
+
+		protect: function(data) {
+			var data = String(data).replace(/"/g, '""');
+			if(data.indexOf(this._s) >= 0 || data.search(/[" \t\r\n]/) >= 0){
+				data = '"' + data + '"';
+			}
+			return data;
 		}
 	};
 
