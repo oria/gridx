@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "및",
 	"or": "또는",
-	"addRuleButton": "규칙 추가",
 	"waiAddRuleButton": "새 규칙 추가",
 	"removeRuleButton": "규칙 제거",
 	"waiRemoveRuleButtonTemplate": "규칙 ${0} 제거",

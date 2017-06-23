@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "και",
 	"or": "ή",
-	"addRuleButton": "Προσθήκη κανόνα",
 	"waiAddRuleButton": "Προσθήκη νέου κανόνα",
 	"removeRuleButton": "Αφαίρεση κανόνα",
 	"waiRemoveRuleButtonTemplate": "Αφαίρεση του κανόνα ${0}",

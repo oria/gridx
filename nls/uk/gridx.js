@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "та",
 	"or": "або",
-	"addRuleButton": "Додати правило",
 	"waiAddRuleButton": "Додати нове правило",
 	"removeRuleButton": "Видалити правило",
 	"waiRemoveRuleButtonTemplate": "Видалити правило ${0}",

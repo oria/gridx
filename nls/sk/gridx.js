@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "a",
 	"or": "alebo",
-	"addRuleButton": "Pridať pravidlo",
 	"waiAddRuleButton": "Pridať nové pravidlo",
 	"removeRuleButton": "Odstrániť pravidlo",
 	"waiRemoveRuleButtonTemplate": "Odstrániť pravidlo ${0}",

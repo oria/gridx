@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "ve",
 	"or": "veya",
-	"addRuleButton": "Kural Ekle",
 	"waiAddRuleButton": "Yeni kural ekle",
 	"removeRuleButton": "Kuralı kaldır",
 	"waiRemoveRuleButtonTemplate": "${0} kuralını kaldır",

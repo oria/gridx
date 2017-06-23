@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "dan",
 	"or": "atau",
-	"addRuleButton": "Tambahkan Aturan",
 	"waiAddRuleButton": "Tambahkan aturan baru",
 	"removeRuleButton": "Hapus Aturan",
 	"waiRemoveRuleButtonTemplate": "Hapus aturan ${0}",

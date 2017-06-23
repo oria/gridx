@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "و",
 	"or": "أو",
-	"addRuleButton": "اضافة قاعدة",
 	"waiAddRuleButton": "اضافة قاعدة جديدة",
 	"removeRuleButton": "ازالة قاعدة",
 	"waiRemoveRuleButtonTemplate": "ازالة قاعدة ${0}",

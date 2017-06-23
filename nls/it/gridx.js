@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "and",
 	"or": "or",
-	"addRuleButton": "Aggiungi regola",
 	"waiAddRuleButton": "Aggiungi una nuova regola",
 	"removeRuleButton": "Rimuovi regola",
 	"waiRemoveRuleButtonTemplate": "Rimuovi regola ${0}",

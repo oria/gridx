@@ -126,7 +126,7 @@ require([
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
-		{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
+		{ field: "Track", name:"Number Spinner", editable: true,
 			width: '50px',
 			editor: "dijit/form/NumberSpinner"
 		},
