@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "และ",
 	"or": "หรือ",
-	"addRuleButton": "เพิ่มกฏ",
 	"waiAddRuleButton": "เพิ่มกฎใหม่",
 	"removeRuleButton": "ลบกฎ",
 	"waiRemoveRuleButtonTemplate": "ลบกฎ ${0}",

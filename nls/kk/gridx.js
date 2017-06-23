@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "және",
 	"or": "немесе",
-	"addRuleButton": "Ережені қосу",
 	"waiAddRuleButton": "Жаңа ережені қосу",
 	"removeRuleButton": "Ережені жою",
 	"waiRemoveRuleButtonTemplate": "Ережені жою ${0}",

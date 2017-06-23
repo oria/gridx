@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "và",
 	"or": "hoặc",
-	"addRuleButton": "Thêm quy tắc",
 	"waiAddRuleButton": "Thêm quy tắc mới",
 	"removeRuleButton": "Xóa quy tắc",
 	"waiRemoveRuleButtonTemplate": "Xóa quy tắc ${0}",

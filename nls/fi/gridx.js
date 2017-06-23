@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": " -",
 	"or": "tai",
-	"addRuleButton": "Lisää sääntö",
 	"waiAddRuleButton": "Lisää uusi sääntö",
 	"removeRuleButton": "Poista sääntö",
 	"waiRemoveRuleButtonTemplate": "Poista sääntö ${0}",

@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "及",
 	"or": "或",
-	"addRuleButton": "新增規則",
 	"waiAddRuleButton": "新增規則",
 	"removeRuleButton": "移除規則",
 	"waiRemoveRuleButtonTemplate": "移除規則 ${0}",

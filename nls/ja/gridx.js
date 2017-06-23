@@ -61,7 +61,6 @@ define({
 	"relationMsgTail": "",
 	"and": "かつ",
 	"or": "または",
-	"addRuleButton": "規則の追加",
 	"waiAddRuleButton": "新規規則の追加",
 	"removeRuleButton": "規則の削除",
 	"waiRemoveRuleButtonTemplate": "規則 ${0} の削除",

@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "és",
 	"or": "vagy",
-	"addRuleButton": "Szabály hozzáadása",
 	"waiAddRuleButton": "Új szabály hozzáadása",
 	"removeRuleButton": "Szabály eltávolítása",
 	"waiRemoveRuleButtonTemplate": "${0} szabály eltávolítása",

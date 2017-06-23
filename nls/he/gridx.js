@@ -45,7 +45,6 @@ define({
 	"relationMsgTail": "",
 	"and": "וגם",
 	"or": "או",
-	"addRuleButton": "הוספת כלל",
 	"waiAddRuleButton": "הוספת כלל חדש",
 	"removeRuleButton": "סילוק כלל",
 	"waiRemoveRuleButtonTemplate": "סילוק הכלל ${0}",

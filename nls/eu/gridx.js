@@ -43,7 +43,6 @@ define({
 	"relationMsgTail": "",
 	"and": "eta",
 	"or": "edo",
-	"addRuleButton": "Gehitu araua",
 	"waiAddRuleButton": "Gehitu arau berria",
 	"removeRuleButton": "Kendu araua",
 	"waiRemoveRuleButtonTemplate": "Kendu ${0} araua",

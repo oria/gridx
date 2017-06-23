@@ -55,7 +55,6 @@ define({root:
 	"and": "and",
 	"or": "or",
 	
-	"addRuleButton": "Add Rule",
 	"waiAddRuleButton": "Add a new rule",
 	"removeRuleButton": "Remove Rule",
 	"waiRemoveRuleButtonTemplate": "Remove rule ${0}",
