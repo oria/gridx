@@ -324,9 +324,9 @@ define([
 				unmarkable = t._unmarkable[type];
 
 			//Fix defect 12877 
-			//Remove ubmarkable items
-			//which does not need toupdate
-			treePath = treePath.filter(function(childId){
+			//Remove unmarkable items
+			//which does not need to update
+			treePath = array.filter(treePath, function(childId){
 				return !(unmarkable && unmarkable[childId]);
 			});
 
