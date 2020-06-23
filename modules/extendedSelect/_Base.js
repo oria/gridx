@@ -56,9 +56,9 @@ define([
 			var t = this, g = t.grid, doc = win.doc;
 			g.domNode.setAttribute('aria-multiselectable', true);
 			t._refSelectedIds = [];
-			t.subscribe('gridClearSelection_' + g.id, function(type){
+			t.subscribe('gridClearSelection_' + g.id, function(type, silent){
 				if(type != t._type){
-					t.clear();
+					t.clear(silent);
 				}
 			});
 			t.batchConnect(
