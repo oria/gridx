@@ -1,18 +1,17 @@
 {
-	"name": "gridx",
-	"version": "1.3.4",
-	"dependencies": {
-		"dojo": ">=1.9.1",
-		"dijit": ">=1.9.1",
-		"dojox": ">=1.9.1"
-	},
-	"devDependencies": {
-	},
-	"ignore": [
-		".jshintrc",
-		".gitattributes",
-		".gitignore",
-		".travis.yml",
-		"CONTRIBUTING.md"
-	]
+  "name": "gridx",
+  "version": "1.3.4",
+  "dependencies": {
+    "dojo": "^1.17.3",
+    "dijit": "^1.17.3",
+    "dojox": "^1.17.3"
+  },
+  "devDependencies": {},
+  "ignore": [
+    ".jshintrc",
+    ".gitattributes",
+    ".gitignore",
+    ".travis.yml",
+    "CONTRIBUTING.md"
+  ]
 }
