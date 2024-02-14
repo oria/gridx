@@ -1,19 +1,21 @@
 {
 	"name": "gridx",
 	"mappings": {
-		"dojo": "https://github.com/dojo/dojo/zipball/1.9.1",
-		"dijit": "https://github.com/dojo/dijit/zipball/1.9.1",
-		"dojox": "https://github.com/dojo/dojox/zipball/1.9.1"
+		"dojo": "https://github.com/dojo/dojo/zipball/1.17.3",
+		"dijit": "https://github.com/dojo/dijit/zipball/1.17.3",
+		"dojox": "https://github.com/dojo/dojox/zipball/1.17.3"
 	},
 	"version": "1.3.8",
-	"maintainers":[
+	"maintainers": [
 		{
 			"name": "Xiao Wen Zhu(Oliver)",
 			"email": "zhuxw1984@gmail.com"
-		}, {
+		},
+		{
 			"name": "Pei Wang(Nate)",
 			"email": "supnate@gmail.com"
-		}, {
+		},
+		{
 			"name": "Qi Chen(Leslie)",
 			"email": "yurychika@gmail.com"
 		}
@@ -25,7 +27,12 @@
 		}
 	],
 	"bugs": "mailto:yurychika@gmail.com",
-	"keywords": ["Gridx", "grid", "virtual scroll", "tree grid"],
+	"keywords": [
+		"Gridx",
+		"grid",
+		"virtual scroll",
+		"tree grid"
+	],
 	"description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
 	"licenses": [
 		{
@@ -44,9 +51,9 @@
 		}
 	],
 	"dependencies": {
-		"dojo": "1.9.1",
-		"dijit": "1.9.1",
-		"dojox": "1.9.1"
+		"dijit": "^1.17.3",
+		"dojo": "^1.17.3",
+		"dojox": "^1.17.3"
 	},
 	"directories": {
 		"lib": "."
