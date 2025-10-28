@@ -280,14 +280,8 @@ define([
 				if(typeof start == 'number' && typeof end == 'number'){
 					//Only need to render when the range is valid
 					body.renderRows(start, end - start, pos);
-					if(a && start < end){
-						//Scroll the body to hide the newly added top rows.
-						var n = query('[visualindex="' + end + '"]', bn)[0];
-						if(n){
-							deltaT += n.offsetTop;
-						}
-					}
-				}
+				} 
+				
 				//Ensure the position when user scrolls to end points
 				if(nearTop){
 					bn.scrollTop = 0;
@@ -298,7 +292,11 @@ define([
 					bn.scrollTop += deltaT;
 				}
 			}
-			t._doVirtual();
+
+			// Same (reversed criteria), when new rows 
+			// are rendered, skip _doVirtual.
+			if(typeof start != 'number' || typeof end != 'number')
+				t._doVirtual();		
 		},
 		
 		_doScroll: function(e, forced, noLazy){
